@@ -61,14 +61,14 @@
                     headers: { 'X-Master-Key': apiKey }
                 });
                 let data = response.data.record;
-                data.count += 1; // Increment counter when page loads
+                data['Website visit\'s'] += 1; // Increment counter when page loads
                 await axios.put(apiUrl, data, {
                     headers: {
                         'Content-Type': 'application/json',
                         'X-Master-Key': apiKey
                     }
                 });
-                document.getElementById('counter').innerText = `Counter: ${data.count}`;
+                document.getElementById('websiteVisits').innerText = `Website visit's: ${data['Website visit\'s']}`;
             } catch (error) {
                 console.error('Error fetching counter:', error);
             }
@@ -80,7 +80,7 @@
 <body>
     <div class="container" id="mainContent">
         <h1 class="welcome-text">Welcome to RekietaLabs</h1>
-        <div class="counter" id="counter">Loading...</div>
+        <div class="counter" id="websiteVisits">Loading...</div>
     </div>
 
     <div class="section contact-section">
@@ -91,7 +91,7 @@
 
     <div class="section coming-soon-section">
         <h2>Coming Soon</h2>
-        <p>Working Hard to make this section great just for you. Check back later for updates!</p>
+        <p>This section is under construction. Check back later for updates!</p>
     </div>
 
     <div class="footer">
