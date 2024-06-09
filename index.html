@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to RekietaLabs</title>
+    <style>
+        body {
+            background-color: black; /* Set background color to black */
+            text-align: center;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            margin-top: 100px;
+        }
+        .section {
+            padding: 50px 0;
+            color: white;
+        }
+        .contact-section {
+            background-color: navy; /* Set background color of contact section to navy blue */
+        }
+        .coming-soon-section {
+            background-color: #FFA500; /* Set background color of coming soon section to orange */
+        }
+        .hidden {
+            display: none;
+        }
+        .welcome-text {
+            color: olive; /* Set text color to olive green */
+            font-size: 36px; /* Set font size to 36px */
+            font-weight: bold; /* Set font weight to bold */
+        }
+        .feedback-banner {
+            background-color: teal; /* Set banner color to teal */
+            color: white;
+            padding: 10px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 999;
+            transition: opacity 0.5s ease; /* Smooth transition effect */
+        }
+        .feedback-banner.hidden {
+            opacity: 0; /* Hide banner when hidden class is applied */
+        }
+        .dismiss-button {
+            background-color: #40e0d0; /* Set dismiss button color to aqua */
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            z-index: 1000; /* Ensure the dismiss button is above the banner */
+        }
+        .copyright {
+            position: fixed;
+            bottom: 20px;
+            left: 10px;
+            color: white;
+            font-size: 10px; /* Set font size to 10px */
+            margin-bottom: 5px; /* Add margin to separate from the trademark */
+        }
+        .trademark {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            color: white;
+            font-size: 10px; /* Set font size to 10px */
+        }
+        .close-website {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            color: #40e0d0; /* Set close website button color to aqua */
+            background-color: transparent;
+            border: 1px solid #40e0d0; /* Add border to close website button */
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .visit-count {
+            position: fixed;
+            bottom: 50px;
+            left: 10px;
+            color: white;
+            font-size: 14px; /* Set font size to 14px */
+        }
+    </style>
+</head>
+<body>
+    <div class="feedback-banner" id="feedbackBanner">
+        <p>Do You Like The New Look Of The Website?</p>
+        <input type="checkbox" id="yesCheckbox">
+        <label for="yesCheckbox">Yes</label>
+        <input type="checkbox" id="noCheckbox">
+        <label for="noCheckbox">No</label>
+        <button class="dismiss-button" onclick="dismissBanner()">Close</button>
+    </div>
+
+    <div class="container" id="mainContent">
+        <h1 class="welcome-text">Welcome to RekietaLabs</h1>
+    </div>
+
+    <div class="section contact-section">
+        <h2>Contact Us</h2>
+        <p>Email us at:</p>
+        <p><a href="mailto:jmrekieta@yahoo.com" style="color: white;">jmrekieta@yahoo.com</a></p>
+    </div>
+
+    <div class="section coming-soon-section">
+        <h2>Coming Soon</h2>
+        <p>This section is under construction. Check back later for updates!</p>
+    </div>
+
+    <div class="copyright">
+        <p>&copy; 2024 RekietaLabs. All rights reserved. <sup>&#169;</sup></p>
+    </div>
+
+    <div class="trademark">
+        <p>Trademarked by RekietaLabs 2024 <sup>&#8482;</sup></p>
+    </div>
+
+    <div class="close-website" onclick="closeWebsite()">Close Website</div>
+
+    <div class="visit-count">
+        <p>Number of visits: <span id="visitCounter"></span></p>
+    </div>
+
+    <script>
+        // Function to dismiss the feedback banner
+        function dismissBanner() {
+            document.getElementById('feedbackBanner').classList.add('hidden');
+        }
+
+        // Function to close the website
+        function closeWebsite() {
+            window.close();
+        }
+
+        // Counter for tracking the number of visits
+        let visitCounter = localStorage.getItem('visitCounter') || 0;
+        visitCounter++;
+        localStorage.setItem('visitCounter', visitCounter);
+        document.getElementById('visitCounter').textContent = visitCounter;
+    </script>
+</body>
+</html>
