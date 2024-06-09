@@ -39,19 +39,6 @@
             font-size: 24px;
             color: white;
         }
-        .increment-button {
-            background-color: black;
-            border: 2px solid #4CAF50;
-            color: white;
-            padding: 15px 32px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin: 4px 2px;
-            cursor: pointer;
-            border-radius: 12px;
-        }
         .footer {
             color: white;
             font-size: 14px;
@@ -73,20 +60,8 @@
                 const response = await axios.get(apiUrl, {
                     headers: { 'X-Master-Key': apiKey }
                 });
-                const data = response.data.record;
-                document.getElementById('counter').innerText = `Counter: ${data.count}`;
-            } catch (error) {
-                console.error('Error fetching counter:', error);
-            }
-        }
-
-        async function incrementCounter() {
-            try {
-                const response = await axios.get(apiUrl, {
-                    headers: { 'X-Master-Key': apiKey }
-                });
                 let data = response.data.record;
-                data.count += 1;
+                data.count += 1; // Increment counter when page loads
                 await axios.put(apiUrl, data, {
                     headers: {
                         'Content-Type': 'application/json',
@@ -95,7 +70,7 @@
                 });
                 document.getElementById('counter').innerText = `Counter: ${data.count}`;
             } catch (error) {
-                console.error('Error incrementing counter:', error);
+                console.error('Error fetching counter:', error);
             }
         }
 
@@ -106,7 +81,6 @@
     <div class="container" id="mainContent">
         <h1 class="welcome-text">Welcome to RekietaLabs</h1>
         <div class="counter" id="counter">Loading...</div>
-        <button class="increment-button" onclick="incrementCounter()">Increment Counter</button>
     </div>
 
     <div class="section contact-section">
@@ -117,7 +91,7 @@
 
     <div class="section coming-soon-section">
         <h2>Coming Soon</h2>
-        <p>This section is under construction. Check back later for updates!</p>
+        <p>Working Hard to make this section great just for you. Check back later for updates!</p>
     </div>
 
     <div class="footer">
