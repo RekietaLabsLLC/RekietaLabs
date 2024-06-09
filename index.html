@@ -6,11 +6,13 @@
     <title>Welcome to RekietaLabs</title>
     <style>
         body {
-            background-color: black; /* Set background color to black */
+            background-color: black;
             text-align: center;
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
+            position: relative;
+            min-height: 100vh;
         }
         .container {
             margin-top: 100px;
@@ -20,92 +22,91 @@
             color: white;
         }
         .contact-section {
-            background-color: navy; /* Set background color of contact section to navy blue */
+            background-color: navy;
         }
         .coming-soon-section {
-            background-color: #FFA500; /* Set background color of coming soon section to orange */
+            background-color: #FFA500;
         }
         .hidden {
             display: none;
         }
         .welcome-text {
-            color: olive; /* Set text color to olive green */
-            font-size: 36px; /* Set font size to 36px */
-            font-weight: bold; /* Set font weight to bold */
+            color: olive;
+            font-size: 36px;
+            font-weight: bold;
         }
-        .feedback-banner {
-            background-color: teal; /* Set banner color to teal */
+        .counter {
+            font-size: 24px;
             color: white;
-            padding: 10px;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 999;
-            transition: opacity 0.5s ease; /* Smooth transition effect */
         }
-        .feedback-banner.hidden {
-            opacity: 0; /* Hide banner when hidden class is applied */
-        }
-        .dismiss-button {
-            background-color: #40e0d0; /* Set dismiss button color to aqua */
+        .increment-button {
+            background-color: black;
+            border: 2px solid #4CAF50;
             color: white;
-            padding: 5px 10px;
-            border: none;
-            border-radius: 5px;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
             cursor: pointer;
+            border-radius: 12px;
+        }
+        .footer {
+            color: white;
+            font-size: 14px;
             position: absolute;
-            bottom: 10px;
-            right: 10px;
-            z-index: 1000; /* Ensure the dismiss button is above the banner */
-        }
-        .copyright {
-            position: fixed;
-            bottom: 20px;
-            left: 10px;
-            color: white;
-            font-size: 10px; /* Set font size to 10px */
-            margin-bottom: 5px; /* Add margin to separate from the trademark */
-        }
-        .trademark {
-            position: fixed;
-            bottom: 10px;
-            left: 10px;
-            color: white;
-            font-size: 10px; /* Set font size to 10px */
-        }
-        .close-website {
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            color: #40e0d0; /* Set close website button color to aqua */
-            background-color: transparent;
-            border: 1px solid #40e0d0; /* Add border to close website button */
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .visit-count {
-            position: fixed;
-            bottom: 50px;
-            left: 10px;
-            color: white;
-            font-size: 14px; /* Set font size to 14px */
+            bottom: 0;
+            left: 0;
+            padding: 10px;
         }
     </style>
+    <!-- Include Axios Library -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        const binId = '6665f4dee41b4d34e400e605';
+        const apiKey = '$2a$10$YHfXtEg5ia4U0ywTyOx4x.OzSVWVgV9Ix.vvtWCuTlgCFHf7KVqTi';
+        const apiUrl = `https://api.jsonbin.io/v3/b/${binId}`;
+
+        async function getCounter() {
+            try {
+                const response = await axios.get(apiUrl, {
+                    headers: { 'X-Master-Key': apiKey }
+                });
+                const data = response.data.record;
+                document.getElementById('counter').innerText = `Counter: ${data.count}`;
+            } catch (error) {
+                console.error('Error fetching counter:', error);
+            }
+        }
+
+        async function incrementCounter() {
+            try {
+                const response = await axios.get(apiUrl, {
+                    headers: { 'X-Master-Key': apiKey }
+                });
+                let data = response.data.record;
+                data.count += 1;
+                await axios.put(apiUrl, data, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Master-Key': apiKey
+                    }
+                });
+                document.getElementById('counter').innerText = `Counter: ${data.count}`;
+            } catch (error) {
+                console.error('Error incrementing counter:', error);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', getCounter);
+    </script>
 </head>
 <body>
-    <div class="feedback-banner" id="feedbackBanner">
-        <p>Do You Like The New Look Of The Website?</p>
-        <input type="checkbox" id="yesCheckbox">
-        <label for="yesCheckbox">Yes</label>
-        <input type="checkbox" id="noCheckbox">
-        <label for="noCheckbox">No</label>
-        <button class="dismiss-button" onclick="dismissBanner()">Close</button>
-    </div>
-
     <div class="container" id="mainContent">
         <h1 class="welcome-text">Welcome to RekietaLabs</h1>
+        <div class="counter" id="counter">Loading...</div>
+        <button class="increment-button" onclick="incrementCounter()">Increment Counter</button>
     </div>
 
     <div class="section contact-section">
@@ -119,36 +120,9 @@
         <p>This section is under construction. Check back later for updates!</p>
     </div>
 
-    <div class="copyright">
-        <p>&copy; 2024 RekietaLabs. All rights reserved. <sup>&#169;</sup></p>
+    <div class="footer">
+        <p>&#8482; RekietaLabs</p>
+        <p>&#169; RekietaLabs</p>
     </div>
-
-    <div class="trademark">
-        <p>Trademarked by RekietaLabs 2024 <sup>&#8482;</sup></p>
-    </div>
-
-    <div class="close-website" onclick="closeWebsite()">Close Website</div>
-
-    <div class="visit-count">
-        <p>Number of visits: <span id="visitCounter"></span></p>
-    </div>
-
-    <script>
-        // Function to dismiss the feedback banner
-        function dismissBanner() {
-            document.getElementById('feedbackBanner').classList.add('hidden');
-        }
-
-        // Function to close the website
-        function closeWebsite() {
-            window.close();
-        }
-
-        // Counter for tracking the number of visits
-        let visitCounter = localStorage.getItem('visitCounter') || 0;
-        visitCounter++;
-        localStorage.setItem('visitCounter', visitCounter);
-        document.getElementById('visitCounter').textContent = visitCounter;
-    </script>
 </body>
 </html>
