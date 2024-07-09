@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to RekietaLabs</title>
+    <style>
+        /* General styles */
+        body {
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .container {
+            margin-top: 50px;
+            flex: 1;
+        }
+        .section {
+            padding: 50px 20px;
+            background-color: #1a1a1a;
+            margin: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        h1, h2 {
+            color: white;
+        }
+        a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .footer {
+            background-color: #333;
+            color: white;
+            font-size: 14px;
+            padding: 10px;
+        }
+        .footer p {
+            margin: 5px 0;
+        }
+        .footer img {
+            width: 32px;
+            height: 32px;
+            margin-top: 10px;
+        }
+        .prints-section {
+            background-color: #333;
+            color: white;
+            padding: 50px 20px;
+            margin: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        .prints-section h2 {
+            color: white;
+        }
+        .prints-gallery {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        .prints-gallery img {
+            width: 300px;
+            height: auto;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+        }
+        /* Media queries for responsiveness */
+        @media (max-width: 768px) {
+            .section, .prints-section {
+                padding: 30px 10px;
+            }
+            .prints-gallery img {
+                width: 100%;
+            }
+        }
+        @media (max-width: 480px) {
+            .section, .prints-section {
+                padding: 20px 5px;
+            }
+            .footer {
+                font-size: 12px;
+            }
+        }
+    </style>
+    <!-- Include Google Platform Library -->
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <script>
+        function onSignIn(googleUser) {
+            var profile = googleUser.getBasicProfile();
+            console.log('Logged in as: ' + profile.getName());
+            // Optional: You can send `googleUser.getAuthResponse().id_token` to your server for verification.
+        }
+
+        function onFailure(error) {
+            console.error('Sign in failed:', error);
+        }
+
+        function renderButton() {
+            gapi.signin2.render('googleSignInButton', {
+                'scope': 'profile email',
+                'width': 200,
+                'height': 50,
+                'longtitle': true,
+                'theme': 'dark',
+                'onsuccess': onSignIn,
+                'onfailure': onFailure
+            });
+        }
+
+        function handleClientLoad() {
+            gapi.load('auth2', function() {
+                gapi.auth2.init({
+                    client_id: '711203273192-ivjoeo7f6magjqt67gumik587b7mekr0.apps.googleusercontent.com'
+                }).then(renderButton);
+            });
+        }
+    </script>
+</head>
+<body onload="handleClientLoad()">
+    <div class="container">
+        <h1>Welcome to RekietaLabs</h1>
+        <div id="googleSignInButton"></div>
+    </div>
+
+    <div class="section">
+        <h2>Contact Us</h2>
+        <p><a href="https://rekietalabs.com/contact" target="_blank">Visit our Contact Page</a></p>
+    </div>
+
+    <div class="section">
+        <h2>Simon Says Discord Bot</h2>
+        <p>Simon Says is a fun and interactive Discord bot that brings the classic game of Simon Says to your Discord server! Engage your community with entertaining commands and challenges. Try it out today!</p>
+        <p><a href="/simon-says">Simon Says Site</a></p>
+    </div>
+
+    <div class="section">
+        <h2>Watch this Video</h2>
+        <div class="video-container">
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/w8ZRmS17pLU?si=6uEZz2b9cXyFyoqq" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <div class="prints-section">
+        <h2>New Print</h2>
+        <div class="prints-gallery">
+            <img src="image0.jpeg" alt="">
+            <img src="image1.jpeg" alt="">
+            <img src="image2.jpeg" alt="">
+            <img src="image3.jpeg" alt="">
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>&#8482; RekietaLabs</p>
+        <p>&#169; RekietaLabs</p>
+        
+        <!-- Add the favicon image -->
+        <img src="IMG_1393.ico" alt="RekietaLabs Favicon">
+    </div>
+</body>
+</html>
