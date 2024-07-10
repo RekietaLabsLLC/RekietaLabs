@@ -136,11 +136,14 @@
 
     <div class="prints-section">
         <h2>New Prints</h2>
-        <div class="prints-gallery">
-            <img src="image0.jpeg" alt="">
-            <img src="image1.jpeg" alt="">
-            <img src="image2.jpeg" alt="">
-            <img src="image3.jpeg" alt="">
+        <select id="printSelect">
+            <option value="Amo themed container">Amo themed container</option>
+            <option value="Print 2">Print 2</option>
+            <option value="Print 3">Print 3</option>
+            <option value="Print 4">Print 4</option>
+        </select>
+        <div id="printDetails" class="prints-gallery">
+            <!-- Images and descriptions will be populated dynamically -->
         </div>
     </div>
 
@@ -149,5 +152,41 @@
         <p>&#169; RekietaLabs</p>
         <img src="IMG_1393.ico" alt="RekietaLabs Favicon">
     </div>
+
+    <script>
+        const prints = {
+            "Amo themed container": {
+                description: "This 3D print is a container that looks like an Amo container. The price of this product is usually around $5-10 depending on the size.",
+                imageUrls: ["image0.jpeg", "image1.jpeg"]
+            },
+            "Print 2": {
+                description: "Description of Print 2.",
+                imageUrl: "image2.jpeg"
+            },
+            "Print 3": {
+                description: "Description of Print 3.",
+                imageUrl: "image3.jpeg"
+            },
+            "Print 4": {
+                description: "Description of Print 4.",
+                imageUrl: "image4.jpeg"
+            }
+        };
+
+        const printSelect = document.getElementById('printSelect');
+        const printDetails = document.getElementById('printDetails');
+
+        printSelect.addEventListener('change', function() {
+            const selectedPrint = this.value;
+            const print = prints[selectedPrint];
+
+            if (print) {
+                printDetails.innerHTML = print.imageUrls ? 
+                    print.imageUrls.map(imageUrl => `<img src="${imageUrl}" alt="${selectedPrint}">`).join('') +
+                    `<p>${print.description}</p>` :
+                    `<img src="${print.imageUrl}" alt="${selectedPrint}"><p>${print.description}</p>`;
+            }
+        });
+    </script>
 </body>
 </html>
