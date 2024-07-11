@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to RekietaLabs</title>
+    <style>
+        /* General styles */
+        body {
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .container {
+            margin-top: 50px;
+            flex: 1;
+        }
+        .section {
+            padding: 50px 20px;
+            background-color: #1a1a1a;
+            margin: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 1s ease-out, transform 1s ease-out;
+        }
+        .visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        h1, h2 {
+            color: white;
+        }
+        a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .footer {
+            background-color: #333;
+            color: white;
+            font-size: 14px;
+            padding: 10px;
+        }
+        .footer p {
+            margin: 5px 0;
+        }
+        .footer img {
+            width: 32px;
+            height: 32px;
+            margin-top: 10px;
+        }
+        .prints-section {
+            background-color: #333;
+            color: white;
+            padding: 50px 20px;
+            margin: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        .prints-section h2 {
+            color: white;
+        }
+        .prints-gallery {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        .prints-gallery img {
+            width: 300px;
+            height: auto;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+        }
+        /* Media queries for responsiveness */
+        @media (max-width: 768px) {
+            .section, .prints-section {
+                padding: 30px 10px;
+            }
+            .prints-gallery img {
+                width: 100%;
+            }
+        }
+        @media (max-width: 480px) {
+            .section, .prints-section {
+                padding: 20px 5px;
+            }
+            .footer {
+                font-size: 12px;
+            }
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sections = document.querySelectorAll('.section');
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to RekietaLabs</h1>
+    </div>
+
+    <div class="section">
+        <h2>Contact Us</h2>
+        <p><a href="https://rekietalabs.com/contact" target="_blank">Visit our Contact Page</a></p>
+    </div>
+
+    <div class="section">
+        <h2>Privacy Policy</h2>
+        <p>Click the link to view the Privacy Policy</p>
+        <p><a href="https://rekietalabs.com/privacy" target="_blank">Privacy Policy</a></p>
+    </div>
+
+    <div class="section">
+        <h2>GitHub</h2>
+        <p><a href="https://rekietalabs.com/code" target="_blank">Visit our GitHub</a></p>
+    </div>
+
+    <div class="prints-section">
+        <h2>New Prints</h2>
+        <select id="printSelect">
+            <option value="Please select from below">Please select from below &#9660;</option>
+            <option value="Ammo themed container">Ammo themed container</option>
+            <option value="Corkscrew shaped tree">Corkscrew shaped tree</option>
+            <option value="Dragon's">Dragon's</option>
+            <option value="Dragon egg's">Dragon egg's</option>
+        </select>
+        <div id="printDetails" class="prints-gallery">
+            <!-- Images and descriptions will be populated dynamically -->
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Calendar 2024</h2>
+        <p><a href="https://www.canva.com/design/DAGKp8IH9ck/h3XrjhSE7exPv2_jiXozPQ/view?utm_content=DAGKp8IH9ck&utm_campaign=designshare&utm_medium=link&utm_source=editor" target="_blank">View our 2024 Calendar</a></p>
+    </div>
+
+    <div class="footer">
+        <p>&#8482; RekietaLabs</p>
+        <p>&#169; RekietaLabs</p>
+        <img src="IMG_1393.ico" alt="RekietaLabs Favicon">
+    </div>
+
+    <script>
+        const prints = {
+            "Ammo themed container": {
+                description: "This 3D print is a container that looks like an Ammo container. The price of this product is usually around $5-10 depending on the size.",
+                imageUrls: ["image0.jpeg", "image1.jpeg"]
+            },
+            "Corkscrew shaped tree": {
+                description: "This 3D print is Muti-colored you can customize it to your favorite color! The price usually is around $7-8 depending on the size. We will have them for sale most time unless we have low supplies. Go check out our other prints too!",
+                imageUrls: ["Tree1.jpeg", "Tree2.jpeg"]
+            },
+            "Dragon's": {
+                description: "This 3D print is a Muti-type style (meaning we have more than one style). It come in a lot of different style's if you like Chinese dragon's we have those and many more so come by when we sell! The price is usually around $5-25$+ depending on the size.",
+                imageUrls: ["Dragon1.jpeg", "Dragon2.jpeg"]
+            },
+            "Dragon egg's": {
+                description: "This 3D print is the same type as the Dragon's. There are different types you can usually get them for $5-25. We do also have mystery egg's for $10+. Inside the mystery egg's you get the dragon and the egg depending on witch type we sell that day it will differ so please make sure to checkout our calendar for the day that you are looking to come depending on how much time we have we will list the products we have for sale that day!",
+                imageUrls: ["Egg2.jpg", "Egg1.jpg"]
+            }
+        };
+
+        const printSelect = document.getElementById('printSelect');
+        const printDetails = document.getElementById('printDetails');
+
+        printSelect.addEventListener('change', function() {
+            const selectedPrint = this.value;
+            const print = prints[selectedPrint];
+
+            if (print) {
+                printDetails.innerHTML = print.imageUrls ? 
+                    print.imageUrls.map(imageUrl => `<img src="${imageUrl}" alt="${selectedPrint}">`).join('') +
+                    `<p>${print.description}</p>` :
+                    `<img src="${print.imageUrl}" alt="${selectedPrint}"><p>${print.description}</p>`;
+            }
+        });
+    </script>
+</body>
+</html>
