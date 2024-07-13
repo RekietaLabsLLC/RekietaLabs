@@ -118,19 +118,22 @@
             <option value="Dragon eggs">Dragon eggs</option>
             <option value="Signs">Signs</option>
         </select>
-        <div id="printDetails" class="prints-gallery">
-            <!-- Images and descriptions will be populated dynamically -->
-        </div>
+        <div id="printDetails"></div>
     </div>
 
     <div class="section">
-        <h2>Calendar 2024</h2>
-        <iframe src="https://docs.google.com/presentation/d/1veoqjx1h5ATwA8lUEU1HC54mQGFPLcmy5wcabt0OXnI/embed?start=false&loop=false&delayms=3000"></iframe>
+        <h2>About Us</h2>
+        <p>Welcome to RekietaLabs, your number one source for all things 3D printing. We're dedicated to giving you the very best of 3D prints, with a focus on dependability, customer service, and uniqueness.</p>
     </div>
 
     <div class="section">
         <h2>GitHub</h2>
         <p><a href="https://rekietalabs.com/code" target="_blank">Visit our GitHub</a></p>
+    </div>
+
+    <div class="section">
+        <h2>How much should that be?</h2>
+        <p><a href="https://rekietalabs.com/cost" target="_blank">Visit our Cost Calculator</a></p>
     </div>
 
     <div class="footer">
@@ -150,31 +153,31 @@
                 imageUrls: ["Tree1.jpeg", "Tree2.jpeg"]
             },
             "Dragons": {
-                description: "This 3D print features multiple styles, including Chinese dragons and more. The price is usually around $5-25+ depending on the size.",
+                description: "These are small dragon figurines available in different colors. They usually cost around $12-15 each.",
                 imageUrls: ["Dragon1.jpeg", "Dragon2.jpeg"]
             },
             "Dragon eggs": {
-                description: "This 3D print includes different types of dragon eggs. Prices range from $5-25. We also offer mystery eggs for $10+ which include both the dragon and the egg.",
-                imageUrls: ["Egg1.jpg", "Egg2.jpg"]
+                description: "These dragon eggs are designed to look like they came straight out of a fantasy novel. Prices vary depending on size but generally range from $8-12.",
+                imageUrls: ["Egg1.jpeg", "Egg2.jpeg"]
             },
             "Signs": {
-                description: "These 3D prints are signs that you can hang up or place anywhere. Prices range from $8-25 depending on the size and type of sign.",
-                imageUrls: ["Sign1.jpg", "Sign2.jpg", "Sign3.jpg"]
+                description: "Customizable signs for various purposes. Prices depend on size and complexity, usually ranging from $10-20.",
+                imageUrls: ["Sign1.jpeg", "Sign2.jpeg"]
             }
         };
 
-        const printSelect = document.getElementById('printSelect');
-        const printDetails = document.getElementById('printDetails');
-
-        printSelect.addEventListener('change', function() {
+        document.getElementById('printSelect').addEventListener('change', function() {
             const selectedPrint = this.value;
-            const print = prints[selectedPrint];
+            const details = prints[selectedPrint];
+            const printDetailsDiv = document.getElementById('printDetails');
 
-            if (print) {
-                printDetails.innerHTML = print.imageUrls ?
-                    print.imageUrls.map(imageUrl => `<img src="${imageUrl}" alt="${selectedPrint}">`).join('') +
-                    `<p>${print.description}</p>` :
-                    `<img src="${print.imageUrl}" alt="${selectedPrint}"><p>${print.description}</p>`;
+            if (details) {
+                printDetailsDiv.innerHTML = `
+                    <p>${details.description}</p>
+                    ${details.imageUrls.map(url => `<img src="${url}" alt="${selectedPrint}" style="width:200px;height:auto;margin:10px;">`).join('')}
+                `;
+            } else {
+                printDetailsDiv.innerHTML = '';
             }
         });
     </script>
