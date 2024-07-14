@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cost Calculator - RekietaLabs</title>
+    <link rel="icon" href="Summer.jpg" type="image/jpeg">
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .container {
+            margin-top: 50px;
+            flex: 1;
+        }
+        .section {
+            padding: 50px 20px;
+            background-color: #1a1a1a;
+            margin: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        h1, h2 {
+            color: white;
+        }
+        input, button {
+            padding: 10px;
+            font-size: 16px;
+            margin: 10px;
+        }
+        input[type="number"] {
+            width: 150px;
+        }
+        .description {
+            font-size: 14px;
+            color: #ccc;
+            margin-top: -10px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Filament Cost Calculator</h1>
+        
+        <div class="section">
+            <h2>Material Cost</h2>
+            <p class="description">Calculate the cost of the filament based on its weight.</p>
+            <p>Enter the weight of the filament in grams:</p>
+            <input type="number" id="filamentWeight" placeholder="Weight in grams">
+            <button onclick="calculateMaterialCost()">Calculate Material Cost</button>
+            <p id="materialResult"></p>
+        </div>
+
+        <div class="section">
+            <h2>Labor Cost</h2>
+            <p class="description">Calculate the labor cost involved in the production process.</p>
+            <p>Enter the labor cost in dollars:</p>
+            <input type="number" id="laborCost" placeholder="Labor cost in dollars">
+            <button onclick="calculateLaborCost()">Calculate Labor Cost</button>
+            <p id="laborResult"></p>
+        </div>
+
+        <div class="section">
+            <h2>Electricity Cost</h2>
+            <p class="description">Calculate the cost of electricity used during the production.</p>
+            <p>Enter the electricity cost in dollars:</p>
+            <input type="number" id="electricityCost" placeholder="Electricity cost in dollars">
+            <button onclick="calculateElectricityCost()">Calculate Electricity Cost</button>
+            <p id="electricityResult"></p>
+        </div>
+
+        <div class="section">
+            <h2>Total Cost with Markup</h2>
+            <p class="description">Calculate the final price, including all costs and a markup percentage.</p>
+            <p>Enter the markup percentage:</p>
+            <input type="number" id="markupPercentage" placeholder="Markup percentage">
+            <button onclick="calculateFinalPrice()">Calculate Final Price</button>
+            <p id="finalResult"></p>
+        </div>
+    </div>
+
+    <script>
+        const pricePerGram = 0.10; // Example price per gram in dollars
+        const baseCost = 2.00; // Example base cost in dollars
+
+        function calculateMaterialCost() {
+            const weight = parseFloat(document.getElementById('filamentWeight').value) || 0;
+            const materialCost = weight * pricePerGram;
+            document.getElementById('materialResult').innerText = `Material Cost: $${materialCost.toFixed(2)}`;
+        }
+
+        function calculateLaborCost() {
+            const laborCost = parseFloat(document.getElementById('laborCost').value) || 0;
+            document.getElementById('laborResult').innerText = `Labor Cost: $${laborCost.toFixed(2)}`;
+        }
+
+        function calculateElectricityCost() {
+            const electricityCost = parseFloat(document.getElementById('electricityCost').value) || 0;
+            document.getElementById('electricityResult').innerText = `Electricity Cost: $${electricityCost.toFixed(2)}`;
+        }
+
+        function calculateFinalPrice() {
+            const weight = parseFloat(document.getElementById('filamentWeight').value) || 0;
+            const laborCost = parseFloat(document.getElementById('laborCost').value) || 0;
+            const electricityCost = parseFloat(document.getElementById('electricityCost').value) || 0;
+            const markupPercentage = parseFloat(document.getElementById('markupPercentage').value) || 0;
+
+            const materialCost = weight * pricePerGram;
+            const totalCost = baseCost + materialCost + laborCost + electricityCost;
+            const finalPrice = totalCost + (totalCost * (markupPercentage / 100));
+
+            document.getElementById('finalResult').innerText = `The price should be $${finalPrice.toFixed(2)}`;
+        }
+    </script>
+</body>
+</html>
