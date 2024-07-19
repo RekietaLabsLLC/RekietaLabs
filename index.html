@@ -60,6 +60,11 @@
             height: 32px;
             margin-top: 10px;
         }
+        .prints-gallery img {
+            width: 200px;
+            height: auto;
+            margin: 10px;
+        }
         /* Media queries for responsiveness */
         @media (max-width: 768px) {
             .section {
@@ -118,7 +123,7 @@
             <option value="Dragon eggs">Dragon eggs</option>
             <option value="Signs">Signs</option>
         </select>
-        <div id="printDetails"></div>
+        <div id="printDetails" class="prints-gallery"></div>
     </div>
 
     <div class="section">
@@ -158,11 +163,11 @@
             },
             "Dragon eggs": {
                 description: "These dragon eggs are designed to look like they came straight out of a fantasy novel. Prices vary depending on size but generally range from $8-12.",
-                imageUrls: ["Egg1.jpeg", "Egg2.jpeg"]
+                imageUrls: ["Egg1.jpg", "Egg2.jpg"]
             },
             "Signs": {
                 description: "Customizable signs for various purposes. Prices depend on size and complexity, usually ranging from $10-20.",
-                imageUrls: ["Sign1.jpeg", "Sign2.jpeg"]
+                imageUrls: ["Sign1.jpg", "Sign2.jpg", "Sign3.jpg"]
             }
         };
 
