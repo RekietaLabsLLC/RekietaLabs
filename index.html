@@ -28,13 +28,6 @@
             margin: 20px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-            opacity: 0;
-            transform: translateY(50px);
-            transition: opacity 1s ease-out, transform 1s ease-out;
-        }
-        .visible {
-            opacity: 1;
-            transform: translateY(0);
         }
         h1, h2 {
             color: white;
@@ -60,11 +53,6 @@
             height: 32px;
             margin-top: 10px;
         }
-        .prints-gallery img {
-            width: 200px;
-            height: auto;
-            margin: 10px;
-        }
         /* Media queries for responsiveness */
         @media (max-width: 768px) {
             .section {
@@ -80,26 +68,26 @@
             }
         }
     </style>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const sections = document.querySelectorAll('.section');
-            const observer = new IntersectionObserver(entries => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                    }
-                });
-            }, { threshold: 0.1 });
-
-            sections.forEach(section => {
-                observer.observe(section);
-            });
-        });
-    </script>
 </head>
 <body>
     <div class="container">
         <h1>Welcome to RekietaLabs</h1>
+    </div>
+
+    <div class="section">
+        <h2>Welcome to RekietaLabs</h2>
+        <p>Your number one source for all things 3D printing. We're dedicated to giving you the very best of 3D prints, with a focus on dependability, customer service, and uniqueness.</p>
+    </div>
+
+    <div class="section">
+        <h2>Need help?</h2>
+        <p><a href="https://rekietalabs.com/support" target="_blank">This will take you to a site where you can support issues</a></p>
+    </div>
+
+    <div class="section">
+        <h2>Newsletter</h2>
+        <p>Please click the link below to subscribe or unsubscribe to the RekietaLabs weekly newsletter.</p>
+        <p><a href="https://docs.google.com/forms/d/e/1FAIpQLScQuY_o-6fpBCZm-J9bG0RwivVFTCyMe54bY7FvZ46mt6Namg/viewform?usp=sf_link" target="_blank">Subscribe/Unsubscribe to Newsletter</a></p>
     </div>
 
     <div class="section">
@@ -124,27 +112,19 @@
             <option value="Signs">Signs</option>
             <option value="Rocket launcher">Rocket launcher</option>
         </select>
-        <div id="printDetails" class="prints-gallery"></div>
+        <div id="printDetails" class="prints-gallery">
+            <!-- Images and descriptions will be populated dynamically -->
+        </div>
     </div>
 
     <div class="section">
-        <h2>About Us</h2>
-        <p>Welcome to RekietaLabs, your number one source for all things 3D printing. We're dedicated to giving you the very best of 3D prints, with a focus on dependability, customer service, and uniqueness.</p>
+        <h2>Calendar 2024</h2>
+        <iframe src="https://docs.google.com/presentation/d/1veoqjx1h5ATwA8lUEU1HC54mQGFPLcmy5wcabt0OXnI/embed?start=false&loop=false&delayms=3000"></iframe>
     </div>
 
     <div class="section">
         <h2>GitHub</h2>
         <p><a href="https://rekietalabs.com/code" target="_blank">Visit our GitHub</a></p>
-    </div>
-
-    <div class="section">
-        <h2>How much should that be?</h2>
-        <p><a href="https://rekietalabs.com/cost" target="_blank">Visit our Cost Calculator</a></p>
-    </div>
-
-    <div class="section">
-        <h2>When are we selling next?</h2>
-        <p>We will be selling next month in August, so be ready.</p>
     </div>
 
     <div class="footer">
@@ -164,15 +144,15 @@
                 imageUrls: ["Tree1.jpeg", "Tree2.jpeg"]
             },
             "Dragons": {
-                description: "These are small dragon figurines available in different colors. They usually cost around $12-15 each.",
+                description: "This 3D print features multiple styles, including Chinese dragons and more. The price is usually around $5-25+ depending on the size.",
                 imageUrls: ["Dragon1.jpeg", "Dragon2.jpeg"]
             },
             "Dragon eggs": {
-                description: "These dragon eggs are designed to look like they came straight out of a fantasy novel. Prices vary depending on size but generally range from $8-12.",
+                description: "This 3D print includes different types of dragon eggs. Prices range from $5-25. We also offer mystery eggs for $10+ which include both the dragon and the egg.",
                 imageUrls: ["Egg1.jpg", "Egg2.jpg"]
             },
             "Signs": {
-                description: "Customizable signs for various purposes. Prices depend on size and complexity, usually ranging from $10-20.",
+                description: "These 3D prints are signs that you can hang up or place anywhere. Prices range from $8-25 depending on the size and type of sign.",
                 imageUrls: ["Sign1.jpg", "Sign2.jpg", "Sign3.jpg"]
             },
             "Rocket launcher": {
@@ -181,18 +161,18 @@
             }
         };
 
-        document.getElementById('printSelect').addEventListener('change', function() {
-            const selectedPrint = this.value;
-            const details = prints[selectedPrint];
-            const printDetailsDiv = document.getElementById('printDetails');
+        const printSelect = document.getElementById('printSelect');
+        const printDetails = document.getElementById('printDetails');
 
-            if (details) {
-                printDetailsDiv.innerHTML = `
-                    <p>${details.description}</p>
-                    ${details.imageUrls.map(url => `<img src="${url}" alt="${selectedPrint}" style="width:200px;height:auto;margin:10px;">`).join('')}
-                `;
-            } else {
-                printDetailsDiv.innerHTML = '';
+        printSelect.addEventListener('change', function() {
+            const selectedPrint = this.value;
+            const print = prints[selectedPrint];
+
+            if (print) {
+                printDetails.innerHTML = print.imageUrls ?
+                    print.imageUrls.map(imageUrl => `<img src="${imageUrl}" alt="${selectedPrint}">`).join('') +
+                    `<p>${print.description}</p>` :
+                    `<img src="${print.imageUrl}" alt="${selectedPrint}"><p>${print.description}</p>`;
             }
         });
     </script>
