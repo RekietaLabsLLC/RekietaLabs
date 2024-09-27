@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nothing Here!</title>
+    <title>Welcome to RekietaLabs</title>
     <link rel="icon" type="image/jpeg" href="Summer.jpg">
     <style>
         /* General styles */
@@ -14,174 +13,279 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            text-align: center;
-            min-height: 100vh;
             display: flex;
-            flex-direction: column;
         }
-
         .container {
-            margin-top: 50px;
             flex: 1;
+            margin-top: 50px;
         }
-
         .section {
-            padding: 50px 20px;
+            padding: 30px 20px;
             background-color: #1a1a1a;
             margin: 20px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-            opacity: 0;
-            transform: translateY(50px);
-            transition: opacity 1s ease-out, transform 1s ease-out;
+            display: none; /* Hidden by default */
         }
-
-        .visible {
-            opacity: 1;
-            transform: translateY(0);
+        .section#about { 
+            display: block; /* Show only "About Us" by default */
         }
-
-        h1,
         h2 {
-            color: white;
+            margin-top: 0;
         }
 
-        a {
-            color: #4CAF50;
-            text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-
-        .footer {
-            background-color: #333;
-            color: white;
-            font-size: 14px;
+        /* Banner styles */
+        .banner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background-color: #ffcc00;
+            color: black;
             padding: 10px;
+            text-align: center;
+            display: none; /* Hidden by default */
+            z-index: 2000; /* Higher than other elements */
         }
 
-        .footer p {
-            margin: 5px 0;
+        /* Sidebar styles */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -250px; /* Hidden by default */
+            width: 250px;
+            height: 100%;
+            background-color: #2b2b2b;
+            padding-top: 30px;
+            transition: left 0.3s;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        .sidebar a {
+            padding: 12px 20px;
+            font-size: 18px;
+            text-decoration: none;
+            color: white;
+            display: block;
+            transition: background 0.3s, padding 0.2s;
+        }
+        .sidebar a:hover {
+            background-color: #575757;
+            padding-left: 30px;
         }
 
-        .footer img {
-            width: 32px;
-            height: 32px;
-            margin-top: 10px;
+        /* Hamburger menu styles */
+        .hamburger {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 30px;
+            height: 24px;
+            z-index: 1001; /* Always on top */
+        }
+        .hamburger div {
+            width: 30px;
+            height: 4px;
+            background-color: white;
         }
 
-        /* Media queries for responsiveness */
-        @media (max-width: 768px) {
-            .section {
-                padding: 30px 10px;
-            }
+        /* Content margin changes when sidebar is open */
+        .content {
+            margin-left: 0;
+            padding: 20px;
+            flex: 1;
+            transition: margin-left 0.3s;
         }
 
-        @media (max-width: 480px) {
-            .section {
-                padding: 20px 5px;
-            }
+        /* Open sidebar */
+        .open-sidebar .sidebar {
+            left: 0;
+        }
+        .open-sidebar .content {
+            margin-left: 250px;
+        }
 
-            .footer {
-                font-size: 12px;
-            }
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Section styling for better layout */
+        .section {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start; /* Align items to the left */
+        }
+
+        /* Styling for links inside sections */
+        .section a {
+            color: #4caf50; /* A nice green color for links */
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .section a:hover {
+            color: #81c784; /* Lighter green on hover */
+        }
+
+        /* Print details styling */
+        #printDetails {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
         }
     </style>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const sections = document.querySelectorAll('.section');
-            const observer = new IntersectionObserver(entries => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                    }
-                });
-            }, { threshold: 0.1 });
-
-            sections.forEach(section => {
-                observer.observe(section);
-            });
-        });
-    </script>
 </head>
-
 <body>
-    <div class="container">
-        <h1>Changes</h1>
+    <!-- Banner -->
+    <div class="banner" id="banner">
+        <p>Do you like the new site? 
+            <a href="https://forms.gle/w6XY9dAcYRtZVcAt6" target="_blank" style="color: blue; text-decoration: underline;">Yes</a> | 
+            <a href="https://forms.gle/w6XY9dAcYRtZVcAt6" target="_blank" style="color: blue; text-decoration: underline;">No</a>
+        </p>
     </div>
 
-    <div class="section">
-        <h2>Under Going Chnages</h2>
-        <p>Hey you Yeah you this site is under going a major chnage so the site will be down for about a week. Nothing on the site will be available please look out for a email about this down (The email willl only come if you are on the emailing list.) .</p>
+    <!-- Hamburger Menu Button -->
+    <div class="hamburger" id="hamburger">
+        <div></div>
+        <div></div>
+        <div></div>
     </div>
 
-    <div class="section">
-       
-        
+    <!-- Sidebar Menu -->
+    <div class="sidebar" id="sidebar">
+        <a href="#about" onclick="showSection('about')">About Us</a>
+        <a href="#newsletter" onclick="showSection('newsletter')">Newsletter</a>
+        <a href="#upload" onclick="showSection('upload')">Upload Your Own 3D Print</a>
+        <a href="#contact" onclick="showSection('contact')">Contact Us</a>
+        <a href="#calendar" onclick="showSection('calendar')">Calendar</a>
+        <a href="#privacy" onclick="showSection('privacy')">Privacy Policy</a>
+        <a href="#help" onclick="showSection('help')">Need Help?</a>
+        <a href="#github" onclick="showSection('github')">GitHub</a>
+        <a href="#prints" onclick="showSection('prints')">3D Print Models</a>
     </div>
 
-   
-    </div>
+    <!-- Main Content -->
+    <div class="content">
+        <div class="container">
+            <h1>Welcome to RekietaLabs</h1>
+        </div>
 
-    <div class="section">
-       
-    </div>
+        <div class="section" id="about">
+            <h2>About Us</h2>
+            <p>Welcome to RekietaLabs, your number one source for all things 3D printing. We're dedicated to giving you the very best of 3D prints, with a focus on dependability, customer service, and uniqueness.</p>
+        </div>
 
-    <div class="section">
-        
-    </div>
+        <div class="section" id="newsletter">
+            <h2>Newsletter</h2>
+            <p>Please click the link below to subscribe or unsubscribe to the RekietaLabs weekly newsletter.</p>
+            <p><a href="https://docs.google.com/forms/d/e/1FAIpQLScQuY_o-6fpBCZm-J9bG0RwivVFTCyMe54bY7FvZ46mt6Namg/viewform?usp=sf_link" target="_blank">Subscribe to Newsletter</a></p>
+        </div>
 
-    <div class="section">
-        
-    </div>
+        <div class="section" id="upload">
+            <h2>Upload Your Own 3D Print</h2>
+            <p><a href="https://forms.gle/xQu5B7ZSaJEDbiEK6" target="_blank">Upload Form</a></p>
+        </div>
 
-    <div class="section">
-       </iframe>
-    </div>
+        <div class="section" id="contact">
+            <h2>Contact Us</h2>
+            <p><a href="https://rekietalabs.com/contact" target="_blank">Visit our Contact Page</a></p>
+        </div>
 
-    <div class="section">
-       
-    </div>
+        <div class="section" id="calendar">
+            <h2>Calendar 2024</h2>
+            <iframe src="https://docs.google.com/presentation/d/1veoqjx1h5ATwA8lUEU1HC54mQGFPLcmy5wcabt0OXnI/embed?start=false&loop=false&delayms=3000" width="100%" height="480" frameborder="0"></iframe>
+        </div>
 
-    <div class="section">
-        
-        <div id="printDetails" class="prints-gallery">
-            <!-- Images and descriptions will be populated dynamically -->
+        <div class="section" id="privacy">
+            <h2>Privacy Policy</h2>
+            <p><a href="https://rekietalabs.com/privacy" target="_blank">Privacy Policy</a></p>
+        </div>
+
+        <div class="section" id="help">
+            <h2>Need Help?</h2>
+            <p>This will take you to a site where you can support issues.</p>
+            <p><a href="https://rekietalabs.com/support" target="_blank">Support Page</a></p>
+        </div>
+
+        <div class="section" id="github">
+            <h2>GitHub</h2>
+            <p><a href="https://rekietalabs.com/code" target="_blank">Visit our GitHub</a></p>
+        </div>
+
+        <div class="section" id="prints">
+            <h2>3D Print Models</h2>
+            <select id="printSelect">
+                <option value="Please select from below">Please select from below ↓</option>
+                <option value="Ammo themed container">Ammo themed container</option>
+                <option value="Corkscrew shaped tree">Corkscrew shaped tree</option>
+                <option value="Dragons">Dragons</option>
+                <option value="Dragon eggs">Dragon eggs</option>
+                <option value="Signs">Signs</option>
+                <option value="Rocket launcher">Rocket launcher</option>
+            </select>
+            <div id="printDetails"></div>
         </div>
     </div>
 
-    <div class="footer">
-        <p>&#8482; RekietaLabs</p>
-        <p>&#169; RekietaLabs</p>
-        <img src="Summer.jpg" alt="RekietaLabs Logo">
-    </div>
-
     <script>
+        // Sidebar toggle
+        const hamburger = document.getElementById('hamburger');
+        const sidebar = document.getElementById('sidebar');
+        const body = document.body;
+
+        hamburger.addEventListener('click', () => {
+            body.classList.toggle('open-sidebar');
+        });
+
+        // Section display function
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => {
+                section.style.display = 'none'; // Hide all sections
+            });
+            document.getElementById(sectionId).style.display = 'flex'; // Show selected section
+        }
+
+        // Show banner for 10 seconds on load
+        window.onload = function() {
+            const banner = document.getElementById('banner');
+            banner.style.display = 'block';
+            setTimeout(() => {
+                banner.style.display = 'none';
+            }, 10000); // Hide after 10 seconds
+        };
+
+        // Print models data
         const prints = {
             "Ammo themed container": {
-                description: "This 3D print is a container that looks like an ammo container. The price of this product is usually around $5-10 depending on the size.",
-                imageUrls: ["image0.jpeg", "image1.jpeg"]
+                description: "This 3D print is a container themed around ammo. The price is $15.",
+                imageUrls: ["ammo_container1.jpg", "ammo_container2.jpg"]
             },
             "Corkscrew shaped tree": {
-                description: "This 3D print is multi-colored and can be customized to your favorite color. The price is usually around $7-8 depending on the size. We have them available most times unless we have low supplies. Check out our other prints too!",
-                imageUrls: ["Tree1.jpeg", "Tree2.jpeg"]
+                description: "This 3D print is a unique corkscrew-shaped tree. The price is $20.",
+                imageUrls: ["corkscrew_tree1.jpg", "corkscrew_tree2.jpg"]
             },
             "Dragons": {
-                description: "This 3D print features multiple styles, including Chinese dragons and more. The price is usually around $5-25+ depending on the size.",
-                imageUrls: ["Dragon1.jpeg", "Dragon2.jpeg"]
+                description: "This 3D print is a beautifully detailed dragon. The price is $25.",
+                imageUrls: ["dragon1.jpg", "dragon2.jpg"]
             },
             "Dragon eggs": {
-                description: "This 3D print includes different types of dragon eggs. Prices range from $5-25. We also offer mystery eggs for $10+ which include both the dragon and the egg.",
-                imageUrls: ["Egg1.jpg", "Egg2.jpg"]
+                description: "This 3D print is a toy dragon egg that hatches to reveal a baby dragon inside. It's customizable and the price is $15.",
+                imageUrls: ["DragonEgg1.jpeg", "DragonEgg2.jpeg"]
             },
             "Signs": {
-                description: "These 3D prints are signs that you can hang up or place anywhere. Prices range from $8-25 depending on the size and type of sign.",
-                imageUrls: ["Sign1.jpg", "Sign2.jpg", "Sign3.jpg"]
+                description: "This 3D print is a customizable sign. You can add text or images. The price varies between $10-12.",
+                imageUrls: ["Sign1.jpeg", "Sign2.jpeg"]
             },
             "Rocket launcher": {
-                description: "This 3D print is a fun little toy for all ages. Make sure to only use it outside as it could break something indoors. The price is $10.",
+                description: "This 3D print is a fun little toy for all ages. Make sure to only use it outside, as it could break something inside. The price is $10.",
                 imageUrls: ["IMG_1639.jpeg", "IMG_1637.jpeg"]
             }
         };
@@ -189,18 +293,17 @@
         const printSelect = document.getElementById('printSelect');
         const printDetails = document.getElementById('printDetails');
 
-        printSelect.addEventListener('change', function () {
+        printSelect.addEventListener('change', function() {
             const selectedPrint = this.value;
             const print = prints[selectedPrint];
 
             if (print) {
-                printDetails.innerHTML = print.imageUrls ?
-                    print.imageUrls.map(imageUrl => `<img src="${imageUrl}" alt="${selectedPrint}">`).join('') +
-                    `<p>${print.description}</p>` :
-                    `<img src="${print.imageUrl}" alt="${selectedPrint}"><p>${print.description}</p>`;
+                printDetails.innerHTML = print.imageUrls.map(imageUrl => `<img src="${imageUrl}" alt="${selectedPrint}" style="max-width: 100%; height: auto;">`).join('') +
+                    `<p>${print.description}</p>`;
+            } else {
+                printDetails.innerHTML = ''; // Clear details if no selection
             }
         });
     </script>
 </body>
-
 </html>
