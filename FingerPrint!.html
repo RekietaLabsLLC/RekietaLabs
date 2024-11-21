@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RekietaLabs Fingerprint Submission</title>
+    <link rel="icon" href="Summer.jpg">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            color: #333;
+        }
+        header {
+            background-color: #0078D7;
+            color: white;
+            padding: 20px;
+        }
+        header h1 {
+            margin: 0;
+        }
+        .notes {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+        form {
+            max-width: 600px;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin: 15px 0 5px;
+            font-weight: bold;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #0078D7;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #005bb5;
+        }
+        canvas {
+            display: block;
+            margin: 20px auto;
+            border: 1px solid #ccc;
+            background-color: white;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>RekietaLabs Fingerprint Submission</h1>
+    </header>
+    
+    <div class="notes">
+        <h2>Fingerprint Prices</h2>
+        <ul>
+            <li>1 Finger: $0.05</li>
+            <li>2 Fingers: $0.10</li>
+            <li>3 Fingers: $0.15</li>
+            <li>4 Fingers: $0.20</li>
+            <li>5 Fingers: $0.25</li>
+            <li>1 Hand: $0.26</li>
+            <li>Both Hands: $0.52</li>
+        </ul>
+        <p>+ Tax on all items</p>
+        <p>*Prices are for taking your fingerprint home.*</p>
+        <p>*It is free to get your fingerprint & have it stored in our book.*</p>
+        <p>*Your signature will always be on file for security reasons.*</p>
+    </div>
+
+    <form action="https://formspree.io/f/myzypnvv" method="POST">
+        <h2>Submit Your Fingerprint</h2>
+        <label for="first-name">First Name</label>
+        <input type="text" id="first-name" name="first-name" required>
+        
+        <label for="last-name">Last Name</label>
+        <input type="text" id="last-name" name="last-name" required>
+        
+        <label for="fingerprint-option">Select Fingerprint Option</label>
+        <select id="fingerprint-option" name="fingerprint-option" required>
+            <option value="1 Finger - $0.05">1 Finger - $0.05</option>
+            <option value="2 Fingers - $0.10">2 Fingers - $0.10</option>
+            <option value="3 Fingers - $0.15">3 Fingers - $0.15</option>
+            <option value="4 Fingers - $0.20">4 Fingers - $0.20</option>
+            <option value="5 Fingers - $0.25">5 Fingers - $0.25</option>
+            <option value="1 Hand - $0.26">1 Hand - $0.26</option>
+            <option value="Both Hands - $0.52">Both Hands - $0.52</option>
+        </select>
+
+        <label for="signature">Draw Your Signature Below</label>
+        <canvas id="signatureCanvas" width="400" height="200"></canvas>
+        <input type="hidden" name="signature" id="signatureData">
+        <button type="button" onclick="clearCanvas()">Clear Signature</button>
+        
+        <button type="submit">Submit</button>
+    </form>
+
+    <script>
+        const canvas = document.getElementById('signatureCanvas');
+        const ctx = canvas.getContext('2d');
+        let drawing = false;
+
+        canvas.addEventListener('mousedown', () => drawing = true);
+        canvas.addEventListener('mouseup', () => drawing = false);
+        canvas.addEventListener('mousemove', draw);
+
+        function draw(event) {
+            if (!drawing) return;
+            ctx.lineWidth = 2;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = 'black';
+            ctx.lineTo(event.offsetX, event.offsetY);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(event.offsetX, event.offsetY);
+        }
+
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        document.querySelector('form').addEventListener('submit', function() {
+            const dataURL = canvas.toDataURL(); // Convert canvas drawing to image
+            document.getElementById('signatureData').value = dataURL; // Store as hidden input
+        });
+    </script>
+</body>
+</html>
