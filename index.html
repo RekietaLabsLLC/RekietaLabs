@@ -187,10 +187,57 @@
             <p><a href="https://rekietalabs.com/404" target="_blank">Upload Form</a></p> <p><a href="https://rekietalabs.com/404" target="_blank">Request 3D Print</a></p>
         </div>
 
-        <div class="section" id="contact">
-            <h2>Contact Us</h2>
-            <p><a href="https://forms.gle/kAigxvGNZ1ZhXSUa7" target="_blank">Contact us Form!</a></p>
-        </div>
+        <!-- Contact Form -->
+<form class="contact-form" action="https://formspree.io/f/manybpzl" method="POST" style="max-width: 600px; margin: 0 auto; padding: 20px; background: #333; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+    <label for="name" style="display: block; margin-bottom: 8px;">Contact us!                 First put in Your First & Last Name.  </label>
+    <input type="text" name="name" id="name" placeholder="First & Last Name" required style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px;">
+
+    <label for="email" style="display: block; margin-bottom: 8px;">Email</label>
+    <input type="email" name="email" id="email" placeholder="Email" required style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px;">
+
+    <label for="phone" style="display: block; margin-bottom: 8px;">Phone Number (Optional)</label>
+    <input type="tel" name="phone" id="phone" placeholder="Phone Number (Optional)" style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px;">
+
+    <label for="contactReason" style="display: block; margin-bottom: 8px;">Reason for Contact</label>
+    <select name="contactReason" id="contactReason" required style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px;" onchange="toggleOtherField(this)">
+        <option value="">Reason for Contact</option>
+        <option value="Support">Support</option>
+        <option value="Inquiry">General Inquiry</option>
+        <option value="Feedback">Feedback</option>
+        <option value="Partnership Request">Partnership Request</option>
+        <option value="Other">Other</option>
+    </select>
+
+    <div id="otherTopic" style="display: none; margin-bottom: 15px;">
+        <label for="otherTopicInput" style="display: block; margin-bottom: 8px;">Please specify the topic</label>
+        <input type="text" name="otherTopic" id="otherTopicInput" placeholder="Specify your topic" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+    </div>
+
+    <label for="urgency" style="display: block; margin-bottom: 8px;">How urgent is this issue?</label>
+    <select name="urgency" id="urgency" required style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px;">
+        <option value="">Please select</option>
+        <option value="High">High</option>
+        <option value="Medium">Medium</option>
+        <option value="Low">Low</option>
+    </select>
+
+    <label for="message" style="display: block; margin-bottom: 8px;">Your Message</label>
+    <textarea name="message" id="message" rows="5" placeholder="Your Message" required style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px;"></textarea>
+
+    <button type="submit" style="width: 100%; padding: 12px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; transition: background-color 0.3s;">Submit</button>
+</form>
+
+<script>
+    function toggleOtherField(select) {
+        const otherTopic = document.getElementById('otherTopic');
+        if (select.value === 'Other') {
+            otherTopic.style.display = 'block';
+        } else {
+            otherTopic.style.display = 'none';
+        }
+    }
+</script>
+
 
         <div class="section" id="calendar">
             <h2>Calendar 2024</h2>
@@ -202,10 +249,7 @@
             <p><a href="https://rekietalabs.com/privacy" target="_blank">Privacy Policy</a></p>
         </div>
 
-        <div class="section" id="help">
-            <h2>Need Help?</h2>
-            <p><a href="https://forms.gle/jkqp9KJ3dSfVHm6v9" target="_blank">Support Form</a></p>
-        </div>
+    
 
         <div class="section" id="github">
             <h2>GitHub</h2>
