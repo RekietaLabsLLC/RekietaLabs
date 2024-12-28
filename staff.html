@@ -87,31 +87,30 @@
         const loginForm = document.getElementById('loginForm');
         const errorDiv = document.getElementById('error');
 
-        // Check if the user is already logged in
-        (async () => {
-            try {
-                await appwrite.account.get();
-                window.location.href = '/staff-dashboard.html'; // Redirect if already logged in
-            } catch (error) {
-                console.log('No active session:', error.message);
-            }
-        })();
-
         loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault(); // Prevent the form from refreshing the page
+            e.preventDefault(); // Prevent the form's default behavior
 
-            const email = document.getElementById('email').value;
+            const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
 
             try {
+                // Clear previous errors
+                errorDiv.textContent = '';
+
                 // Call Appwrite's login method
                 await appwrite.account.createSession(email, password);
 
                 // Redirect to a staff dashboard after successful login
-                window.location.href = '/staff-dashboard.html'; // Replace with the dashboard URL
+                window.location.href = '/staff-dashboard.html'; // Replace with your dashboard URL
             } catch (error) {
                 console.error(error); // Log the error for debugging
-                errorDiv.textContent = error.response ? error.response.message : "An unknown error occurred."; // Show error message to the user
+
+                // Display a user-friendly error message
+                if (error.response && error.response.message) {
+                    errorDiv.textContent = error.response.message;
+                } else {
+                    errorDiv.textContent = "An unexpected error occurred. Please try again.";
+                }
             }
         });
     </script>
