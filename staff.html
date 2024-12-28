@@ -6,30 +6,90 @@
     <title>Staff Login - RekietaLabs</title>
     <script src="https://cdn.jsdelivr.net/npm/appwrite"></script>
     <style>
-        /* Styles omitted for brevity */
+        body {
+            background-color: #2b2b2b; /* Darker gray for background */
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-container {
+            background-color: #333;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        .google-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #666; /* Gray for the button */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 10px 20px;
+            width: 100%;
+            max-width: 300px;
+            text-align: center;
+        }
+        .google-button img {
+            height: 20px;
+            width: 20px;
+            margin-right: 10px;
+        }
+        .google-button:hover {
+            background-color: #555; /* Darker gray for hover */
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
     <div class="login-container">
         <h1>Staff Login</h1>
-        <button id="googleLogin">Sign in with Google</button>
+        <button id="googleSignIn" class="google-button">
+            <img src="Google-Symbol.png" alt="Google Logo">
+            <span>Sign in with Google</span>
+        </button>
         <div id="error" class="error"></div>
     </div>
     <script>
-        // Initialize Appwrite
         const appwrite = new Appwrite();
-        appwrite
-            .setEndpoint('https://cloud.appwrite.io/v1') // Your Appwrite endpoint
-            .setProject('staffportal'); // Your Appwrite Project ID
 
-        // Google Login Handler
-        document.getElementById('googleLogin').addEventListener('click', async () => {
+        // Appwrite configuration
+        const APPWRITE_PROJECT_ID = 'staffportal'; // Replace with your project ID
+        const APPWRITE_ENDPOINT = 'https://cloud.appwrite.io/v1'; // Appwrite endpoint
+
+        appwrite.setEndpoint(APPWRITE_ENDPOINT).setProject(APPWRITE_PROJECT_ID);
+
+        // Google Sign-In button handler
+        const googleSignInButton = document.getElementById('googleSignIn');
+        const errorDiv = document.getElementById('error');
+
+        googleSignInButton.addEventListener('click', async () => {
             try {
-                // Redirect to Google OAuth
-                const googleAuthURL = await appwrite.account.createOAuth2Session('google', 'https://rekietalabs.com', window.location.href);
-                window.location.href = googleAuthURL;
+                // Start Google OAuth process
+                appwrite.account.createOAuth2Session(
+                    'google', 
+                    'https://rekietalabs.com/dashboard', // Success redirect URL
+                    'https://rekietalabs.com/login'    // Failure redirect URL
+                );
             } catch (error) {
-                document.getElementById('error').textContent = error.message;
+                console.error('Google Sign-In failed:', error);
+                errorDiv.textContent = error.message || 'Google Sign-In failed. Please try again.';
             }
         });
     </script>
