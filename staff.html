@@ -82,19 +82,24 @@
         const errorDiv = document.getElementById('error');
 
         loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
+            e.preventDefault(); // Prevent the form from refreshing the page
+            errorDiv.textContent = ''; // Clear previous error messages
 
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
+            console.log('Attempting login with:', email);
+
             try {
-                // Create a session for the user
-                await appwrite.account.createSession(email, password);
-                alert('Login successful!');
+                // Attempt to create a session
+                const session = await appwrite.account.createSession(email, password);
+                console.log('Session created successfully:', session);
+
                 // Redirect to the staff dashboard
+                alert('Login successful!');
                 window.location.href = '/dashboard.html';
             } catch (error) {
-                console.error('Login error:', error);
+                console.error('Login error:', error); // Log detailed error to the console
                 errorDiv.textContent = error.message || 'Login failed. Please try again.';
             }
         });
