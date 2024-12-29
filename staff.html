@@ -69,28 +69,28 @@
   </div>
 
   <script>
-    // Initialize Supabase client at the global scope
+    // Initialize Supabase client globally
     const SUPABASE_URL = 'https://ukwonuzabfejuymwhqop.supabase.co';
     const SUPABASE_ANON_KEY =
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVrd29udXphYmZlanV5bXdocW9wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzU1MDgyOTEsImV4cCI6MjA1MTA4NDI5MX0.WDp-HgUQXXVmproGQ115Cn-Gm7vxOG-hTP90r0IPp8U';
 
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    // The Supabase client is initialized globally
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // Handle GitHub login
+    // Attach an event listener once the DOM has loaded
     document.addEventListener('DOMContentLoaded', () => {
-      document.getElementById('githubLogin').addEventListener('click', async () => {
-        const errorDiv = document.getElementById('error');
+      const githubLoginButton = document.getElementById('githubLogin');
+      const errorDiv = document.getElementById('error');
 
+      githubLoginButton.addEventListener('click', async () => {
         try {
+          // Redirect user to GitHub authentication
           const { error } = await supabase.auth.signInWithOAuth({
             provider: 'github',
           });
 
           if (error) {
             errorDiv.textContent = error.message;
-          } else {
-            // Redirect user after successful login
-            window.location.href = '/staff-dashboard.html';
           }
         } catch (err) {
           errorDiv.textContent = 'An unexpected error occurred.';
