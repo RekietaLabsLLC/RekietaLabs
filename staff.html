@@ -7,7 +7,7 @@
     <script src="https://cdn.jsdelivr.net/npm/appwrite"></script>
     <style>
         body {
-            background-color: #2b2b2b; /* Darker gray for background */
+            background-color: #1c1c1c; /* Darker gray for the background */
             color: white;
             font-family: Arial, sans-serif;
             display: flex;
@@ -16,7 +16,7 @@
             height: 100vh;
             margin: 0;
         }
-        .login-container {
+        .container {
             background-color: #333;
             padding: 20px;
             border-radius: 10px;
@@ -25,72 +25,127 @@
             width: 100%;
             text-align: center;
         }
-        h1 {
+        h1, h2 {
             margin-bottom: 20px;
         }
-        .google-button {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #666; /* Gray for the button */
+        label {
+            display: block;
+            margin-bottom: 8px;
+            text-align: left;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #444; /* Gray for buttons */
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             font-size: 16px;
+        }
+        button:hover {
+            background-color: #555; /* Slightly darker gray on hover */
+        }
+        .github-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #444; /* Gray button background */
+            color: white;
+            border: none;
+            border-radius: 5px;
             padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
             width: 100%;
             max-width: 300px;
-            text-align: center;
+            transition: background-color 0.3s;
         }
-        .google-button img {
-            height: 20px;
-            width: 20px;
+        .github-button img {
             margin-right: 10px;
+            background-color: white; /* White background for logo */
+            border-radius: 3px;
+            padding: 5px;
+            width: 30px;
+            height: 30px;
         }
-        .google-button:hover {
-            background-color: #555; /* Darker gray for hover */
+        .github-button:hover {
+            background-color: #555; /* Darker gray on hover */
         }
         .error {
             color: red;
             margin-top: 10px;
         }
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <h1>Staff Login</h1>
-        <button id="googleSignIn" class="google-button">
-            <img src="Google-Symbol.png" alt="Google Logo">
-            <span>Sign in with Google</span>
-        </button>
-        <div id="error" class="error"></div>
+    <div id="pinContainer" class="container">
+        <h1>Staff Portal</h1>
+        <h2>Enter PIN</h2>
+        <label for="pinInput">PIN:</label>
+        <input type="password" id="pinInput" placeholder="Enter PIN" maxlength="4">
+        <button id="pinButton">Submit</button>
+        <div id="pinError" class="error"></div>
     </div>
+
+    <div id="loginContainer" class="container hidden">
+        <h1>Staff Login</h1>
+        <button id="githubButton" class="github-button">
+            <img src="GitHub.jpg" alt="GitHub Logo">
+            Login with GitHub
+        </button>
+        <div id="loginError" class="error"></div>
+    </div>
+
     <script>
+        // Initialize the Appwrite SDK
         const appwrite = new Appwrite();
+        appwrite
+            .setEndpoint('https://cloud.appwrite.io/v1') // Your Appwrite endpoint
+            .setProject('staffportal'); // Your Appwrite project ID
 
-        // Appwrite configuration
-        const APPWRITE_PROJECT_ID = 'staffportal'; // Replace with your project ID
-        const APPWRITE_ENDPOINT = 'https://cloud.appwrite.io/v1'; // Appwrite endpoint
+        const pinContainer = document.getElementById('pinContainer');
+        const loginContainer = document.getElementById('loginContainer');
+        const pinInput = document.getElementById('pinInput');
+        const pinButton = document.getElementById('pinButton');
+        const pinError = document.getElementById('pinError');
+        const githubButton = document.getElementById('githubButton');
+        const loginError = document.getElementById('loginError');
 
-        appwrite.setEndpoint(APPWRITE_ENDPOINT).setProject(APPWRITE_PROJECT_ID);
-
-        // Google Sign-In button handler
-        const googleSignInButton = document.getElementById('googleSignIn');
-        const errorDiv = document.getElementById('error');
-
-        googleSignInButton.addEventListener('click', async () => {
-            try {
-                // Start Google OAuth process
-                appwrite.account.createOAuth2Session(
-                    'google', 
-                    'https://rekietalabs.com/dashboard', // Success redirect URL
-                    'https://rekietalabs.com/login'    // Failure redirect URL
-                );
-            } catch (error) {
-                console.error('Google Sign-In failed:', error);
-                errorDiv.textContent = error.message || 'Google Sign-In failed. Please try again.';
+        // Handle PIN submission
+        pinButton.addEventListener('click', () => {
+            const pin = pinInput.value;
+            if (pin === '7423') {
+                pinContainer.classList.add('hidden');
+                loginContainer.classList.remove('hidden');
+            } else {
+                pinError.textContent = 'Incorrect PIN. Please try again.';
+                pinInput.value = '';
             }
+        });
+
+        // Handle GitHub login
+        githubButton.addEventListener('click', () => {
+            appwrite.account.createOAuth2Session('github')
+                .then(() => {
+                    console.log('Login successful!');
+                    // Redirect or show success page
+                    window.location.href = '/staff-dashboard.html'; // Adjust as needed
+                })
+                .catch((error) => {
+                    console.error('Login failed:', error);
+                    loginError.textContent = 'Login failed. Please try again.';
+                });
         });
     </script>
 </body>
