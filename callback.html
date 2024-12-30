@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirecting...</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <style>
+        body {
+            background-color: #1a1a1a;
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Redirecting...</h1>
+
+    <script>
+        // Initialize Supabase
+        const supabase = supabase.createClient(
+            'https://ukwonuzabfejuymwhqop.supabase.co', // Supabase URL
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...' // Supabase Public API Key
+        );
+
+        // Validate session and redirect
+        (async () => {
+            const { data, error } = await supabase.auth.getSession();
+
+            if (error) {
+                console.error('Authentication error:', error.message);
+                document.body.innerHTML = '<h1>Authentication failed. Please try again.</h1>';
+                return;
+            }
+
+            if (data.session) {
+                // Redirect to the dashboard
+                window.location.href = '/dashboard.html';
+            } else {
+                document.body.innerHTML = '<h1>Session not found. Please log in again.</h1>';
+            }
+        })();
+    </script>
+</body>
+</html>
