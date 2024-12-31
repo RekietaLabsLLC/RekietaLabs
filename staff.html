@@ -84,16 +84,30 @@
 
       githubLoginButton.addEventListener('click', async () => {
         try {
-          // Redirect user to GitHub authentication
-          const { error } = await supabase.auth.signInWithOAuth({
-            provider: 'github',
+          // Call the edge function
+          const response = await fetch('https://ukwonuzabfejuymwhqop.supabase.co/functions/v1/proxy-github', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + SUPABASE_ANON_KEY
+            },
+            body: JSON.stringify({})
           });
 
-          if (error) {
-            errorDiv.textContent = error.message;
+          if (!response.ok) {
+            throw new Error('Failed to communicate with the server.');
+          }
+
+          const data = await response.json();
+
+          // Redirect to dashboard based on UID
+          if (data.uid) {
+            window.location.href = `/dashboard/${data.uid}`;
+          } else {
+            errorDiv.textContent = 'Error: Invalid response from server.';
           }
         } catch (err) {
-          errorDiv.textContent = 'An unexpected error occurred.';
+          errorDiv.textContent = err.message;
           console.error(err);
         }
       });
