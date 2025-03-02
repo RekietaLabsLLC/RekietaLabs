@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Receipt - RekietaLabs</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+        .receipt-container {
+            border: 2px solid black;
+            padding: 20px;
+            display: inline-block;
+            text-align: left;
+            max-width: 400px;
+        }
+    </style>
+</head>
+<body>
+    <h1>RekietaLabs Receipt</h1>
+    <div class="receipt-container">
+        <p><strong>Order Number:</strong> <span id="order-number"></span></p>
+        <p><strong>Total:</strong> $<span id="total-amount">0.00</span></p>
+        <p><strong>Payment Type:</strong> <span id="payment-type">Unknown</span></p>
+        <p><strong>Cashier:</strong> <span id="cashier-name">Unknown</span></p>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        document.getElementById("order-number").textContent = urlParams.get("ordernumber") || "Unknown";
+        document.getElementById("total-amount").textContent = urlParams.get("total") || "0.00";
+        document.getElementById("payment-type").textContent = urlParams.get("payment") || "Unknown";
+        document.getElementById("cashier-name").textContent = urlParams.get("cashier") || "Unknown";
+    </script>
+</body>
+</html>
