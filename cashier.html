@@ -26,17 +26,24 @@
     </div>
 
     <script>
+        // Initialize Appwrite client
         const client = new Appwrite.Client()
             .setEndpoint('https://cloud.appwrite.io/v1') // Example: 'https://cloud.appwrite.io/v1'
             .setProject('rekietalabspos'); // Example: '654321abc'
 
+        // Define database and collection IDs
+        const dbId = 'rlpossystem'; 
+        const collectionId = 'rlcashierpins';
+
+        // Create database object
         const databases = new Appwrite.Databases(client);
 
+        // Login function
         async function login() {
             const pin = document.getElementById('pinInput').value;
             try {
-                // Search for the cashier with the entered PIN
-                const response = await databases.listDocuments('pos_system', 'cashier_pins', [
+                // Search for cashier with entered PIN
+                const response = await databases.listDocuments(dbId, collectionId, [
                     Appwrite.Query.equal('pin', pin)
                 ]);
 
@@ -50,7 +57,7 @@
                 }
             } catch (error) {
                 console.error('Error:', error);
-                alert('Login failed. Check the console for details.');
+                alert('Login failed. Check console for details.');
             }
         }
     </script>
