@@ -3,198 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RekietaLabs Cashier</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <title>RekietaLabs POS</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
             background-color: #222;
             color: white;
-            text-align: center;
-            margin: 0;
-            padding: 0;
-        }
-        /* PIN Login Screen */
-        #pin-screen {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            flex-direction: column;
-        }
-        #pin-input {
-            padding: 10px;
-            font-size: 18px;
-            width: 200px;
-            text-align: center;
-            border-radius: 5px;
-            border: none;
-            margin-bottom: 10px;
-        }
-        .btn {
-            background-color: #be9f13;
-            border: none;
-            padding: 10px;
-            width: 210px;
-            font-size: 16px;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-        /* Hide Cashier UI */
-        #cashier-ui {
-            display: none;
-            padding: 20px;
+            font-family: Arial, sans-serif;
         }
         .container {
             display: flex;
-            justify-content: space-between;
-            padding: 20px;
         }
         .left-panel {
-            width: 50%;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
+            width: 60%;
+            padding: 20px;
         }
         .right-panel {
             width: 40%;
-            text-align: left;
+            padding: 20px;
+            background-color: #333;
         }
-        .item-button {
-            width: 100px;
-            height: 100px;
-            border-radius: 10px;
+        button {
             background-color: #be9f13;
+            color: white;
             border: none;
-            font-size: 16px;
+            padding: 15px;
+            margin: 5px;
             cursor: pointer;
+            border-radius: 5px;
         }
-        .summary {
-            background: #333;
+        select {
             padding: 10px;
-            border-radius: 10px;
-        }
-        #qr-code-container {
-            margin-top: 10px;
-            text-align: center;
-        }
-        #qr-code {
-            width: 100px;
-            height: 100px;
-            display: none;
+            margin-bottom: 10px;
         }
     </style>
 </head>
 <body>
 
-    <!-- PIN Entry Screen -->
-    <div id="pin-screen">
-        <h2>Enter Store PIN</h2>
-        <input type="password" id="pin-input" placeholder="Enter PIN">
-        <button class="btn" onclick="checkPin()">Login</button>
-    </div>
+    <h1>RekietaLabs POS</h1>
 
-    <!-- Cashier UI (Hidden Until PIN is Entered) -->
-    <div id="cashier-ui">
-        <h1>RekietaLabs POS System</h1>
-        
-        <div class="container">
-            <!-- Left Panel: Item Buttons -->
-            <div class="left-panel">
-                <button class="item-button" onclick="addItem('Item 1', 5.00)">Item 1</button>
-                <button class="item-button" onclick="addItem('Item 2', 10.00)">Item 2</button>
-                <button class="item-button" onclick="addItem('Item 3', 7.50)">Item 3</button>
-                <button class="item-button" onclick="addItem('Item 4', 3.75)">Item 4</button>
-                <button class="item-button" onclick="addItem('Item 5', 12.00)">Item 5</button>
-            </div>
+    <label for="terminalSelect">Select Terminal:</label>
+    <select id="terminalSelect">
+        <option value="">-- Select --</option>
+        <option value="terminal1">Terminal 1</option>
+        <option value="terminal2">Terminal 2</option>
+        <option value="terminal3">Terminal 3</option>
+        <option value="terminal4">Terminal 4</option>
+        <option value="terminal5">Terminal 5</option>
+    </select>
 
-            <!-- Right Panel: Selected Items, Total, QR Code, Buttons -->
-            <div class="right-panel">
-                <h2>Selected Items</h2>
-                <div class="summary">
-                    <ul id="item-list"></ul>
-                    <p><strong>Total: $<span id="total-amount">0.00</span></strong></p>
-                    <label>Select Terminal:</label>
-                    <select id="terminal-select">
-                        <option value="terminal1.html">Terminal 1</option>
-                        <option value="terminal2.html">Terminal 2</option>
-                        <option value="terminal3.html">Terminal 3</option>
-                        <option value="terminal4.html">Terminal 4</option>
-                        <option value="terminal5.html">Terminal 5</option>
-                    </select>
-                </div>
-                <button class="btn" onclick="sendSale()">Send Sale</button>
-                <button class="btn" onclick="customAmount()">Custom Amount</button>
-                <div id="qr-code-container">
-                    <h3>Receipt QR Code</h3>
-                    <div id="qr-code"></div>
-                </div>
-            </div>
+    <button onclick="connectTerminal()">Connect to Terminal</button>
+
+    <div class="container">
+        <div class="left-panel">
+            <h3>Items</h3>
+            <button onclick="addItem('Item A', 10.99)">Item A - $10.99</button>
+            <button onclick="addItem('Item B', 5.49)">Item B - $5.49</button>
+            <button onclick="addItem('Item C', 7.99)">Item C - $7.99</button>
+        </div>
+
+        <div class="right-panel">
+            <h3>Order Summary</h3>
+            <ul id="orderList"></ul>
+            <h3>Total: $<span id="totalAmount">0.00</span></h3>
+
+            <button onclick="sendSale()">Send Sale</button>
         </div>
     </div>
 
     <script>
-        // Store PIN Logic
-        function checkPin() {
-            let enteredPin = document.getElementById("pin-input").value;
-            let validPins = { "2687": "Kellan Rekieta", "4646": "Justin Rekieta" };
+        let selectedTerminal = "";
 
-            if (validPins[enteredPin]) {
-                document.getElementById("pin-screen").style.display = "none";
-                document.getElementById("cashier-ui").style.display = "block";
+        function connectTerminal() {
+            selectedTerminal = document.getElementById("terminalSelect").value;
+            if (selectedTerminal) {
+                localStorage.setItem("selectedTerminal", selectedTerminal);
+                alert(`Connected to ${selectedTerminal}`);
             } else {
-                alert("Invalid PIN");
+                alert("Please select a terminal first.");
             }
         }
 
-        // Add Item to List
+        let order = [];
         let total = 0;
+
         function addItem(name, price) {
-            let itemList = document.getElementById("item-list");
-            let listItem = document.createElement("li");
-            listItem.textContent = `${name} - $${price.toFixed(2)}`;
-            listItem.classList.add("selected-item");
-            itemList.appendChild(listItem);
-            
+            order.push({ name, price });
             total += price;
-            document.getElementById("total-amount").textContent = total.toFixed(2);
+            updateOrderDisplay();
         }
 
-        // Custom Amount Entry
-        function customAmount() {
-            let amount = parseFloat(prompt("Enter custom amount:"));
-            if (!isNaN(amount) && amount > 0) {
-                addItem("Custom Amount", amount);
-            }
+        function updateOrderDisplay() {
+            let orderList = document.getElementById("orderList");
+            orderList.innerHTML = "";
+            order.forEach(item => {
+                let li = document.createElement("li");
+                li.textContent = `${item.name} - $${item.price.toFixed(2)}`;
+                orderList.appendChild(li);
+            });
+            document.getElementById("totalAmount").textContent = total.toFixed(2);
         }
 
-        // Generate QR Code for Receipt
         function sendSale() {
-            let items = [];
-            document.querySelectorAll(".selected-item").forEach(item => {
-                items.push(item.textContent);
-            });
+            if (!selectedTerminal) {
+                alert("Please connect to a terminal first.");
+                return;
+            }
 
-            let orderNumber = Math.floor(100000 + Math.random() * 900000);
-            let totalAmount = document.getElementById("total-amount").textContent || "0.00";
+            let saleData = {
+                order: order,
+                total: total.toFixed(2)
+            };
 
-            let encodedItems = encodeURIComponent(items.join(","));
-            let receiptURL = `https://rekietalabs.com/pos/receipt?ordernumber=${orderNumber}&total=${encodeURIComponent(totalAmount)}&items=${encodedItems}`;
+            localStorage.setItem("saleData", JSON.stringify(saleData));
+            alert("Sale sent to terminal!");
 
-            let qrCodeElement = document.getElementById("qr-code");
-            qrCodeElement.innerHTML = ""; // Clear previous QR code
-            qrCodeElement.style.display = "block"; // Show QR code container
-            
-            new QRCode(qrCodeElement, {
-                text: receiptURL,
-                width: 100,
-                height: 100
-            });
-
-            // Open terminal page
-            let selectedTerminal = document.getElementById("terminal-select").value;
-            window.open(selectedTerminal, "_blank");
+            // Reset order after sending
+            order = [];
+            total = 0;
+            updateOrderDisplay();
         }
     </script>
 
