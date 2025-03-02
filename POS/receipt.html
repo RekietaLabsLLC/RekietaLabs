@@ -3,100 +3,148 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RekietaLabs Receipt</title>
+    <title>Cashier POS</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f8f8f8;
-            color: #333;
             text-align: center;
-            padding: 20px;
-        }
-        .receipt-container {
-            max-width: 400px;
-            margin: auto;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            text-align: left;
-        }
-        h1 {
-            font-size: 22px;
-            margin-bottom: 5px;
-        }
-        .receipt-info {
-            font-size: 16px;
-            margin: 5px 0;
-        }
-        .items-list {
-            list-style-type: none;
+            background-color: #f4f4f4;
+            margin: 0;
             padding: 0;
         }
-        .items-list li {
-            padding: 5px 0;
-            border-bottom: 1px solid #ddd;
+        #pin-container {
+            display: block;
+            margin-top: 50px;
         }
-        .total {
+        #pin-input {
+            font-size: 20px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        #login-btn {
             font-size: 18px;
-            font-weight: bold;
-            margin-top: 10px;
+            padding: 10px 20px;
+            cursor: pointer;
         }
-        .disclaimer {
-            font-size: 12px;
-            color: gray;
+        #cashier-ui {
+            display: none;
+            margin-top: 30px;
+        }
+        .left-side {
+            float: left;
+            width: 50%;
+            padding: 20px;
+        }
+        .right-side {
+            float: right;
+            width: 50%;
+            padding: 20px;
+        }
+        .item-btn {
+            display: block;
+            width: 100px;
+            height: 100px;
+            margin: 10px auto;
+            font-size: 18px;
+            border-radius: 10px;
+            background-color: #be9f13;
+            color: white;
+            cursor: pointer;
+        }
+        #total-display {
+            font-size: 24px;
             margin-top: 20px;
-            text-align: center;
+        }
+        #terminal-select, #send-sale-btn {
+            font-size: 18px;
+            padding: 10px;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
 
-    <div class="receipt-container">
-        <h1>RekietaLabs Receipt</h1>
-        <p class="receipt-info"><strong>Order #:</strong> <span id="order-number"></span></p>
-        <p class="receipt-info"><strong>Cashier:</strong> <span id="cashier"></span></p>
-        <p class="receipt-info"><strong>Payment Type:</strong> <span id="payment-type"></span></p>
+    <!-- PIN Login -->
+    <div id="pin-container">
+        <input type="password" id="pin-input" placeholder="Enter PIN">
+        <button id="login-btn">Login</button>
+    </div>
 
-        <h2>Items Purchased</h2>
-        <ul class="items-list" id="items"></ul>
+    <!-- Cashier UI (Hidden until PIN is entered) -->
+    <div id="cashier-ui">
+        <div class="left-side">
+            <button class="item-btn" onclick="addItem('Item A', 5.00)">Item A - $5</button>
+            <button class="item-btn" onclick="addItem('Item B', 10.00)">Item B - $10</button>
+            <button class="item-btn" onclick="addItem('Item C', 7.50)">Item C - $7.50</button>
+        </div>
+        <div class="right-side">
+            <h3>Items:</h3>
+            <ul id="item-list"></ul>
+            <h2 id="total-display">Total: $0.00</h2>
 
-        <p class="total">Total: $<span id="total"></span></p>
+            <label for="terminal-select">Select Terminal:</label>
+            <select id="terminal-select">
+                <option value="1">Terminal 1</option>
+                <option value="2">Terminal 2</option>
+                <option value="3">Terminal 3</option>
+                <option value="4">Terminal 4</option>
+                <option value="5">Terminal 5</option>
+            </select>
 
-        <p class="disclaimer">
-            Disclaimer: These receipts are not always accurate.  
-            If you find any issues with it, feel free to reach out at:  
-            <strong>support@rekietalabs.com</strong>.
-        </p>
+            <button id="send-sale-btn">Send Sale</button>
+            <h3 id="transaction-status"></h3>
+        </div>
     </div>
 
     <script>
-        // Get URL Parameters
-        function getQueryParam(param) {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(param);
+        let totalAmount = 0;
+        let selectedTerminal = "1"; // Default terminal 1
+
+        // PIN login
+        document.getElementById("login-btn").addEventListener("click", function () {
+            let pin = document.getElementById("pin-input").value;
+            if (pin === "1234") { // Replace with real PIN checking
+                document.getElementById("pin-container").style.display = "none";
+                document.getElementById("cashier-ui").style.display = "block";
+            } else {
+                alert("Incorrect PIN");
+            }
+        });
+
+        // Add item function
+        function addItem(name, price) {
+            let listItem = document.createElement("li");
+            listItem.textContent = `${name} - $${price.toFixed(2)}`;
+            document.getElementById("item-list").appendChild(listItem);
+
+            totalAmount += price;
+            document.getElementById("total-display").textContent = `Total: $${totalAmount.toFixed(2)}`;
         }
 
-        // Populate Receipt Details
-        document.getElementById("order-number").textContent = getQueryParam("ordernumber") || "Unknown";
-        document.getElementById("cashier").textContent = getQueryParam("cashier") || "Unknown";
-        document.getElementById("payment-type").textContent = getQueryParam("payment") || "Unknown";
-        document.getElementById("total").textContent = getQueryParam("total") || "0.00";
+        // Update selected terminal
+        document.getElementById("terminal-select").addEventListener("change", function () {
+            selectedTerminal = this.value;
+        });
 
-        // Retrieve and Display Purchased Items
-        const itemsData = getQueryParam("items");
-        const itemsList = document.getElementById("items");
+        // Send sale to terminal
+        document.getElementById("send-sale-btn").addEventListener("click", function () {
+            let terminalWindow = window.open(`https://rekietalabs.com/Terminal${selectedTerminal}`, "_blank");
+            
+            setTimeout(() => {
+                terminalWindow.postMessage(`sale:${totalAmount.toFixed(2)}`, "*");
+            }, 1000);
+        });
 
-        if (itemsData) {
-            const itemsArray = decodeURIComponent(itemsData).split(",");
-            itemsArray.forEach(item => {
-                const listItem = document.createElement("li");
-                listItem.textContent = item;
-                itemsList.appendChild(listItem);
-            });
-        } else {
-            itemsList.innerHTML = "<li>No items found</li>";
-        }
+        // Listen for transaction result from terminal
+        window.addEventListener("message", function (event) {
+            if (event.data.startsWith("result:")) {
+                let result = event.data.split(":")[1];
+                document.getElementById("transaction-status").textContent = `Transaction: ${result}`;
+            } else if (event.data.startsWith("card:")) {
+                let cardInfo = event.data.split(":")[1];
+                document.getElementById("transaction-status").textContent += `\nCard Info: ${cardInfo}`;
+            }
+        });
     </script>
 
 </body>
