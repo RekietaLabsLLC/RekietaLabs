@@ -9,9 +9,17 @@
             background-color: #222;
             color: white;
             font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
         }
         .container {
             display: flex;
+            width: 90%;
+            max-width: 1200px;
         }
         .left-panel {
             width: 60%;
@@ -22,6 +30,9 @@
             padding: 20px;
             background-color: #333;
         }
+        .hidden {
+            display: none;
+        }
         button {
             background-color: #be9f13;
             color: white;
@@ -31,13 +42,31 @@
             cursor: pointer;
             border-radius: 5px;
         }
-        select {
+        select, input {
             padding: 10px;
             margin-bottom: 10px;
+        }
+        #pin-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #222;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
     </style>
 </head>
 <body>
+
+    <div id="pin-screen">
+        <h2>Enter Store PIN</h2>
+        <input type="password" id="storePin" placeholder="Enter PIN">
+        <button onclick="checkPin()">Login</button>
+    </div>
 
     <h1>RekietaLabs POS</h1>
 
@@ -65,7 +94,6 @@
             <h3>Order Summary</h3>
             <ul id="orderList"></ul>
             <h3>Total: $<span id="totalAmount">0.00</span></h3>
-
             <button onclick="sendSale()">Send Sale</button>
         </div>
     </div>
@@ -73,18 +101,28 @@
     <script>
         let selectedTerminal = "";
 
-        function connectTerminal() {
-            selectedTerminal = document.getElementById("terminalSelect").value;
-            if (selectedTerminal) {
-                alert(`Connected to ${selectedTerminal}`);
+        function checkPin() {
+            const pinInput = document.getElementById("storePin").value;
+            const correctPin = "1234"; // Replace with actual stored PIN validation
 
-                // Send connection message to terminal
-                let terminalWindow = window.open("", selectedTerminal);
-                if (terminalWindow) {
-                    terminalWindow.postMessage("connect", "*");
-                } else {
-                    alert("Unable to connect. Make sure the terminal window is open.");
+            if (pinInput === correctPin) {
+                document.getElementById("pin-screen").style.display = "none";
+            } else {
+                alert("Incorrect PIN!");
+            }
+        }
+
+        function connectTerminal() {
+            let newTerminal = document.getElementById("terminalSelect").value;
+            
+            if (newTerminal) {
+                if (selectedTerminal && selectedTerminal !== newTerminal) {
+                    localStorage.removeItem(selectedTerminal);
                 }
+
+                selectedTerminal = newTerminal;
+                localStorage.setItem("selectedTerminal", selectedTerminal);
+                alert(`Connected to ${selectedTerminal}`);
             } else {
                 alert("Please select a terminal first.");
             }
@@ -121,13 +159,8 @@
                 total: total.toFixed(2)
             };
 
-            let terminalWindow = window.open("", selectedTerminal);
-            if (terminalWindow) {
-                terminalWindow.postMessage(`sale:${saleData.total}`, "*");
-                alert("Sale sent to terminal!");
-            } else {
-                alert("Unable to send sale. Make sure the terminal window is open.");
-            }
+            localStorage.setItem(selectedTerminal + "_saleData", JSON.stringify(saleData));
+            alert("Sale sent to terminal!");
 
             // Reset order after sending
             order = [];
@@ -135,14 +168,15 @@
             updateOrderDisplay();
         }
 
-        // Listen for transaction results from the terminal
-        window.addEventListener("message", (event) => {
-            if (event.data === "result:Success") {
-                alert("Transaction Successful!");
-            } else if (event.data === "result:Failed") {
-                alert("Transaction Failed. Try again.");
+        function checkStoredTerminal() {
+            let storedTerminal = localStorage.getItem("selectedTerminal");
+            if (storedTerminal) {
+                selectedTerminal = storedTerminal;
+                document.getElementById("terminalSelect").value = selectedTerminal;
             }
-        });
+        }
+
+        checkStoredTerminal();
     </script>
 
 </body>
