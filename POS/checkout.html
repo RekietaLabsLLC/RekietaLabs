@@ -3,131 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RekietaLabs POS System</title>
-    <style>
-        /* Global Styles */
-        :root {
-            --primary-color: #be9f13;
-            --dark-bg: #222;
-            --dark-text: #fff;
-            --light-bg: #f4f4f4;
-            --light-text: #222;
-        }
-
-        body {
-            font-family: Arial, sans-serif;
-            background-color: var(--dark-bg);
-            color: var(--dark-text);
-            margin: 0;
-            padding: 20px;
-            text-align: center;
-            transition: background 0.3s, color 0.3s;
-        }
-
-        .container {
-            max-width: 600px;
-            margin: auto;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-            background: rgba(0, 0, 0, 0.5);
-        }
-
-        h1 {
-            color: var(--primary-color);
-        }
-
-        input {
-            width: 80%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 2px solid var(--primary-color);
-            border-radius: 5px;
-            text-align: center;
-            font-size: 16px;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 12px 20px;
-            margin: 10px;
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: 0.3s;
-        }
-
-        .btn:hover {
-            background-color: #9c8410;
-        }
-
-        .light-mode {
-            background-color: var(--light-bg);
-            color: var(--light-text);
-        }
-
-        .light-mode .container {
-            background: rgba(255, 255, 255, 0.8);
-        }
-
-        .light-mode .btn {
-            background-color: var(--primary-color);
-            color: white;
-        }
-
-        .dark-light-toggle {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            background: var(--primary-color);
-            color: white;
-            padding: 8px 12px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: 0.3s;
-        }
-
-        .dark-light-toggle:hover {
-            background: #9c8410;
-        }
-    </style>
+    <title>RekietaLabs POS</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body class="dark-mode">
 
-    <button class="dark-light-toggle" onclick="toggleMode()">Light/Dark Mode</button>
+    <!-- PIN Entry Section -->
+    <div id="pinContainer" class="login-container">
+        <h2>Enter Your PIN</h2>
+        <input type="password" id="pinInput" placeholder="Enter PIN">
+        <button onclick="validatePIN()">Login</button>
+        <p id="error-message" class="error"></p>
+    </div>
 
-    <div class="container">
-        <h1>RekietaLabs POS</h1>
+    <!-- POS System (Initially Hidden) -->
+    <div id="posContainer" class="pos-container" style="display: none;">
+        <button id="toggleTheme">Toggle Dark/Light Mode</button>
 
-        <label>Enter Store PIN:</label><br>
-        <input type="password" id="pinInput" placeholder="Enter PIN"><br>
-        <button class="btn" onclick="checkPin()">Login</button>
+        <div class="left-panel">
+            <h2>Items</h2>
+            <div class="item-buttons">
+                <button onclick="addItem('Item 1', 5.00)">Item 1 - $5.00</button>
+                <button onclick="addItem('Item 2', 10.00)">Item 2 - $10.00</button>
+                <button onclick="addItem('Item 3', 15.00)">Item 3 - $15.00</button>
+                <button onclick="customAmount()">Custom Amount</button>
+            </div>
+        </div>
+        
+        <div class="right-panel">
+            <h2>Order Summary</h2>
+            <p>Cashier: <span id="cashierName"></span></p>
+            <ul id="orderList"></ul>
+            <p>Total: $<span id="totalAmount">0.00</span></p>
 
-        <h2>Checkout</h2>
-        <button class="btn">Big Print</button>
-        <button class="btn">Medium Print</button>
-        <button class="btn">Small Print</button>
-        <button class="btn">Custom Amount</button>
+            <label for="terminalSelect">Select Terminal:</label>
+            <select id="terminalSelect">
+                <option value="Terminal1.html">Terminal 1</option>
+                <option value="Terminal2.html">Terminal 2</option>
+                <option value="Terminal3.html">Terminal 3</option>
+                <option value="Terminal4.html">Terminal 4</option>
+                <option value="Terminal5.html">Terminal 5</option>
+            </select>
+
+            <button onclick="sendSale()">Send Sale</button>
+        </div>
     </div>
 
     <script>
-        function toggleMode() {
-            document.body.classList.toggle("light-mode");
-        }
+        const validPins = {
+            "2687": "Kellan Rekieta",
+            "4646": "Justin Rekieta"
+        };
 
-        function checkPin() {
-            let pin = document.getElementById("pinInput").value;
-            if (pin === "2687" || pin === "4646") {
-                alert("Access Granted. Welcome!");
+        function validatePIN() {
+            const pin = document.getElementById('pinInput').value;
+            if (validPins[pin]) {
+                localStorage.setItem("cashierName", validPins[pin]);
+                document.getElementById("cashierName").innerText = validPins[pin];
+
+                // Hide PIN entry, show POS system
+                document.getElementById("pinContainer").style.display = "none";
+                document.getElementById("posContainer").style.display = "flex";
             } else {
-                alert("Invalid PIN.");
+                document.getElementById('error-message').innerText = "Invalid PIN!";
             }
         }
+
+        let total = 0;
+        function addItem(name, price) {
+            const list = document.getElementById("orderList");
+            const item = document.createElement("li");
+            item.innerText = `${name} - $${price.toFixed(2)}`;
+            list.appendChild(item);
+            total += price;
+            document.getElementById("totalAmount").innerText = total.toFixed(2);
+        }
+
+        function customAmount() {
+            const amount = parseFloat(prompt("Enter custom amount:"));
+            if (!isNaN(amount) && amount > 0) {
+                addItem("Custom Amount", amount);
+            }
+        }
+
+        function sendSale() {
+            const terminal = document.getElementById("terminalSelect").value;
+            window.open(terminal, "_blank");
+        }
+
+        // Dark/Light Mode Toggle
+        document.getElementById("toggleTheme").addEventListener("click", function () {
+            document.body.classList.toggle("light-mode");
+            document.body.classList.toggle("dark-mode");
+        });
     </script>
 
 </body>
