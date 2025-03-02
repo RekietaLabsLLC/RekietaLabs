@@ -6,57 +6,158 @@
     <title>Terminal 1</title>
     <style>
         body {
-            text-align: center;
             font-family: Arial, sans-serif;
             background-color: #be9f13;
             color: black;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
         }
-        .container {
-            margin-top: 50px;
+        #terminal-status {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 20px;
         }
-        h1, h2 {
+        #logo {
+            width: 200px;
+            height: auto;
             margin-bottom: 20px;
+        }
+        #qr-code {
+            display: none;
+            margin-top: 20px;
+        }
+        .hidden {
+            display: none;
+        }
+        .button {
+            background-color: black;
+            color: white;
+            padding: 10px;
+            border: none;
+            margin: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            border-radius: 5px;
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1 id="terminalState">This register is closed. Please choose a different register.</h1>
-        <h2 id="saleInfo"></h2>
+    <img id="logo" src="Summer.jpg" alt="RekietaLabs Logo">
+    <div id="terminal-status">This Register is closed. Please choose a different register.</div>
+    <div id="terminal-id">Terminal 1</div>
+
+    <div id="transaction-flow" class="hidden">
+        <div id="total-confirm" class="hidden">
+            <p>Total: $<span id="total-amount"></span></p>
+            <button class="button" onclick="confirmTotal(true)">Yes</button>
+            <button class="button" onclick="confirmTotal(false)">No</button>
+        </div>
+
+        <div id="card-entry" class="hidden">
+            <p>Enter Card Details:</p>
+            <input type="text" placeholder="Card Number" id="card-number"><br>
+            <input type="text" placeholder="CVV" id="cvv"><br>
+            <button class="button" onclick="processCard()">Enter</button>
+        </div>
+
+        <div id="processing" class="hidden">
+            <p>Processing...</p>
+        </div>
+
+        <div id="transaction-result" class="hidden">
+            <p id="result-message"></p>
+        </div>
+
+        <div id="receipt-option" class="hidden">
+            <p>Would you like a receipt?</p>
+            <button class="button" onclick="showQRCode()">Yes</button>
+            <button class="button" onclick="resetTerminal()">No</button>
+        </div>
+
+        <img id="qr-code" src="" alt="Receipt QR Code">
     </div>
 
+    <audio id="insert-sound" src="insert_sound.mp3"></audio> <!-- Provide the file -->
+
     <script>
-        function checkTerminalConnection() {
-            let selectedTerminal = localStorage.getItem("selectedTerminal");
-            if (selectedTerminal === "terminal1") {
-                document.getElementById("terminalState").textContent = "Welcome to RekietaLabs!";
+        function connectTerminal() {
+            document.getElementById("terminal-status").innerText = "Welcome to RekietaLabs!";
+            localStorage.setItem("terminal1", "connected");
+        }
+
+        window.addEventListener("message", (event) => {
+            if (event.data === "connect") {
+                connectTerminal();
+            } else if (event.data.startsWith("sale:")) {
+                startTransaction(event.data.split(":")[1]);
+            }
+        });
+
+        function startTransaction(amount) {
+            document.getElementById("terminal-status").classList.add("hidden");
+            document.getElementById("transaction-flow").classList.remove("hidden");
+
+            setTimeout(() => {
+                document.getElementById("total-amount").innerText = amount;
+                document.getElementById("total-confirm").classList.remove("hidden");
+            }, 5000);
+        }
+
+        function confirmTotal(confirmed) {
+            document.getElementById("total-confirm").classList.add("hidden");
+
+            if (confirmed) {
+                document.getElementById("card-entry").classList.remove("hidden");
+            } else {
+                resetTerminal();
             }
         }
 
-        function checkForSale() {
-            let saleData = localStorage.getItem("saleData");
-            if (saleData) {
-                let sale = JSON.parse(saleData);
-                document.getElementById("saleInfo").innerHTML = `
-                    <h2>New Sale</h2>
-                    <p>Total: $${sale.total}</p>
-                    <p>Items:</p>
-                    <ul>
-                        ${sale.order.map(item => `<li>${item.name} - $${item.price.toFixed(2)}</li>`).join('')}
-                    </ul>
-                `;
+        function processCard() {
+            document.getElementById("card-entry").classList.add("hidden");
+            document.getElementById("processing").classList.remove("hidden");
 
-                // Clear sale data so it's not shown repeatedly
-                localStorage.removeItem("saleData");
-            }
+            document.getElementById("insert-sound").play();
+
+            setTimeout(() => {
+                let success = Math.random() > 0.1; // 90% chance of success
+                document.getElementById("processing").classList.add("hidden");
+                document.getElementById("transaction-result").classList.remove("hidden");
+
+                if (success) {
+                    document.getElementById("result-message").innerText = "Transaction Successful!";
+                    setTimeout(() => {
+                        document.getElementById("transaction-result").classList.add("hidden");
+                        document.getElementById("receipt-option").classList.remove("hidden");
+                    }, 3000);
+                } else {
+                    document.getElementById("result-message").innerText = "Transaction Failed. Try again.";
+                    setTimeout(resetTerminal, 3000);
+                }
+            }, 3000);
         }
 
-        // Check if terminal is selected
-        checkTerminalConnection();
+        function showQRCode() {
+            let orderNumber = Math.floor(100000 + Math.random() * 900000);
+            let qrLink = `https://rekietalabs.com/pos/receipt?ordernumber=${orderNumber}`;
+            document.getElementById("qr-code").src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(qrLink)}`;
+            document.getElementById("qr-code").style.display = "block";
 
-        // Check for sale updates every second
-        setInterval(checkForSale, 1000);
+            setTimeout(resetTerminal, 15000);
+        }
+
+        function resetTerminal() {
+            document.getElementById("qr-code").style.display = "none";
+            document.getElementById("transaction-flow").classList.add("hidden");
+            document.getElementById("terminal-status").classList.remove("hidden");
+            document.getElementById("terminal-status").innerText = "Welcome to RekietaLabs!";
+        }
     </script>
 
 </body>
