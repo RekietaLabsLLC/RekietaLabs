@@ -26,21 +26,17 @@
     </div>
 
     <script>
-        const client = new Appwrite.Client();
-        client
+        const client = new Appwrite.Client()
             .setEndpoint('https://cloud.appwrite.io/v1') // Example: 'https://cloud.appwrite.io/v1'
-            .setProject('rekietalabspos') // Example: '654321abc'
-            .setKey('standard_62339d2692ee86945282da59324551b1bfb27ab5810f037e14aaaa46ea1390e4a3ca61ac7c3d74b80831bf6b21c56b51a503c8b3dd3830c860f436078807b40ca106d5812a7f98d4ee76eee91e6938e3808b2debe8f4ee9faf00f6ec7e18a8b1b17cc975cf395d7ed679c70abf34089dc1784af86e2541b5a053dee93dc30365'); // Keep this secure!
+            .setProject('rekietalabspos'); // Example: '654321abc'
 
         const databases = new Appwrite.Databases(client);
-        const dbId = 'pos_system'; // Your database ID
-        const collectionId = 'cashier_pins'; // Your collection ID
 
         async function login() {
             const pin = document.getElementById('pinInput').value;
             try {
                 // Search for the cashier with the entered PIN
-                const response = await databases.listDocuments(dbId, collectionId, [
+                const response = await databases.listDocuments('pos_system', 'cashier_pins', [
                     Appwrite.Query.equal('pin', pin)
                 ]);
 
