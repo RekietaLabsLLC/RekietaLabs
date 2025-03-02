@@ -11,13 +11,39 @@
             background-color: #222;
             color: white;
             text-align: center;
+            margin: 0;
+            padding: 0;
         }
+        /* PIN Login Screen */
         #pin-screen {
-            display: block;
-            margin-top: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
         }
+        #pin-input {
+            padding: 10px;
+            font-size: 18px;
+            width: 200px;
+            text-align: center;
+            border-radius: 5px;
+            border: none;
+            margin-bottom: 10px;
+        }
+        .btn {
+            background-color: #be9f13;
+            border: none;
+            padding: 10px;
+            width: 210px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        /* Hide Cashier UI */
         #cashier-ui {
             display: none;
+            padding: 20px;
         }
         .container {
             display: flex;
@@ -29,6 +55,7 @@
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
+            justify-content: center;
         }
         .right-panel {
             width: 40%;
@@ -51,16 +78,8 @@
         #qr-code {
             margin-top: 10px;
             display: none;
-        }
-        .btn {
-            background-color: #be9f13;
-            border: none;
-            padding: 10px;
-            width: 100%;
-            font-size: 16px;
-            cursor: pointer;
-            margin-top: 10px;
-            border-radius: 5px;
+            width: 100px;
+            height: 100px;
         }
     </style>
 </head>
@@ -69,7 +88,7 @@
     <!-- PIN Entry Screen -->
     <div id="pin-screen">
         <h2>Enter Store PIN</h2>
-        <input type="password" id="store-pin" placeholder="Enter PIN">
+        <input type="password" id="pin-input" placeholder="Enter PIN">
         <button class="btn" onclick="checkPin()">Login</button>
     </div>
 
@@ -112,13 +131,12 @@
     <script>
         // Store PIN Logic
         function checkPin() {
-            let enteredPin = document.getElementById("store-pin").value;
+            let enteredPin = document.getElementById("pin-input").value;
             let validPins = { "2687": "Kellan Rekieta", "4646": "Justin Rekieta" };
 
             if (validPins[enteredPin]) {
                 document.getElementById("pin-screen").style.display = "none";
                 document.getElementById("cashier-ui").style.display = "block";
-                document.getElementById("cashier-name").textContent = validPins[enteredPin];
             } else {
                 alert("Invalid PIN");
             }
@@ -153,13 +171,10 @@
             });
 
             let orderNumber = Math.floor(100000 + Math.random() * 900000);
-            let cashier = document.getElementById("cashier-name").textContent || "Unknown";
-            let paymentType = "Credit/Debit"; // Placeholder
-            let selectedTerminal = document.getElementById("terminal-select").value;
             let totalAmount = document.getElementById("total-amount").textContent || "0.00";
 
             let encodedItems = encodeURIComponent(items.join(","));
-            let receiptURL = `receipt.html?ordernumber=${orderNumber}&cashier=${encodeURIComponent(cashier)}&payment=${encodeURIComponent(paymentType)}&total=${encodeURIComponent(totalAmount)}&items=${encodedItems}`;
+            let receiptURL = `https://rekietalabs.com/pos/receipt?ordernumber=${orderNumber}&total=${encodeURIComponent(totalAmount)}&items=${encodedItems}`;
 
             let qrCodeElement = document.getElementById("qr-code");
             qrCodeElement.innerHTML = "";
@@ -171,7 +186,8 @@
 
             qrCodeElement.style.display = "block";
 
-            // Redirect to terminal page
+            // Open terminal page
+            let selectedTerminal = document.getElementById("terminal-select").value;
             window.open(selectedTerminal, "_blank");
         }
     </script>
