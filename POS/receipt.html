@@ -3,33 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Receipt - RekietaLabs</title>
+    <title>RekietaLabs Receipt</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
-        .receipt-container {
-            border: 2px solid black;
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f8f8;
+            color: #333;
+            text-align: center;
             padding: 20px;
-            display: inline-block;
-            text-align: left;
+        }
+        .receipt-container {
             max-width: 400px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+        h1 {
+            font-size: 22px;
+            margin-bottom: 5px;
+        }
+        .receipt-info {
+            font-size: 16px;
+            margin: 5px 0;
+        }
+        .items-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .items-list li {
+            padding: 5px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        .total {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .disclaimer {
+            font-size: 12px;
+            color: gray;
+            margin-top: 20px;
+            text-align: center;
         }
     </style>
 </head>
 <body>
-    <h1>RekietaLabs Receipt</h1>
+
     <div class="receipt-container">
-        <p><strong>Order Number:</strong> <span id="order-number"></span></p>
-        <p><strong>Total:</strong> $<span id="total-amount">0.00</span></p>
-        <p><strong>Payment Type:</strong> <span id="payment-type">Unknown</span></p>
-        <p><strong>Cashier:</strong> <span id="cashier-name">Unknown</span></p>
+        <h1>RekietaLabs Receipt</h1>
+        <p class="receipt-info"><strong>Order #:</strong> <span id="order-number"></span></p>
+        <p class="receipt-info"><strong>Cashier:</strong> <span id="cashier"></span></p>
+        <p class="receipt-info"><strong>Payment Type:</strong> <span id="payment-type"></span></p>
+
+        <h2>Items Purchased</h2>
+        <ul class="items-list" id="items"></ul>
+
+        <p class="total">Total: $<span id="total"></span></p>
+
+        <p class="disclaimer">
+            Disclaimer: These receipts are not always accurate.  
+            If you find any issues with it, feel free to reach out at:  
+            <strong>support@rekietalabs.com</strong>.
+        </p>
     </div>
 
     <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        document.getElementById("order-number").textContent = urlParams.get("ordernumber") || "Unknown";
-        document.getElementById("total-amount").textContent = urlParams.get("total") || "0.00";
-        document.getElementById("payment-type").textContent = urlParams.get("payment") || "Unknown";
-        document.getElementById("cashier-name").textContent = urlParams.get("cashier") || "Unknown";
+        // Get URL Parameters
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        // Populate Receipt Details
+        document.getElementById("order-number").textContent = getQueryParam("ordernumber") || "Unknown";
+        document.getElementById("cashier").textContent = getQueryParam("cashier") || "Unknown";
+        document.getElementById("payment-type").textContent = getQueryParam("payment") || "Unknown";
+        document.getElementById("total").textContent = getQueryParam("total") || "0.00";
+
+        // Retrieve and Display Purchased Items
+        const itemsData = getQueryParam("items");
+        const itemsList = document.getElementById("items");
+
+        if (itemsData) {
+            const itemsArray = decodeURIComponent(itemsData).split(",");
+            itemsArray.forEach(item => {
+                const listItem = document.createElement("li");
+                listItem.textContent = item;
+                itemsList.appendChild(listItem);
+            });
+        } else {
+            itemsList.innerHTML = "<li>No items found</li>";
+        }
     </script>
+
 </body>
 </html>
