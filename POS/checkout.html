@@ -3,125 +3,171 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RekietaLabs POS</title>
+    <title>Terminal 1</title>
     <style>
         body {
-            background-color: #222;
-            color: white;
             font-family: Arial, sans-serif;
-        }
-        .container {
-            display: flex;
-        }
-        .left-panel {
-            width: 60%;
-            padding: 20px;
-        }
-        .right-panel {
-            width: 40%;
-            padding: 20px;
-            background-color: #333;
-        }
-        button {
             background-color: #be9f13;
-            color: white;
-            border: none;
-            padding: 15px;
-            margin: 5px;
-            cursor: pointer;
-            border-radius: 5px;
+            color: black;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
         }
-        select {
+        #terminal-status {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        #logo {
+            width: 200px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+        #qr-code {
+            display: none;
+            margin-top: 20px;
+        }
+        .hidden {
+            display: none;
+        }
+        .button {
+            background-color: black;
+            color: white;
             padding: 10px;
-            margin-bottom: 10px;
+            border: none;
+            margin: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            border-radius: 5px;
         }
     </style>
 </head>
 <body>
 
-    <h1>RekietaLabs POS</h1>
+    <img id="logo" src="Summer.jpg" alt="RekietaLabs Logo">
+    <div id="terminal-status">This Register is closed. Please choose a different register.</div>
+    <div id="terminal-id">Terminal 1</div>
 
-    <label for="terminalSelect">Select Terminal:</label>
-    <select id="terminalSelect">
-        <option value="">-- Select --</option>
-        <option value="terminal1">Terminal 1</option>
-        <option value="terminal2">Terminal 2</option>
-        <option value="terminal3">Terminal 3</option>
-        <option value="terminal4">Terminal 4</option>
-        <option value="terminal5">Terminal 5</option>
-    </select>
-
-    <button onclick="connectTerminal()">Connect to Terminal</button>
-
-    <div class="container">
-        <div class="left-panel">
-            <h3>Items</h3>
-            <button onclick="addItem('Item A', 10.99)">Item A - $10.99</button>
-            <button onclick="addItem('Item B', 5.49)">Item B - $5.49</button>
-            <button onclick="addItem('Item C', 7.99)">Item C - $7.99</button>
+    <div id="transaction-flow" class="hidden">
+        <div id="total-confirm" class="hidden">
+            <p>Total: $<span id="total-amount"></span></p>
+            <button class="button" onclick="confirmTotal(true)">Yes</button>
+            <button class="button" onclick="confirmTotal(false)">No</button>
         </div>
 
-        <div class="right-panel">
-            <h3>Order Summary</h3>
-            <ul id="orderList"></ul>
-            <h3>Total: $<span id="totalAmount">0.00</span></h3>
-
-            <button onclick="sendSale()">Send Sale</button>
+        <div id="card-entry" class="hidden">
+            <p>Enter Card Details:</p>
+            <input type="text" placeholder="Card Number" id="card-number"><br>
+            <input type="text" placeholder="CVV" id="cvv"><br>
+            <button class="button" onclick="processCard()">Enter</button>
         </div>
+
+        <div id="processing" class="hidden">
+            <p>Processing...</p>
+        </div>
+
+        <div id="transaction-result" class="hidden">
+            <p id="result-message"></p>
+        </div>
+
+        <div id="receipt-option" class="hidden">
+            <p>Would you like a receipt?</p>
+            <button class="button" onclick="showQRCode()">Yes</button>
+            <button class="button" onclick="resetTerminal()">No</button>
+        </div>
+
+        <img id="qr-code" src="" alt="Receipt QR Code">
     </div>
 
+    <audio id="insert-sound" src="insert_sound.mp3"></audio> <!-- Provide the file -->
+
     <script>
-        let selectedTerminal = "";
+        function updateTerminalStatus() {
+            let terminalStatus = localStorage.getItem("terminal1");
+            if (terminalStatus === "connected") {
+                document.getElementById("terminal-status").innerText = "Welcome to RekietaLabs!";
+            }
+        }
 
         function connectTerminal() {
-            selectedTerminal = document.getElementById("terminalSelect").value;
-            if (selectedTerminal) {
-                localStorage.setItem("selectedTerminal", selectedTerminal);
-                alert(`Connected to ${selectedTerminal}`);
+            document.getElementById("terminal-status").innerText = "Welcome to RekietaLabs!";
+            localStorage.setItem("terminal1", "connected");
+        }
+
+        window.addEventListener("message", (event) => {
+            if (event.data === "connect") {
+                connectTerminal();
+            } else if (event.data.startsWith("sale:")) {
+                startTransaction(event.data.split(":")[1]);
+            }
+        });
+
+        function startTransaction(amount) {
+            document.getElementById("terminal-status").classList.add("hidden");
+            document.getElementById("transaction-flow").classList.remove("hidden");
+
+            setTimeout(() => {
+                document.getElementById("total-amount").innerText = amount;
+                document.getElementById("total-confirm").classList.remove("hidden");
+            }, 5000);
+        }
+
+        function confirmTotal(confirmed) {
+            document.getElementById("total-confirm").classList.add("hidden");
+
+            if (confirmed) {
+                document.getElementById("card-entry").classList.remove("hidden");
             } else {
-                alert("Please select a terminal first.");
+                resetTerminal();
             }
         }
 
-        let order = [];
-        let total = 0;
+        function processCard() {
+            document.getElementById("card-entry").classList.add("hidden");
+            document.getElementById("processing").classList.remove("hidden");
 
-        function addItem(name, price) {
-            order.push({ name, price });
-            total += price;
-            updateOrderDisplay();
+            document.getElementById("insert-sound").play();
+
+            setTimeout(() => {
+                let success = Math.random() > 0.1; // 90% chance of success
+                document.getElementById("processing").classList.add("hidden");
+                document.getElementById("transaction-result").classList.remove("hidden");
+
+                if (success) {
+                    document.getElementById("result-message").innerText = "Transaction Successful!";
+                    setTimeout(() => {
+                        document.getElementById("transaction-result").classList.add("hidden");
+                        document.getElementById("receipt-option").classList.remove("hidden");
+                    }, 3000);
+                } else {
+                    document.getElementById("result-message").innerText = "Transaction Failed. Try again.";
+                    setTimeout(resetTerminal, 3000);
+                }
+            }, 3000);
         }
 
-        function updateOrderDisplay() {
-            let orderList = document.getElementById("orderList");
-            orderList.innerHTML = "";
-            order.forEach(item => {
-                let li = document.createElement("li");
-                li.textContent = `${item.name} - $${item.price.toFixed(2)}`;
-                orderList.appendChild(li);
-            });
-            document.getElementById("totalAmount").textContent = total.toFixed(2);
+        function showQRCode() {
+            let orderNumber = Math.floor(100000 + Math.random() * 900000);
+            let qrLink = `https://rekietalabs.com/pos/receipt?ordernumber=${orderNumber}`;
+            document.getElementById("qr-code").src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(qrLink)}`;
+            document.getElementById("qr-code").style.display = "block";
+
+            setTimeout(resetTerminal, 15000);
         }
 
-        function sendSale() {
-            if (!selectedTerminal) {
-                alert("Please connect to a terminal first.");
-                return;
-            }
-
-            let saleData = {
-                order: order,
-                total: total.toFixed(2)
-            };
-
-            localStorage.setItem("saleData", JSON.stringify(saleData));
-            alert("Sale sent to terminal!");
-
-            // Reset order after sending
-            order = [];
-            total = 0;
-            updateOrderDisplay();
+        function resetTerminal() {
+            document.getElementById("qr-code").style.display = "none";
+            document.getElementById("transaction-flow").classList.add("hidden");
+            document.getElementById("terminal-status").classList.remove("hidden");
+            document.getElementById("terminal-status").innerText = "Welcome to RekietaLabs!";
         }
+
+        // Check the terminal status on page load
+        updateTerminalStatus();
     </script>
 
 </body>
