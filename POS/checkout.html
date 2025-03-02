@@ -4,98 +4,178 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RekietaLabs POS</title>
-    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1e1e1e;
+            color: white;
+            text-align: center;
+            margin: 0;
+        }
+        .container {
+            display: none;
+            flex-direction: row;
+            justify-content: space-between;
+            padding: 20px;
+        }
+        .items, .summary {
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .items {
+            flex: 1;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .summary {
+            flex: 1;
+            background-color: #333;
+            padding: 20px;
+            text-align: left;
+        }
+        button {
+            width: 120px;
+            height: 120px;
+            margin: 10px;
+            font-size: 18px;
+            border-radius: 15px;
+            border: none;
+            background-color: #be9f13;
+            color: black;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #a38711;
+        }
+        .total {
+            font-size: 24px;
+            margin: 20px 0;
+        }
+        #pinScreen {
+            display: block;
+            background-color: #222;
+            padding: 50px;
+            border-radius: 10px;
+            width: 300px;
+            margin: 100px auto;
+        }
+        #terminalSelect {
+            margin-top: 20px;
+        }
+    </style>
 </head>
-<body class="dark-mode">
+<body>
 
-    <!-- PIN Entry Section -->
-    <div id="pinContainer" class="login-container">
-        <h2>Enter Your PIN</h2>
-        <input type="password" id="pinInput" placeholder="Enter PIN">
-        <button onclick="validatePIN()">Login</button>
-        <p id="error-message" class="error"></p>
+    <!-- PIN ENTRY SCREEN -->
+    <div id="pinScreen">
+        <h2>Enter Store PIN</h2>
+        <input type="password" id="pinInput">
+        <button onclick="checkPin()">Login</button>
+        <p id="pinError" style="color: red;"></p>
     </div>
 
-    <!-- POS System (Initially Hidden) -->
-    <div id="posContainer" class="pos-container" style="display: none;">
-        <button id="toggleTheme">Toggle Dark/Light Mode</button>
-
-        <div class="left-panel">
-            <h2>Items</h2>
-            <div class="item-buttons">
-                <button onclick="addItem('Item 1', 5.00)">Item 1 - $5.00</button>
-                <button onclick="addItem('Item 2', 10.00)">Item 2 - $10.00</button>
-                <button onclick="addItem('Item 3', 15.00)">Item 3 - $15.00</button>
-                <button onclick="customAmount()">Custom Amount</button>
-            </div>
+    <!-- CASHIER UI -->
+    <div class="container" id="cashierUI">
+        <!-- Items Section -->
+        <div class="items">
+            <button onclick="addItem('Item 1', 5.00)">Item 1 - $5.00</button>
+            <button onclick="addItem('Item 2', 10.00)">Item 2 - $10.00</button>
+            <button onclick="addItem('Item 3', 7.50)">Item 3 - $7.50</button>
         </div>
-        
-        <div class="right-panel">
-            <h2>Order Summary</h2>
-            <p>Cashier: <span id="cashierName"></span></p>
-            <ul id="orderList"></ul>
-            <p>Total: $<span id="totalAmount">0.00</span></p>
 
+        <!-- Checkout Summary -->
+        <div class="summary">
+            <h2>Order Summary</h2>
+            <div id="orderList"></div>
+            <p class="total">Total: $<span id="totalAmount">0.00</span></p>
             <label for="terminalSelect">Select Terminal:</label>
             <select id="terminalSelect">
-                <option value="Terminal1.html">Terminal 1</option>
-                <option value="Terminal2.html">Terminal 2</option>
-                <option value="Terminal3.html">Terminal 3</option>
-                <option value="Terminal4.html">Terminal 4</option>
-                <option value="Terminal5.html">Terminal 5</option>
+                <option value="Terminal1">Terminal 1</option>
+                <option value="Terminal2">Terminal 2</option>
+                <option value="Terminal3">Terminal 3</option>
+                <option value="Terminal4">Terminal 4</option>
+                <option value="Terminal5">Terminal 5</option>
             </select>
-
+            <button onclick="customAmount()">Custom Amount</button>
             <button onclick="sendSale()">Send Sale</button>
         </div>
     </div>
 
     <script>
-        const validPins = {
-            "2687": "Kellan Rekieta",
-            "4646": "Justin Rekieta"
-        };
+        let total = 0;
+        let items = [];
+        const cashierNames = { "2687": "Kellan Rekieta", "4646": "Justin Rekieta" };
 
-        function validatePIN() {
-            const pin = document.getElementById('pinInput').value;
-            if (validPins[pin]) {
-                localStorage.setItem("cashierName", validPins[pin]);
-                document.getElementById("cashierName").innerText = validPins[pin];
-
-                // Hide PIN entry, show POS system
-                document.getElementById("pinContainer").style.display = "none";
-                document.getElementById("posContainer").style.display = "flex";
+        function checkPin() {
+            const pinInput = document.getElementById('pinInput').value;
+            if (cashierNames[pinInput]) {
+                document.getElementById('pinScreen').style.display = 'none';
+                document.getElementById('cashierUI').style.display = 'flex';
             } else {
-                document.getElementById('error-message').innerText = "Invalid PIN!";
+                document.getElementById('pinError').innerText = "Invalid PIN!";
             }
         }
 
-        let total = 0;
         function addItem(name, price) {
-            const list = document.getElementById("orderList");
-            const item = document.createElement("li");
-            item.innerText = `${name} - $${price.toFixed(2)}`;
-            list.appendChild(item);
+            items.push({ name, price });
             total += price;
-            document.getElementById("totalAmount").innerText = total.toFixed(2);
+            updateOrder();
         }
 
         function customAmount() {
-            const amount = parseFloat(prompt("Enter custom amount:"));
-            if (!isNaN(amount) && amount > 0) {
-                addItem("Custom Amount", amount);
+            let amount = prompt("Enter custom amount:");
+            amount = parseFloat(amount);
+            if (!isNaN(amount)) {
+                items.push({ name: "Custom Amount", price: amount });
+                total += amount;
+                updateOrder();
             }
         }
 
-        function sendSale() {
-            const terminal = document.getElementById("terminalSelect").value;
-            window.open(terminal, "_blank");
+        function updateOrder() {
+            const orderList = document.getElementById('orderList');
+            orderList.innerHTML = "";
+            items.forEach(item => {
+                let p = document.createElement('p');
+                p.innerText = `${item.name} - $${item.price.toFixed(2)}`;
+                orderList.appendChild(p);
+            });
+            document.getElementById('totalAmount').innerText = total.toFixed(2);
         }
 
-        // Dark/Light Mode Toggle
-        document.getElementById("toggleTheme").addEventListener("click", function () {
-            document.body.classList.toggle("light-mode");
-            document.body.classList.toggle("dark-mode");
-        });
+        function sendSale() {
+            const terminal = document.getElementById('terminalSelect').value;
+            if (!terminal) {
+                alert("Please select a terminal.");
+                return;
+            }
+
+            // Generate a 6-digit order number
+            const orderNumber = Math.floor(100000 + Math.random() * 900000);
+
+            // Generate PDF Receipt
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            doc.text("RekietaLabs Receipt", 10, 10);
+            doc.text(`Cashier: ${cashierNames[document.getElementById('pinInput').value]}`, 10, 20);
+            doc.text(`Order Number: ${orderNumber}`, 10, 30);
+            doc.text("Items Purchased:", 10, 40);
+            let y = 50;
+            items.forEach(item => {
+                doc.text(`${item.name} - $${item.price.toFixed(2)}`, 10, y);
+                y += 10;
+            });
+            doc.text(`Total: $${total.toFixed(2)}`, 10, y + 10);
+            doc.save("receipt.pdf");
+
+            // Reset UI
+            alert(`Sale sent to ${terminal}!`);
+            items = [];
+            total = 0;
+            updateOrder();
+        }
     </script>
 
 </body>
