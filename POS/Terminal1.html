@@ -86,6 +86,13 @@
     <audio id="insert-sound" src="insert_sound.mp3"></audio> <!-- Provide the file -->
 
     <script>
+        function updateTerminalStatus() {
+            let terminalStatus = localStorage.getItem("terminal1");
+            if (terminalStatus === "connected") {
+                document.getElementById("terminal-status").innerText = "Welcome to RekietaLabs!";
+            }
+        }
+
         function connectTerminal() {
             document.getElementById("terminal-status").innerText = "Welcome to RekietaLabs!";
             localStorage.setItem("terminal1", "connected");
@@ -158,6 +165,9 @@
             document.getElementById("terminal-status").classList.remove("hidden");
             document.getElementById("terminal-status").innerText = "Welcome to RekietaLabs!";
         }
+
+        // Check the terminal status on page load
+        updateTerminalStatus();
     </script>
 
 </body>
