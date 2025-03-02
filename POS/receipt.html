@@ -3,176 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RekietaLabs Cashier</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <title>RekietaLabs Receipt</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #222;
-            color: white;
+            background-color: #f8f8f8;
+            color: #333;
             text-align: center;
-        }
-        #pin-screen {
-            display: block;
-            margin-top: 100px;
-        }
-        #cashier-ui {
-            display: none;
-        }
-        .container {
-            display: flex;
-            justify-content: space-between;
             padding: 20px;
         }
-        .left-panel {
-            width: 50%;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        .right-panel {
-            width: 40%;
+        .receipt-container {
+            max-width: 400px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
             text-align: left;
         }
-        .item-button {
-            width: 100px;
-            height: 100px;
-            border-radius: 10px;
-            background-color: #be9f13;
-            border: none;
+        h1 {
+            font-size: 22px;
+            margin-bottom: 5px;
+        }
+        .receipt-info {
             font-size: 16px;
-            cursor: pointer;
+            margin: 5px 0;
         }
-        .summary {
-            background: #333;
-            padding: 10px;
-            border-radius: 10px;
+        .items-list {
+            list-style-type: none;
+            padding: 0;
         }
-        #qr-code {
+        .items-list li {
+            padding: 5px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        .total {
+            font-size: 18px;
+            font-weight: bold;
             margin-top: 10px;
-            display: none;
         }
-        .btn {
-            background-color: #be9f13;
-            border: none;
-            padding: 10px;
-            width: 100%;
-            font-size: 16px;
-            cursor: pointer;
-            margin-top: 10px;
-            border-radius: 5px;
+        .disclaimer {
+            font-size: 12px;
+            color: gray;
+            margin-top: 20px;
+            text-align: center;
         }
     </style>
 </head>
 <body>
 
-    <!-- PIN Entry Screen -->
-    <div id="pin-screen">
-        <h2>Enter Store PIN</h2>
-        <input type="password" id="store-pin" placeholder="Enter PIN">
-        <button class="btn" onclick="checkPin()">Login</button>
-    </div>
+    <div class="receipt-container">
+        <h1>RekietaLabs Receipt</h1>
+        <p class="receipt-info"><strong>Order #:</strong> <span id="order-number"></span></p>
+        <p class="receipt-info"><strong>Cashier:</strong> <span id="cashier"></span></p>
+        <p class="receipt-info"><strong>Payment Type:</strong> <span id="payment-type"></span></p>
 
-    <!-- Cashier UI (Hidden Until PIN is Entered) -->
-    <div id="cashier-ui">
-        <h1>RekietaLabs POS System</h1>
-        
-        <div class="container">
-            <!-- Left Panel: Item Buttons -->
-            <div class="left-panel">
-                <button class="item-button" onclick="addItem('Item 1', 5.00)">Item 1</button>
-                <button class="item-button" onclick="addItem('Item 2', 10.00)">Item 2</button>
-                <button class="item-button" onclick="addItem('Item 3', 7.50)">Item 3</button>
-                <button class="item-button" onclick="addItem('Item 4', 3.75)">Item 4</button>
-                <button class="item-button" onclick="addItem('Item 5', 12.00)">Item 5</button>
-            </div>
+        <h2>Items Purchased</h2>
+        <ul class="items-list" id="items"></ul>
 
-            <!-- Right Panel: Selected Items, Total, QR Code, Buttons -->
-            <div class="right-panel">
-                <h2>Selected Items</h2>
-                <div class="summary">
-                    <ul id="item-list"></ul>
-                    <p><strong>Total: $<span id="total-amount">0.00</span></strong></p>
-                    <label>Select Terminal:</label>
-                    <select id="terminal-select">
-                        <option value="terminal1.html">Terminal 1</option>
-                        <option value="terminal2.html">Terminal 2</option>
-                        <option value="terminal3.html">Terminal 3</option>
-                        <option value="terminal4.html">Terminal 4</option>
-                        <option value="terminal5.html">Terminal 5</option>
-                    </select>
-                </div>
-                <button class="btn" onclick="sendSale()">Send Sale</button>
-                <button class="btn" onclick="customAmount()">Custom Amount</button>
-                <div id="qr-code"></div>
-            </div>
-        </div>
+        <p class="total">Total: $<span id="total"></span></p>
+
+        <p class="disclaimer">
+            Disclaimer: These receipts are not always accurate.  
+            If you find any issues with it, feel free to reach out at:  
+            <strong>support@rekietalabs.com</strong>.
+        </p>
     </div>
 
     <script>
-        // Store PIN Logic
-        function checkPin() {
-            let enteredPin = document.getElementById("store-pin").value;
-            let validPins = { "2687": "Kellan Rekieta", "4646": "Justin Rekieta" };
-
-            if (validPins[enteredPin]) {
-                document.getElementById("pin-screen").style.display = "none";
-                document.getElementById("cashier-ui").style.display = "block";
-                document.getElementById("cashier-name").textContent = validPins[enteredPin];
-            } else {
-                alert("Invalid PIN");
-            }
+        // Get URL Parameters
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
         }
 
-        // Add Item to List
-        let total = 0;
-        function addItem(name, price) {
-            let itemList = document.getElementById("item-list");
-            let listItem = document.createElement("li");
-            listItem.textContent = `${name} - $${price.toFixed(2)}`;
-            listItem.classList.add("selected-item");
-            itemList.appendChild(listItem);
-            
-            total += price;
-            document.getElementById("total-amount").textContent = total.toFixed(2);
-        }
+        // Populate Receipt Details
+        document.getElementById("order-number").textContent = getQueryParam("ordernumber") || "Unknown";
+        document.getElementById("cashier").textContent = getQueryParam("cashier") || "Unknown";
+        document.getElementById("payment-type").textContent = getQueryParam("payment") || "Unknown";
+        document.getElementById("total").textContent = getQueryParam("total") || "0.00";
 
-        // Custom Amount Entry
-        function customAmount() {
-            let amount = parseFloat(prompt("Enter custom amount:"));
-            if (!isNaN(amount) && amount > 0) {
-                addItem("Custom Amount", amount);
-            }
-        }
+        // Retrieve and Display Purchased Items
+        const itemsData = getQueryParam("items");
+        const itemsList = document.getElementById("items");
 
-        // Generate QR Code for Receipt
-        function sendSale() {
-            let items = [];
-            document.querySelectorAll(".selected-item").forEach(item => {
-                items.push(item.textContent);
+        if (itemsData) {
+            const itemsArray = decodeURIComponent(itemsData).split(",");
+            itemsArray.forEach(item => {
+                const listItem = document.createElement("li");
+                listItem.textContent = item;
+                itemsList.appendChild(listItem);
             });
-
-            let orderNumber = Math.floor(100000 + Math.random() * 900000);
-            let cashier = document.getElementById("cashier-name").textContent || "Unknown";
-            let paymentType = "Credit/Debit"; // Placeholder
-            let selectedTerminal = document.getElementById("terminal-select").value;
-            let totalAmount = document.getElementById("total-amount").textContent || "0.00";
-
-            let encodedItems = encodeURIComponent(items.join(","));
-            let receiptURL = `receipt.html?ordernumber=${orderNumber}&cashier=${encodeURIComponent(cashier)}&payment=${encodeURIComponent(paymentType)}&total=${encodeURIComponent(totalAmount)}&items=${encodedItems}`;
-
-            let qrCodeElement = document.getElementById("qr-code");
-            qrCodeElement.innerHTML = "";
-            new QRCode(qrCodeElement, {
-                text: receiptURL,
-                width: 100,
-                height: 100
-            });
-
-            qrCodeElement.style.display = "block";
-
-            // Redirect to terminal page
-            window.open(selectedTerminal, "_blank");
+        } else {
+            itemsList.innerHTML = "<li>No items found</li>";
         }
     </script>
 
