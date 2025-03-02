@@ -3,154 +3,176 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RekietaLabs POS</title>
-    <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+    <title>RekietaLabs Cashier</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #121212;
+            background-color: #222;
             color: white;
             text-align: center;
         }
-        .hidden { display: none; }
+        #pin-screen {
+            display: block;
+            margin-top: 100px;
+        }
+        #cashier-ui {
+            display: none;
+        }
         .container {
             display: flex;
             justify-content: space-between;
-            max-width: 900px;
-            margin: 50px auto;
             padding: 20px;
-            background: #222;
-            border-radius: 10px;
         }
         .left-panel {
             width: 50%;
-            text-align: left;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
         }
         .right-panel {
-            width: 50%;
+            width: 40%;
             text-align: left;
-            padding-left: 20px;
         }
-        input, button, select {
-            padding: 10px;
-            margin: 10px;
+        .item-button {
+            width: 100px;
+            height: 100px;
+            border-radius: 10px;
+            background-color: #be9f13;
+            border: none;
             font-size: 16px;
+            cursor: pointer;
         }
-        .btn { background-color: #be9f13; border: none; color: black; cursor: pointer; }
-        .btn:hover { background-color: #d4b41f; }
-        .item-btn {
-            width: 100px; height: 100px;
-            background: #444; color: white;
-            border: none; margin: 5px;
-            font-size: 16px; border-radius: 10px;
-            display: inline-block;
+        .summary {
+            background: #333;
+            padding: 10px;
+            border-radius: 10px;
         }
-        .qr-container {
-            margin-top: 20px;
-            text-align: center;
+        #qr-code {
+            margin-top: 10px;
+            display: none;
+        }
+        .btn {
+            background-color: #be9f13;
+            border: none;
+            padding: 10px;
+            width: 100%;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+            border-radius: 5px;
         }
     </style>
 </head>
 <body>
 
-    <!-- PIN Login Screen -->
+    <!-- PIN Entry Screen -->
     <div id="pin-screen">
-        <h1>Enter Store PIN</h1>
-        <input type="password" id="store-pin" maxlength="4">
-        <br>
+        <h2>Enter Store PIN</h2>
+        <input type="password" id="store-pin" placeholder="Enter PIN">
         <button class="btn" onclick="checkPin()">Login</button>
     </div>
 
-    <!-- Main POS UI (Hidden until PIN is entered) -->
-    <div id="pos-ui" class="hidden">
-        <h1>RekietaLabs POS</h1>
+    <!-- Cashier UI (Hidden Until PIN is Entered) -->
+    <div id="cashier-ui">
+        <h1>RekietaLabs POS System</h1>
+        
         <div class="container">
-
-            <!-- Left Panel: Items -->
+            <!-- Left Panel: Item Buttons -->
             <div class="left-panel">
-                <h2>Items</h2>
-                <button class="item-btn" onclick="addItem('Item 1', 5.00)">Item 1</button>
-                <button class="item-btn" onclick="addItem('Item 2', 10.00)">Item 2</button>
-                <button class="item-btn" onclick="addItem('Item 3', 3.50)">Item 3</button>
-                <button class="item-btn" onclick="addItem('Item 4', 7.25)">Item 4</button>
+                <button class="item-button" onclick="addItem('Item 1', 5.00)">Item 1</button>
+                <button class="item-button" onclick="addItem('Item 2', 10.00)">Item 2</button>
+                <button class="item-button" onclick="addItem('Item 3', 7.50)">Item 3</button>
+                <button class="item-button" onclick="addItem('Item 4', 3.75)">Item 4</button>
+                <button class="item-button" onclick="addItem('Item 5', 12.00)">Item 5</button>
             </div>
 
-            <!-- Right Panel: Order Details -->
+            <!-- Right Panel: Selected Items, Total, QR Code, Buttons -->
             <div class="right-panel">
-                <h2>Order Details</h2>
-                <ul id="item-list"></ul>
-                <h3>Total: $<span id="total">0.00</span></h3>
-
-                <label>Select Terminal:</label>
-                <select id="terminal">
-                    <option value="terminal1">Terminal 1</option>
-                    <option value="terminal2">Terminal 2</option>
-                    <option value="terminal3">Terminal 3</option>
-                    <option value="terminal4">Terminal 4</option>
-                    <option value="terminal5">Terminal 5</option>
-                </select>
-
-                <br>
+                <h2>Selected Items</h2>
+                <div class="summary">
+                    <ul id="item-list"></ul>
+                    <p><strong>Total: $<span id="total-amount">0.00</span></strong></p>
+                    <label>Select Terminal:</label>
+                    <select id="terminal-select">
+                        <option value="terminal1.html">Terminal 1</option>
+                        <option value="terminal2.html">Terminal 2</option>
+                        <option value="terminal3.html">Terminal 3</option>
+                        <option value="terminal4.html">Terminal 4</option>
+                        <option value="terminal5.html">Terminal 5</option>
+                    </select>
+                </div>
                 <button class="btn" onclick="sendSale()">Send Sale</button>
                 <button class="btn" onclick="customAmount()">Custom Amount</button>
+                <div id="qr-code"></div>
             </div>
-        </div>
-
-        <!-- QR Code for Receipt -->
-        <div class="qr-container hidden" id="qr-section">
-            <h3>Receipt QR Code</h3>
-            <div id="qrcode"></div>
         </div>
     </div>
 
     <script>
-        let total = 0;
-        let orderNumber = Math.floor(100000 + Math.random() * 900000); // 6-digit order number
-
+        // Store PIN Logic
         function checkPin() {
-            const pin = document.getElementById("store-pin").value;
-            if (pin === "2687" || pin === "4646") {  // Example PINs for Kellan & Justin
-                document.getElementById("pin-screen").classList.add("hidden");
-                document.getElementById("pos-ui").classList.remove("hidden");
+            let enteredPin = document.getElementById("store-pin").value;
+            let validPins = { "2687": "Kellan Rekieta", "4646": "Justin Rekieta" };
+
+            if (validPins[enteredPin]) {
+                document.getElementById("pin-screen").style.display = "none";
+                document.getElementById("cashier-ui").style.display = "block";
+                document.getElementById("cashier-name").textContent = validPins[enteredPin];
             } else {
-                alert("Incorrect PIN");
+                alert("Invalid PIN");
             }
         }
 
+        // Add Item to List
+        let total = 0;
         function addItem(name, price) {
+            let itemList = document.getElementById("item-list");
+            let listItem = document.createElement("li");
+            listItem.textContent = `${name} - $${price.toFixed(2)}`;
+            listItem.classList.add("selected-item");
+            itemList.appendChild(listItem);
+            
             total += price;
-            document.getElementById("item-list").innerHTML += `<li>${name} - $${price.toFixed(2)}</li>`;
-            document.getElementById("total").textContent = total.toFixed(2);
+            document.getElementById("total-amount").textContent = total.toFixed(2);
         }
 
+        // Custom Amount Entry
         function customAmount() {
-            let amount = prompt("Enter custom amount:");
-            amount = parseFloat(amount);
+            let amount = parseFloat(prompt("Enter custom amount:"));
             if (!isNaN(amount) && amount > 0) {
-                total += amount;
-                document.getElementById("item-list").innerHTML += `<li>Custom Amount - $${amount.toFixed(2)}</li>`;
-                document.getElementById("total").textContent = total.toFixed(2);
+                addItem("Custom Amount", amount);
             }
         }
 
+        // Generate QR Code for Receipt
         function sendSale() {
-            if (total === 0) {
-                alert("No items added.");
-                return;
-            }
+            let items = [];
+            document.querySelectorAll(".selected-item").forEach(item => {
+                items.push(item.textContent);
+            });
 
-            const terminal = document.getElementById("terminal").value;
-            const cashierName = document.getElementById("store-pin").value === "2687" ? "Kellan Rekieta" : "Justin Rekieta"; 
+            let orderNumber = Math.floor(100000 + Math.random() * 900000);
+            let cashier = document.getElementById("cashier-name").textContent || "Unknown";
+            let paymentType = "Credit/Debit"; // Placeholder
+            let selectedTerminal = document.getElementById("terminal-select").value;
+            let totalAmount = document.getElementById("total-amount").textContent || "0.00";
 
-            // Generate Receipt URL
-            const receiptURL = `https://rekietalabs.com/receipt?ordernumber=${orderNumber}&total=${total.toFixed(2)}&payment=Credit&cashier=${encodeURIComponent(cashierName)}`;
+            let encodedItems = encodeURIComponent(items.join(","));
+            let receiptURL = `receipt.html?ordernumber=${orderNumber}&cashier=${encodeURIComponent(cashier)}&payment=${encodeURIComponent(paymentType)}&total=${encodeURIComponent(totalAmount)}&items=${encodedItems}`;
 
-            // Show QR Code
-            document.getElementById("qr-section").classList.remove("hidden");
-            document.getElementById("qrcode").innerHTML = ""; // Clear old QR codes
-            new QRCode(document.getElementById("qrcode"), receiptURL);
+            let qrCodeElement = document.getElementById("qr-code");
+            qrCodeElement.innerHTML = "";
+            new QRCode(qrCodeElement, {
+                text: receiptURL,
+                width: 100,
+                height: 100
+            });
 
-            alert(`Sale sent to ${terminal}. Receipt available at: ${receiptURL}`);
+            qrCodeElement.style.display = "block";
+
+            // Redirect to terminal page
+            window.open(selectedTerminal, "_blank");
         }
     </script>
 
