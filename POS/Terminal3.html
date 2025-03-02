@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terminal 3</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #be9f13;
+            color: black;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        #terminal-status {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        #logo {
+            width: 200px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <img id="logo" src="Summer.jpg" alt="RekietaLabs Logo">
+    <div id="terminal-status">This Register is closed. Please choose a different register.</div>
+    <div id="terminal-id">Terminal 3</div>
+
+    <script>
+        function connectTerminal() {
+            document.getElementById("terminal-status").innerText = "Welcome to RekietaLabs!";
+        }
+
+        window.addEventListener("message", (event) => {
+            if (event.data === "connect") {
+                connectTerminal();
+            }
+        });
+    </script>
+
+</body>
+</html>
