@@ -6,46 +6,57 @@
     <title>Terminal 1</title>
     <style>
         body {
+            text-align: center;
             font-family: Arial, sans-serif;
             background-color: #be9f13;
             color: black;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
         }
-        #terminal-status {
-            font-size: 24px;
-            font-weight: bold;
-            margin-top: 20px;
+        .container {
+            margin-top: 50px;
         }
-        #logo {
-            width: 200px;
-            height: auto;
+        h1, h2 {
             margin-bottom: 20px;
         }
     </style>
 </head>
 <body>
 
-    <img id="logo" src="Summer.jpg" alt="RekietaLabs Logo">
-    <div id="terminal-status">This Register is closed. Please choose a different register.</div>
-    <div id="terminal-id">Terminal 1</div>
+    <div class="container">
+        <h1 id="terminalState">This register is closed. Please choose a different register.</h1>
+        <h2 id="saleInfo"></h2>
+    </div>
 
     <script>
-        function connectTerminal() {
-            document.getElementById("terminal-status").innerText = "Welcome to RekietaLabs!";
+        function checkTerminalConnection() {
+            let selectedTerminal = localStorage.getItem("selectedTerminal");
+            if (selectedTerminal === "terminal1") {
+                document.getElementById("terminalState").textContent = "Welcome to RekietaLabs!";
+            }
         }
 
-        // Listen for a cashier connecting from the main POS system
-        window.addEventListener("message", (event) => {
-            if (event.data === "connect") {
-                connectTerminal();
+        function checkForSale() {
+            let saleData = localStorage.getItem("saleData");
+            if (saleData) {
+                let sale = JSON.parse(saleData);
+                document.getElementById("saleInfo").innerHTML = `
+                    <h2>New Sale</h2>
+                    <p>Total: $${sale.total}</p>
+                    <p>Items:</p>
+                    <ul>
+                        ${sale.order.map(item => `<li>${item.name} - $${item.price.toFixed(2)}</li>`).join('')}
+                    </ul>
+                `;
+
+                // Clear sale data so it's not shown repeatedly
+                localStorage.removeItem("saleData");
             }
-        });
+        }
+
+        // Check if terminal is selected
+        checkTerminalConnection();
+
+        // Check for sale updates every second
+        setInterval(checkForSale, 1000);
     </script>
 
 </body>
