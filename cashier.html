@@ -4,131 +4,58 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RekietaLabs POS</title>
+    <script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.0"></script>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #1E1E1E;
-            color: white;
-            text-align: center;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            width: 300px;
-            margin: 100px auto;
-            padding: 20px;
-            background: #333;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.1);
-        }
-        input, select, button {
-            width: 85%;
-            padding: 10px;
-            margin: 10px 0;
-            font-size: 18px;
-            border: none;
-            border-radius: 5px;
-        }
-        button {
-            background-color: #FF4136;
-            color: white;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #D6322A;
-        }
-        .hidden { display: none; }
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin-top: 20px;
-        }
-        .log {
-            font-size: 14px;
-            margin-top: 10px;
-            color: #aaa;
-        }
+        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+        #posSection { display: none; }
+        input { padding: 10px; margin: 10px; font-size: 16px; }
+        button { padding: 10px 20px; font-size: 16px; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <!-- Login Screen -->
-    <div id="loginScreen" class="container">
-        <h1>RekietaLabs POS</h1>
-        <h2>Enter Your PIN</h2>
+    <div id="loginSection">
+        <h2>Enter Store PIN</h2>
         <input type="password" id="pinInput" placeholder="Enter PIN">
-        <button onclick="checkPIN()">Login</button>
-        <p id="errorMessage" style="color: red;"></p>
+        <button onclick="login()">Login</button>
     </div>
 
-    <!-- POS Interface (Hidden Until Login) -->
-    <div id="posScreen" class="container hidden">
-        <h1>RekietaLabs POS</h1>
-        <p>Logged in as: <span id="cashierID"></span></p>
-        <p id="loginTime" class="log"></p>
-        <h2>Total: $<span id="total">0.00</span></h2>
-
-        <div class="grid">
-            <button onclick="addToTotal(5)">Small Print - $5</button>
-            <button onclick="addToTotal(10)">Medium Print - $10</button>
-            <button onclick="addToTotal(20)">Large Print - $20</button>
-            <button onclick="addToTotal(15)">Custom Design - $15</button>
-        </div>
-
-        <select id="terminalSelect">
-            <option value="">Select Terminal</option>
-            <option value="Terminal 1">Terminal 1</option>
-            <option value="Terminal 2">Terminal 2</option>
-            <option value="Terminal 3">Terminal 3</option>
-        </select>
-
-        <button onclick="charge()">Charge</button>
-        <button onclick="resetTotal()">Reset</button>
-        <button onclick="logout()">Logout</button>
+    <div id="posSection">
+        <h2 id="cashierName"></h2>
+        <p>POS system will go here...</p>
     </div>
 
     <script>
-        const validPins = ["2687", "4646"];
-        let total = 0;
+        const client = new Appwrite.Client();
+        client
+            .setEndpoint('https://cloud.appwrite.io/v1') // Example: 'https://cloud.appwrite.io/v1'
+            .setProject('rekietalabspos') // Example: '654321abc'
+            .setKey('standard_62339d2692ee86945282da59324551b1bfb27ab5810f037e14aaaa46ea1390e4a3ca61ac7c3d74b80831bf6b21c56b51a503c8b3dd3830c860f436078807b40ca106d5812a7f98d4ee76eee91e6938e3808b2debe8f4ee9faf00f6ec7e18a8b1b17cc975cf395d7ed679c70abf34089dc1784af86e2541b5a053dee93dc30365'); // Keep this secure!
 
-        function checkPIN() {
-            let enteredPIN = document.getElementById("pinInput").value;
-            if (validPins.includes(enteredPIN)) {
-                document.getElementById("loginScreen").classList.add("hidden");
-                document.getElementById("posScreen").classList.remove("hidden");
-                document.getElementById("cashierID").innerText = "Cashier " + enteredPIN;
-                document.getElementById("loginTime").innerText = "Login Time: " + new Date().toLocaleString();
-            } else {
-                document.getElementById("errorMessage").innerText = "Invalid PIN. Try again.";
+        const databases = new Appwrite.Databases(client);
+        const dbId = 'pos_system'; // Your database ID
+        const collectionId = 'cashier_pins'; // Your collection ID
+
+        async function login() {
+            const pin = document.getElementById('pinInput').value;
+            try {
+                // Search for the cashier with the entered PIN
+                const response = await databases.listDocuments(dbId, collectionId, [
+                    Appwrite.Query.equal('pin', pin)
+                ]);
+
+                if (response.total > 0) {
+                    const cashier = response.documents[0];
+                    document.getElementById('cashierName').innerText = `Welcome, ${cashier.name}!`;
+                    document.getElementById('loginSection').style.display = 'none';
+                    document.getElementById('posSection').style.display = 'block';
+                } else {
+                    alert('Invalid PIN. Try again.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Login failed. Check the console for details.');
             }
-        }
-
-        function addToTotal(amount) {
-            total += amount;
-            document.getElementById("total").innerText = total.toFixed(2);
-        }
-
-        function resetTotal() {
-            total = 0;
-            document.getElementById("total").innerText = total.toFixed(2);
-        }
-
-        function charge() {
-            let terminal = document.getElementById("terminalSelect").value;
-            if (!terminal) {
-                alert("Please select a terminal!");
-                return;
-            }
-            alert("Charging $" + total.toFixed(2) + " on " + terminal);
-        }
-
-        function logout() {
-            total = 0;
-            document.getElementById("total").innerText = "0.00";
-            document.getElementById("posScreen").classList.add("hidden");
-            document.getElementById("loginScreen").classList.remove("hidden");
-            document.getElementById("pinInput").value = "";
         }
     </script>
 
