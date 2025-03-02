@@ -36,13 +36,16 @@
     <div id="terminal-id">Terminal 1</div>
 
     <script>
-        // Function to switch to the "Welcome" screen when a cashier connects
-        function openRegister() {
+        function connectTerminal() {
             document.getElementById("terminal-status").innerText = "Welcome to RekietaLabs!";
         }
 
-        // Simulating a cashier connecting (Replace this with real logic)
-        setTimeout(openRegister, 5000); // Simulated connection after 5 seconds
+        // Listen for a cashier connecting from the main POS system
+        window.addEventListener("message", (event) => {
+            if (event.data === "connect") {
+                connectTerminal();
+            }
+        });
     </script>
 
 </body>
