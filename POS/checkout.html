@@ -75,11 +75,14 @@
             padding: 10px;
             border-radius: 10px;
         }
-        #qr-code {
+        #qr-code-container {
             margin-top: 10px;
-            display: none;
+            text-align: center;
+        }
+        #qr-code {
             width: 100px;
             height: 100px;
+            display: none;
         }
     </style>
 </head>
@@ -123,7 +126,10 @@
                 </div>
                 <button class="btn" onclick="sendSale()">Send Sale</button>
                 <button class="btn" onclick="customAmount()">Custom Amount</button>
-                <div id="qr-code"></div>
+                <div id="qr-code-container">
+                    <h3>Receipt QR Code</h3>
+                    <div id="qr-code"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -177,14 +183,14 @@
             let receiptURL = `https://rekietalabs.com/pos/receipt?ordernumber=${orderNumber}&total=${encodeURIComponent(totalAmount)}&items=${encodedItems}`;
 
             let qrCodeElement = document.getElementById("qr-code");
-            qrCodeElement.innerHTML = "";
+            qrCodeElement.innerHTML = ""; // Clear previous QR code
+            qrCodeElement.style.display = "block"; // Show QR code container
+            
             new QRCode(qrCodeElement, {
                 text: receiptURL,
                 width: 100,
                 height: 100
             });
-
-            qrCodeElement.style.display = "block";
 
             // Open terminal page
             let selectedTerminal = document.getElementById("terminal-select").value;
