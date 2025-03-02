@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RekietaLabs POS</title>
-    <script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.0"></script>
     <style>
         body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
         #posSection { display: none; }
@@ -26,38 +25,21 @@
     </div>
 
     <script>
-        // Initialize Appwrite client
-        const client = new Appwrite.Client()
-            .setEndpoint('https://cloud.appwrite.io/v1') // Example: 'https://cloud.appwrite.io/v1'
-            .setProject('rekietalabspos'); // Example: '654321abc'
+        // Hardcoded PINs with cashier names
+        const validPins = {
+            "2687": "Kellan Rekieta",
+            "4646": "Justin Rekieta"
+        };
 
-        // Define database and collection IDs
-        const dbId = 'rlpossystem'; 
-        const collectionId = 'rlcashierpins';
-
-        // Create database object
-        const databases = new Appwrite.Databases(client);
-
-        // Login function
-        async function login() {
+        function login() {
             const pin = document.getElementById('pinInput').value;
-            try {
-                // Search for cashier with entered PIN
-                const response = await databases.listDocuments(dbId, collectionId, [
-                    Appwrite.Query.equal('pin', pin)
-                ]);
 
-                if (response.total > 0) {
-                    const cashier = response.documents[0];
-                    document.getElementById('cashierName').innerText = `Welcome, ${cashier.name}!`;
-                    document.getElementById('loginSection').style.display = 'none';
-                    document.getElementById('posSection').style.display = 'block';
-                } else {
-                    alert('Invalid PIN. Try again.');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Login failed. Check console for details.');
+            if (validPins[pin]) {
+                document.getElementById('cashierName').innerText = `Welcome, ${validPins[pin]}!`;
+                document.getElementById('loginSection').style.display = 'none';
+                document.getElementById('posSection').style.display = 'block';
+            } else {
+                alert('Invalid PIN. Try again.');
             }
         }
     </script>
