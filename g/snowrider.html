@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snow Rider 3D Game</title>
+    <style>
+        /* Basic styling for the page */
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        /* Form styling */
+        #pin-form {
+            margin-top: 50px;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            margin-right: 10px;
+            width: 150px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        /* Game container */
+        #game-container {
+            display: none;
+            width: 100%;
+            height: 600px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Enter Pin to Play Snow Rider 3D</h1>
+
+    <!-- PIN input form -->
+    <div id="pin-form">
+        <input type="text" id="pin-input" placeholder="Enter PIN">
+        <button onclick="checkPin()">Submit</button>
+    </div>
+
+    <!-- Game iframe container -->
+    <div id="game-container">
+        <iframe src="https://html5.gamedistribution.com/3b79a8537ebc414fb4f9672a9b8c68c8/?gd_sdk_referrer_url=https://www.example.com/games/{game-path}" 
+                width="960" height="600" scrolling="none" frameborder="0">
+        </iframe>
+    </div>
+
+    <script>
+        function checkPin() {
+            const pin = document.getElementById('pin-input').value;
+            const correctPin = '8593';
+
+            if (pin === correctPin) {
+                // Show the game iframe when correct pin is entered
+                document.getElementById('game-container').style.display = 'block';
+                document.getElementById('pin-form').style.display = 'none';
+            } else {
+                alert('Incorrect PIN! Please try again.');
+            }
+        }
+    </script>
+</body>
+</html>
