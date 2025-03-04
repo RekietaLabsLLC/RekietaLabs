@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson 3</title>
+    <style>
+        /* Basic styling for the page */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-top: 100px;
+        }
+
+        p {
+            font-size: 20px;
+            margin-top: 20px;
+        }
+
+        /* Form styling */
+        #pin-form {
+            margin-top: 50px;
+        }
+
+        input[type="text"] {
+            padding: 12px;
+            font-size: 18px;
+            margin-right: 10px;
+            width: 200px;
+            background-color: #222;
+            border: 2px solid #555;
+            color: white;
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 18px;
+            cursor: pointer;
+            background-color: #555;
+            color: white;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #888;
+        }
+
+        /* Game container */
+        #game-container {
+            display: none;
+            width: 100%;
+            height: 695px;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Learn Spanish</h1>
+    <p>To start, please enter the PIN.</p>
+
+    <!-- PIN input form -->
+    <div id="pin-form">
+        <input type="text" id="pin-input" placeholder="Enter PIN">
+        <button onclick="checkPin()">Submit</button>
+    </div>
+
+    <!-- Game iframe container -->
+    <iframe src="https://deckard.openprocessing.org/user416285/visual2157557/h6d6c8c774339c4d80d3c87dde0d9f0e2/workingtunnel.html" width="100%" height="100%" frameborder="0" marginwidth="0" marginheight="0" allowfullscreen="true"</iframe>
+
+    <script>
+        function checkPin() {
+            const pin = document.getElementById('pin-input').value;
+            const correctPin = '5489';  // Correct PIN for Slope game
+
+            if (pin === correctPin) {
+                // Show the game iframe when correct pin is entered
+                document.getElementById('game-container').style.display = 'block';
+                document.getElementById('pin-form').style.display = 'none';
+            } else {
+                alert('Incorrect PIN! Please try again.');
+            }
+        }
+    </script>
+</body>
+</html>
