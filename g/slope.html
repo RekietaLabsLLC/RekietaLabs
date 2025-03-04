@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Slope Car Game</title>
+    <title>Slope Game</title>
     <style>
         /* Basic styling for the page */
         body {
@@ -36,12 +36,13 @@
         #game-container {
             display: none;
             width: 100%;
-            height: 600px;
+            height: 695px;
+            text-align: center;
         }
     </style>
 </head>
 <body>
-    <h1>Enter Pin to Play Slope Car</h1>
+    <h1>Enter Pin to Play Slope</h1>
 
     <!-- PIN input form -->
     <div id="pin-form">
@@ -51,13 +52,13 @@
 
     <!-- Game iframe container -->
     <div id="game-container">
-        <iframe src="https://html5.gamedistribution.com/8f04290afb7a43d88eed607b597847d1/?gd_sdk_referrer_url=https://www.example.com/games/{game-path}" width="480" height="800" scrolling="none" frameborder="0"></iframe>
+        <iframe src="https://www.gameflare.com/embed/slope/" frameborder="0" scrolling="no" width="900" height="695" allowfullscreen></iframe>
     </div>
 
     <script>
         function checkPin() {
             const pin = document.getElementById('pin-input').value;
-            const correctPin = '5489';
+            const correctPin = '5489';  // Use the correct PIN for your game
 
             if (pin === correctPin) {
                 // Show the game iframe when correct pin is entered
