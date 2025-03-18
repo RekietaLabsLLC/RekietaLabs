@@ -1,1 +1,69 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - RekietaLabs Bot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Privacy Policy for RekietaLabs Bot</h1>
+        <p><strong>Last Updated: 3/18/25 </strong> [Date]</p>
+        
+        <h2>1. Introduction</h2>
+        <p>Welcome to RekietaLabs Bot! This privacy policy explains how we collect, use, and protect any information obtained through our Discord bot.</p>
+        
+        <h2>2. Information We Collect</h2>
+        <ul>
+            <li><strong>User IDs & Server IDs</strong> (for bot functionality).</li>
+            <li><strong>Messages & Commands</strong> (only for responding to commands, no message logging).</li>
+            <li><strong>Channel IDs</strong> (if required for bot features).</li>
+            <li><strong>Direct Messages</strong> (only if bot commands require them).</li>
+        </ul>
+        
+        <h2>3. How We Use Your Information</h2>
+        <p>We only use data for the following:</p>
+        <ul>
+            <li>Processing bot commands and responses.</li>
+            <li>Storing server preferences.</li>
+            <li>Improving bot functionality.</li>
+            <li>Maintaining moderation logs (if applicable).</li>
+        </ul>
+        <p>We <strong>do not</strong> share, sell, or distribute your data.</p>
+        
+        <h2>4. Data Protection & Security</h2>
+        <p>We take reasonable steps to protect user data. However, as the bot operates within Discord’s infrastructure, Discord’s security measures also apply.</p>
+        
+        <h2>5. User Rights & Data Removal</h2>
+        <p>If you wish to remove your data, you can:</p>
+        <ul>
+            <li>Use a bot command (if available) to clear stored data.</li>
+            <li>Contact us at <a href="mailto:[support@rekietalabs.com]">[support@rekietalabs.com]</a>.</li>
+        </ul>
+        
+        <h2>6. Changes to This Policy</h2>
+        <p>We may update this policy from time to time. Changes will be reflected on this page with an updated "Last Updated" date.</p>
+        
+        <h2>7. Contact Information</h2>
+        <p>If you have any questions, contact us at <a href="mailto:[support@rekietalabs.com]">[support@rekietalabs.com]</a> or join our <a href="[https://discord.gg/p82DPFnsbv]">Support Server</a>.</p>
+    </div>
+</body>
+</html>
