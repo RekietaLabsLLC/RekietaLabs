@@ -3,140 +3,162 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Receipt - RekietaLabs POS</title>
+  <title>Receipt - RekietaLabs</title>
   <style>
     body {
+      background-color: #222;
+      color: white;
       font-family: Arial, sans-serif;
-      background: #f5f5f5;
-      color: #333;
-      padding: 20px;
-      max-width: 600px;
-      margin: auto;
-    }
-    .logo {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    .logo img {
-      max-width: 200px;
-    }
-    h2 {
-      text-align: center;
-    }
-    .receipt-section {
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-    }
-    ul {
-      list-style: none;
+      margin: 0;
       padding: 0;
     }
-    li {
-      margin-bottom: 5px;
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #333;
+      border-radius: 10px;
+    }
+    h1 {
+      text-align: center;
+      color: #be9f13;
+    }
+    .order-summary {
+      margin-top: 20px;
+    }
+    .order-summary h3 {
+      color: #be9f13;
+    }
+    .order-summary ul {
+      list-style-type: none;
+      padding-left: 0;
+    }
+    .order-summary li {
+      padding: 5px 0;
+    }
+    .total {
+      font-size: 20px;
+      font-weight: bold;
+      color: #be9f13;
+      text-align: right;
+    }
+    .info {
+      margin-top: 20px;
+      font-size: 14px;
+      color: #ccc;
     }
     .buttons {
+      text-align: center;
       margin-top: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
     }
-    button {
+    .button {
       background-color: #be9f13;
       color: white;
       border: none;
-      padding: 10px;
+      padding: 10px 20px;
       border-radius: 5px;
       cursor: pointer;
+      margin: 5px;
     }
-    .disclaimer {
-      font-size: 0.8em;
-      margin-top: 20px;
-      color: #666;
+    .button:hover {
+      background-color: #a88810;
+    }
+    .receipt-link {
+      color: #be9f13;
+      text-decoration: none;
+      font-weight: bold;
     }
   </style>
+
+  <!-- Include jsPDF library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
 
-  <div class="logo">
-    <img src="/pos/logo.png" alt="RekietaLabs Logo" />
-  </div>
+  <div class="container">
+    <h1>RekietaLabs Receipt</h1>
 
-  <div class="receipt-section">
-    <h2>Receipt</h2>
-    <div id="receiptData">
-      <!-- Receipt content will be injected here -->
+    <div class="order-summary">
+      <h3>Order Summary</h3>
+      <ul id="orderList"></ul>
+      <p class="total">Total: $<span id="totalAmount">0.00</span></p>
+    </div>
+
+    <div class="info">
+      <p><strong>Cashier Name:</strong> <span id="cashierName">Brandi</span></p>
+      <p><strong>Terminal:</strong> <span id="terminalUsed">Terminal 1</span></p>
+      <p><strong>Tax:</strong> $<span id="taxAmount">0.00</span></p>
+      <p><strong>Order Number:</strong> <span id="orderNumber">123456</span></p>
     </div>
 
     <div class="buttons">
-      <button onclick="emailReceipt()">Email Receipt</button>
-      <button onclick="downloadReceipt('pdf')">Download as PDF</button>
-      <button onclick="downloadReceipt('json')">Download as JSON</button>
-      <button onclick="downloadReceipt('txt')">Download as Text</button>
-      <button onclick="window.location.href='/pos/cashier.html'">Return to POS</button>
+      <button class="button" onclick="downloadPDF()">Download Receipt as PDF</button>
+      <button class="button" onclick="emailReceipt()">Email Receipt</button>
+      <button class="button" onclick="goBackToPOS()">Return to POS</button>
     </div>
 
-    <p class="disclaimer">
-      All sales are final unless returned within 30 days with receipt and original payment method. Thank you for shopping at RekietaLabs!
-    </p>
+    <div class="info">
+      <p>By completing this transaction, you agree to the <a href="#" class="receipt-link">RekietaLabs Terms and Conditions</a>.</p>
+    </div>
   </div>
 
   <script>
-    const params = new URLSearchParams(window.location.search);
-    const orderNumber = params.get("ordernumber");
-    const saleKey = "sale_" + orderNumber;
-    const saleData = JSON.parse(localStorage.getItem(saleKey));
+    // Retrieving data from localStorage
+    const orderData = JSON.parse(localStorage.getItem('saleData') || '{}');
+    if (orderData) {
+      const orderList = document.getElementById('orderList');
+      orderData.order.forEach(item => {
+        const li = document.createElement('li');
+        li.textContent = `${item.name} - $${item.price.toFixed(2)}`;
+        orderList.appendChild(li);
+      });
+      document.getElementById('totalAmount').textContent = orderData.total;
+      document.getElementById('cashierName').textContent = orderData.cashierName;
+      document.getElementById('terminalUsed').textContent = orderData.terminal;
+      document.getElementById('taxAmount').textContent = (orderData.total * 0.1).toFixed(2); // Assuming 10% tax
+      document.getElementById('orderNumber').textContent = orderData.orderNumber;
+    }
 
-    if (!saleData) {
-      document.getElementById("receiptData").innerHTML = "<p>Receipt not found or has expired.</p>";
-    } else {
-      const { order, total, cashierName, terminal, timestamp } = saleData;
-      const taxRate = 0.07;
-      const tax = (parseFloat(total) * taxRate).toFixed(2);
-      const grandTotal = (parseFloat(total) + parseFloat(tax)).toFixed(2);
+    function downloadPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
 
-      const orderHTML = `
-        <ul>
-          ${order.map(item => `<li>${item.name} - $${item.price.toFixed(2)}</li>`).join("")}
-        </ul>
-        <p><strong>Subtotal:</strong> $${parseFloat(total).toFixed(2)}</p>
-        <p><strong>Tax (7%):</strong> $${tax}</p>
-        <p><strong>Total:</strong> $${grandTotal}</p>
-        <p><strong>Cashier:</strong> ${cashierName}</p>
-        <p><strong>Terminal:</strong> ${terminal}</p>
-        <p><strong>Date:</strong> ${new Date(timestamp).toLocaleString()}</p>
-        <p><strong>Order #:</strong> ${orderNumber}</p>
-      `;
-      document.getElementById("receiptData").innerHTML = orderHTML;
+      // Add title
+      doc.setFontSize(22);
+      doc.text("RekietaLabs Receipt", 105, 10, { align: "center" });
+
+      // Add order details
+      doc.setFontSize(14);
+      doc.text(`Order Number: ${document.getElementById('orderNumber').textContent}`, 10, 30);
+      doc.text(`Cashier: ${document.getElementById('cashierName').textContent}`, 10, 40);
+      doc.text(`Terminal: ${document.getElementById('terminalUsed').textContent}`, 10, 50);
+      doc.text(`Tax: $${document.getElementById('taxAmount').textContent}`, 10, 60);
+      doc.text(`Total: $${document.getElementById('totalAmount').textContent}`, 10, 70);
+
+      // Add order list
+      let yOffset = 80;
+      document.getElementById('orderList').querySelectorAll('li').forEach(item => {
+        doc.text(item.textContent, 10, yOffset);
+        yOffset += 10;
+      });
+
+      // Add disclaimer
+      doc.setFontSize(10);
+      doc.text("By completing this transaction, you agree to the RekietaLabs Terms and Conditions.", 10, yOffset + 10);
+
+      // Save PDF
+      doc.save(`Receipt_${document.getElementById('orderNumber').textContent}.pdf`);
     }
 
     function emailReceipt() {
-      const subject = `RekietaLabs Receipt #${orderNumber}`;
-      const body = encodeURIComponent(document.getElementById("receiptData").innerText);
-      window.location.href = `mailto:?subject=${subject}&body=${body}`;
+      const emailLink = `mailto:?subject=Your Receipt from RekietaLabs&body=Here is your receipt for order #${document.getElementById('orderNumber').textContent}.\n\nTotal: $${document.getElementById('totalAmount').textContent}\nItems: ${document.getElementById('orderList').innerText}\n\nBest Regards,\nRekietaLabs`;
+      window.location.href = emailLink;
     }
 
-    function downloadReceipt(format) {
-      const content = document.getElementById("receiptData").innerText;
-      let blob;
-      let filename;
-
-      if (format === "pdf") {
-        blob = new Blob([content], { type: "application/pdf" });
-        filename = `receipt_${orderNumber}.pdf`;
-      } else if (format === "json") {
-        blob = new Blob([JSON.stringify(saleData, null, 2)], { type: "application/json" });
-        filename = `receipt_${orderNumber}.json`;
-      } else {
-        blob = new Blob([content], { type: "text/plain" });
-        filename = `receipt_${orderNumber}.txt`;
-      }
-
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = filename;
-      link.click();
+    function goBackToPOS() {
+      window.location.href = '/pos/checkout';
     }
   </script>
+
 </body>
 </html>
