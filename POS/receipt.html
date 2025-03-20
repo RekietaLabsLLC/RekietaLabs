@@ -2,108 +2,107 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Receipt - RekietaLabs</title>
+  <title>RekietaLabs Receipt</title>
   <style>
     body {
       background-color: #222;
       color: white;
-      font-family: Arial, sans-serif;
-      padding: 20px;
+      font-family: monospace;
+      padding: 30px;
     }
     h1 {
       text-align: center;
-      margin-bottom: 20px;
+      color: #be9f13;
     }
-    .receipt-container {
+    .receipt {
       background-color: #333;
       padding: 20px;
       border-radius: 10px;
-      max-width: 600px;
-      margin: 0 auto;
+      max-width: 500px;
+      margin: auto;
     }
-    .receipt-header {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    .receipt-details {
-      list-style-type: none;
+    ul {
+      list-style: none;
       padding: 0;
     }
-    .receipt-details li {
-      margin: 10px 0;
+    button {
+      margin-top: 15px;
+      background-color: #be9f13;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      color: white;
+      cursor: pointer;
     }
-    .total {
-      font-size: 1.2em;
+    .disclaimer {
+      font-size: 0.8rem;
       margin-top: 20px;
-    }
-    .back-link {
-      display: block;
-      text-align: center;
-      margin-top: 30px;
-      color: #be9f13;
-      text-decoration: none;
+      color: #bbb;
     }
   </style>
 </head>
 <body>
-
   <h1>RekietaLabs Receipt</h1>
-
-  <div class="receipt-container">
-    <div class="receipt-header">
-      <h2>Receipt Details</h2>
-      <p id="orderNumber">Order Number: </p>
-    </div>
-
-    <ul id="receiptDetails" class="receipt-details"></ul>
-
-    <div class="total">
-      Total: $<span id="totalAmount">0.00</span>
-    </div>
-
-    <a href="/" class="back-link">Back to Home</a>
-  </div>
+  <div class="receipt" id="receiptDisplay">Loading receipt...</div>
 
   <script>
-    window.onload = function() {
-      // Get the order number from the URL
-      const urlParams = new URLSearchParams(window.location.search);
-      const orderNumber = urlParams.get('ordernumber');
+    const cashierMap = {
+      "8836": "Brandi",
+      "4646": "Justin",
+      "7423": "Kellan"
+    };
 
-      if (!orderNumber) {
-        alert("No order number found.");
-        return;
-      }
+    function formatCurrency(value) {
+      return "$" + Number(value).toFixed(2);
+    }
 
+    function generateReceiptHTML(data) {
+      const itemsHTML = data.order.map(item => `<li>${item.name} - ${formatCurrency(item.price)}</li>`).join("");
+
+      const taxRate = 0.0825;
+      const tax = (parseFloat(data.total) * taxRate).toFixed(2);
+      const totalWithTax = (parseFloat(data.total) + parseFloat(tax)).toFixed(2);
+      const cashierName = cashierMap[data.cashierPin] || "Unknown";
+
+      return `
+        <p><strong>Order #: </strong>${data.orderNumber}</p>
+        <p><strong>Cashier: </strong>${cashierName}</p>
+        <p><strong>Terminal: </strong>${data.terminal}</p>
+        <ul>${itemsHTML}</ul>
+        <p><strong>Subtotal:</strong> ${formatCurrency(data.total)}</p>
+        <p><strong>Tax (8.25%):</strong> ${formatCurrency(tax)}</p>
+        <p><strong>Total:</strong> ${formatCurrency(totalWithTax)}</p>
+        <button onclick="downloadReceipt()">Download Receipt</button>
+        <p class="disclaimer">All sales final. Returns allowed within 30 days with receipt. Please retain this receipt for your records.</p>
+      `;
+    }
+
+    function downloadReceipt() {
+      const text = document.getElementById("receiptDisplay").innerText;
+      const blob = new Blob([text], { type: "text/plain" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "RekietaLabs_Receipt.txt";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const orderNumber = urlParams.get("ordernumber");
+
+    if (orderNumber) {
       const saleKey = `sale_${orderNumber}`;
       const saleData = JSON.parse(localStorage.getItem(saleKey));
-
-      if (!saleData) {
-        alert("Invalid or expired order.");
-        return;
+      if (saleData && Date.now() < saleData.expiresAt + (30 * 24 * 60 * 60 * 1000)) { // 30 day validity
+        document.getElementById("receiptDisplay").innerHTML = generateReceiptHTML(saleData);
+      } else {
+        document.getElementById("receiptDisplay").innerHTML = "<p>Receipt not found or has expired.</p>";
       }
-
-      // Display the order number
-      document.getElementById("orderNumber").textContent = `Order Number: ${orderNumber}`;
-
-      // Display the items and total
-      const receiptDetails = document.getElementById("receiptDetails");
-      let totalAmount = 0;
-      saleData.order.forEach(item => {
-        let li = document.createElement("li");
-        li.textContent = `${item.name} - $${item.price.toFixed(2)}`;
-        receiptDetails.appendChild(li);
-        totalAmount += item.price;
-      });
-
-      // Apply tax (let's assume 7% tax for this example)
-      const tax = totalAmount * 0.07;
-      totalAmount += tax;
-
-      document.getElementById("totalAmount").textContent = totalAmount.toFixed(2);
-    };
+    } else {
+      document.getElementById("receiptDisplay").innerHTML = "<p>Invalid receipt link.</p>";
+    }
   </script>
-
 </body>
 </html>
