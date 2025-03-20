@@ -2,102 +2,90 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RekietaLabs Receipt</title>
+    <title>Receipt - RekietaLabs</title>
     <style>
         body {
             font-family: Arial, sans-serif;
+            padding: 20px;
             background-color: #f8f8f8;
             color: #333;
-            text-align: center;
-            padding: 20px;
         }
         .receipt-container {
-            max-width: 400px;
+            max-width: 600px;
             margin: auto;
-            background: white;
+            background-color: white;
             padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            text-align: left;
+            border: 1px solid #ccc;
         }
         h1 {
-            font-size: 22px;
-            margin-bottom: 5px;
-        }
-        .receipt-info {
-            font-size: 16px;
-            margin: 5px 0;
-        }
-        .items-list {
-            list-style-type: none;
-            padding: 0;
-        }
-        .items-list li {
-            padding: 5px 0;
-            border-bottom: 1px solid #ddd;
-        }
-        .total {
-            font-size: 18px;
-            font-weight: bold;
-            margin-top: 10px;
-        }
-        .disclaimer {
-            font-size: 12px;
-            color: gray;
-            margin-top: 20px;
             text-align: center;
+            color: #be9f13;
+        }
+        ul {
+            padding-left: 0;
+        }
+        li {
+            list-style: none;
+            padding: 5px 0;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 14px;
+            text-align: center;
+            color: #777;
         }
     </style>
 </head>
 <body>
 
-    <div class="receipt-container">
-        <h1>RekietaLabs Receipt</h1>
-        <p class="receipt-info"><strong>Order #:</strong> <span id="order-number"></span></p>
-        <p class="receipt-info"><strong>Cashier:</strong> <span id="cashier"></span></p>
-        <p class="receipt-info"><strong>Payment Type:</strong> <span id="payment-type"></span></p>
-
-        <h2>Items Purchased</h2>
-        <ul class="items-list" id="items"></ul>
-
-        <p class="total">Total: $<span id="total"></span></p>
-
-        <p class="disclaimer">
-            Disclaimer: These receipts are not always accurate.  
-            If you find any issues with it, feel free to reach out at:  
-            <strong>support@rekietalabs.com</strong>.
-        </p>
+<div class="receipt-container">
+    <h1>RekietaLabs Receipt</h1>
+    <div id="receipt-content">
+        <p>Loading receipt...</p>
     </div>
+    <div class="footer">
+        Thank you for shopping at RekietaLabs!
+    </div>
+</div>
 
-    <script>
-        // Get URL Parameters
-        function getQueryParam(param) {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(param);
+<script>
+    function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
+
+    function loadReceipt() {
+        const orderNumber = getQueryParam('ordernumber');
+        if (!orderNumber) {
+            document.getElementById('receipt-content').innerHTML = "<p>Invalid receipt link.</p>";
+            return;
         }
 
-        // Populate Receipt Details
-        document.getElementById("order-number").textContent = getQueryParam("ordernumber") || "Unknown";
-        document.getElementById("cashier").textContent = getQueryParam("cashier") || "Unknown";
-        document.getElementById("payment-type").textContent = getQueryParam("payment") || "Unknown";
-        document.getElementById("total").textContent = getQueryParam("total") || "0.00";
-
-        // Retrieve and Display Purchased Items
-        const itemsData = getQueryParam("items");
-        const itemsList = document.getElementById("items");
-
-        if (itemsData) {
-            const itemsArray = decodeURIComponent(itemsData).split(",");
-            itemsArray.forEach(item => {
-                const listItem = document.createElement("li");
-                listItem.textContent = item;
-                itemsList.appendChild(listItem);
-            });
-        } else {
-            itemsList.innerHTML = "<li>No items found</li>";
+        const saleKey = `sale_${orderNumber}`;
+        const saleData = localStorage.getItem(saleKey);
+        if (!saleData) {
+            document.getElementById('receipt-content').innerHTML = "<p>Receipt has expired or does not exist.</p>";
+            return;
         }
-    </script>
+
+        const data = JSON.parse(saleData);
+
+        let html = `<p><strong>Order Number:</strong> ${orderNumber}</p>`;
+        html += `<p><strong>Date:</strong> ${new Date(data.timestamp).toLocaleString()}</p>`;
+        html += `<p><strong>Cashier:</strong> ${data.cashier}</p>`;
+        html += `<ul>`;
+        data.order.forEach(item => {
+            html += `<li>${item.name} - $${item.price.toFixed(2)}</li>`;
+        });
+        html += `</ul>`;
+        html += `<p><strong>Total:</strong> $${parseFloat(data.total).toFixed(2)}</p>`;
+        html += `<p><strong>Payment Type:</strong> ${data.paymentType || 'Credit/Debit Visa'}</p>`;
+
+        document.getElementById('receipt-content').innerHTML = html;
+    }
+
+    loadReceipt();
+</script>
 
 </body>
 </html>
