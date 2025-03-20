@@ -1,183 +1,177 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RekietaLabs POS</title>
-    <style>
-        body {
-            background-color: #222;
-            color: white;
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .container {
-            display: flex;
-            width: 90%;
-            max-width: 1200px;
-        }
-        .left-panel {
-            width: 60%;
-            padding: 20px;
-        }
-        .right-panel {
-            width: 40%;
-            padding: 20px;
-            background-color: #333;
-        }
-        .hidden {
-            display: none;
-        }
-        button {
-            background-color: #be9f13;
-            color: white;
-            border: none;
-            padding: 15px;
-            margin: 5px;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-        select, input {
-            padding: 10px;
-            margin-bottom: 10px;
-        }
-        #pin-screen {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #222;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RekietaLabs POS</title>
+  <style>
+    body {
+      background-color: #222;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+    .container {
+      display: flex;
+    }
+    .left-panel {
+      width: 60%;
+      padding: 20px;
+    }
+    .right-panel {
+      width: 40%;
+      padding: 20px;
+      background-color: #333;
+    }
+    button {
+      background-color: #be9f13;
+      color: white;
+      border: none;
+      padding: 15px;
+      margin: 5px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    select {
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+    #pin-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    #cashier-ui {
+      display: none;
+    }
+  </style>
 </head>
 <body>
 
-    <div id="pin-screen">
-        <h2>Enter Store PIN</h2>
-        <input type="password" id="storePin" placeholder="Enter PIN">
-        <button onclick="checkPin()">Login</button>
-    </div>
+  <div id="pin-container">
+    <h2>Enter Store PIN</h2>
+    <input type="password" id="storePin" placeholder="Store PIN" />
+    <br/>
+    <button onclick="validatePIN()">Login</button>
+  </div>
 
+  <div id="cashier-ui">
     <h1>RekietaLabs POS</h1>
 
     <label for="terminalSelect">Select Terminal:</label>
     <select id="terminalSelect">
-        <option value="">-- Select --</option>
-        <option value="terminal1">Terminal 1</option>
-        <option value="terminal2">Terminal 2</option>
-        <option value="terminal3">Terminal 3</option>
-        <option value="terminal4">Terminal 4</option>
-        <option value="terminal5">Terminal 5</option>
+      <option value="">-- Select --</option>
+      <option value="terminal1">Terminal 1</option>
+      <option value="terminal2">Terminal 2</option>
+      <option value="terminal3">Terminal 3</option>
+      <option value="terminal4">Terminal 4</option>
+      <option value="terminal5">Terminal 5</option>
     </select>
-
     <button onclick="connectTerminal()">Connect to Terminal</button>
 
     <div class="container">
-        <div class="left-panel">
-            <h3>Items</h3>
-            <button onclick="addItem('Item A', 10.99)">Item A - $10.99</button>
-            <button onclick="addItem('Item B', 5.49)">Item B - $5.49</button>
-            <button onclick="addItem('Item C', 7.99)">Item C - $7.99</button>
-        </div>
-
-        <div class="right-panel">
-            <h3>Order Summary</h3>
-            <ul id="orderList"></ul>
-            <h3>Total: $<span id="totalAmount">0.00</span></h3>
-            <button onclick="sendSale()">Send Sale</button>
-        </div>
+      <div class="left-panel">
+        <h3>Items</h3>
+        <button onclick="addItem('Item A', 10.99)">Item A - $10.99</button>
+        <button onclick="addItem('Item B', 5.49)">Item B - $5.49</button>
+        <button onclick="addItem('Item C', 7.99)">Item C - $7.99</button>
+      </div>
+      <div class="right-panel">
+        <h3>Order Summary</h3>
+        <ul id="orderList"></ul>
+        <h3>Total: $<span id="totalAmount">0.00</span></h3>
+        <button onclick="sendSale()">Send Sale</button>
+      </div>
     </div>
+  </div>
 
-    <script>
-        let selectedTerminal = "";
+  <script>
+    // PIN login system
+    function validatePIN() {
+      const pin = document.getElementById("storePin").value;
+      if (pin === "7433") {
+        document.getElementById("pin-container").style.display = "none";
+        document.getElementById("cashier-ui").style.display = "block";
+      } else {
+        alert("Invalid PIN");
+      }
+    }
 
-        function checkPin() {
-            const pinInput = document.getElementById("storePin").value;
-            const correctPin = "1234"; // Replace with actual stored PIN validation
+    let selectedTerminal = "";
+    let order = [];
+    let total = 0;
 
-            if (pinInput === correctPin) {
-                document.getElementById("pin-screen").style.display = "none";
-            } else {
-                alert("Incorrect PIN!");
-            }
-        }
+    function connectTerminal() {
+      const newTerminal = document.getElementById("terminalSelect").value;
+      if (!newTerminal) {
+        alert("Please select a terminal.");
+        return;
+      }
 
-        function connectTerminal() {
-            let newTerminal = document.getElementById("terminalSelect").value;
-            
-            if (newTerminal) {
-                if (selectedTerminal && selectedTerminal !== newTerminal) {
-                    localStorage.removeItem(selectedTerminal);
-                }
+      // Disconnect from old terminal
+      if (selectedTerminal && selectedTerminal !== newTerminal) {
+        const connected = JSON.parse(localStorage.getItem("connectedTerminals") || "{}");
+        delete connected[selectedTerminal];
+        localStorage.setItem("connectedTerminals", JSON.stringify(connected));
+      }
 
-                selectedTerminal = newTerminal;
-                localStorage.setItem("selectedTerminal", selectedTerminal);
-                alert(`Connected to ${selectedTerminal}`);
-            } else {
-                alert("Please select a terminal first.");
-            }
-        }
+      selectedTerminal = newTerminal;
 
-        let order = [];
-        let total = 0;
+      // Allow multiple devices to connect to the same terminal
+      const connected = JSON.parse(localStorage.getItem("connectedTerminals") || "{}");
+      connected[selectedTerminal] = true;
+      localStorage.setItem("connectedTerminals", JSON.stringify(connected));
 
-        function addItem(name, price) {
-            order.push({ name, price });
-            total += price;
-            updateOrderDisplay();
-        }
+      alert(`Connected to ${selectedTerminal}`);
+    }
 
-        function updateOrderDisplay() {
-            let orderList = document.getElementById("orderList");
-            orderList.innerHTML = "";
-            order.forEach(item => {
-                let li = document.createElement("li");
-                li.textContent = `${item.name} - $${item.price.toFixed(2)}`;
-                orderList.appendChild(li);
-            });
-            document.getElementById("totalAmount").textContent = total.toFixed(2);
-        }
+    function addItem(name, price) {
+      order.push({ name, price });
+      total += price;
+      updateOrderDisplay();
+    }
 
-        function sendSale() {
-            if (!selectedTerminal) {
-                alert("Please connect to a terminal first.");
-                return;
-            }
+    function updateOrderDisplay() {
+      let orderList = document.getElementById("orderList");
+      orderList.innerHTML = "";
+      order.forEach(item => {
+        let li = document.createElement("li");
+        li.textContent = `${item.name} - $${item.price.toFixed(2)}`;
+        orderList.appendChild(li);
+      });
+      document.getElementById("totalAmount").textContent = total.toFixed(2);
+    }
 
-            let saleData = {
-                order: order,
-                total: total.toFixed(2)
-            };
+    function sendSale() {
+      if (!selectedTerminal) {
+        alert("Please connect to a terminal first.");
+        return;
+      }
 
-            localStorage.setItem(selectedTerminal + "_saleData", JSON.stringify(saleData));
-            alert("Sale sent to terminal!");
+      const orderNumber = Math.floor(100000 + Math.random() * 900000);
+      const saleKey = `sale_${orderNumber}`;
+      const saleData = {
+        order,
+        total: total.toFixed(2),
+        timestamp: Date.now(),
+        expiresAt: Date.now() + 5 * 60 * 1000, // expires in 5 minutes
+        orderNumber,
+        terminal: selectedTerminal
+      };
 
-            // Reset order after sending
-            order = [];
-            total = 0;
-            updateOrderDisplay();
-        }
+      localStorage.setItem(saleKey, JSON.stringify(saleData));
 
-        function checkStoredTerminal() {
-            let storedTerminal = localStorage.getItem("selectedTerminal");
-            if (storedTerminal) {
-                selectedTerminal = storedTerminal;
-                document.getElementById("terminalSelect").value = selectedTerminal;
-            }
-        }
+      // Open terminal in new tab with order number
+      const terminalUrl = `/pos/${selectedTerminal}.html?ordernumber=${orderNumber}`;
+      window.open(terminalUrl, "_blank");
 
-        checkStoredTerminal();
-    </script>
+      // Reset order
+      order = [];
+      total = 0;
+      updateOrderDisplay();
+    }
+  </script>
 
 </body>
 </html>
