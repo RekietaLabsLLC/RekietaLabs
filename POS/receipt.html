@@ -1,91 +1,109 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Receipt - RekietaLabs</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-            background-color: #f8f8f8;
-            color: #333;
-        }
-        .receipt-container {
-            max-width: 600px;
-            margin: auto;
-            background-color: white;
-            padding: 20px;
-            border: 1px solid #ccc;
-        }
-        h1 {
-            text-align: center;
-            color: #be9f13;
-        }
-        ul {
-            padding-left: 0;
-        }
-        li {
-            list-style: none;
-            padding: 5px 0;
-        }
-        .footer {
-            margin-top: 20px;
-            font-size: 14px;
-            text-align: center;
-            color: #777;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Receipt - RekietaLabs</title>
+  <style>
+    body {
+      background-color: #222;
+      color: white;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .receipt-container {
+      background-color: #333;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .receipt-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .receipt-details {
+      list-style-type: none;
+      padding: 0;
+    }
+    .receipt-details li {
+      margin: 10px 0;
+    }
+    .total {
+      font-size: 1.2em;
+      margin-top: 20px;
+    }
+    .back-link {
+      display: block;
+      text-align: center;
+      margin-top: 30px;
+      color: #be9f13;
+      text-decoration: none;
+    }
+  </style>
 </head>
 <body>
 
-<div class="receipt-container">
-    <h1>RekietaLabs Receipt</h1>
-    <div id="receipt-content">
-        <p>Loading receipt...</p>
+  <h1>RekietaLabs Receipt</h1>
+
+  <div class="receipt-container">
+    <div class="receipt-header">
+      <h2>Receipt Details</h2>
+      <p id="orderNumber">Order Number: </p>
     </div>
-    <div class="footer">
-        Thank you for shopping at RekietaLabs!
+
+    <ul id="receiptDetails" class="receipt-details"></ul>
+
+    <div class="total">
+      Total: $<span id="totalAmount">0.00</span>
     </div>
-</div>
 
-<script>
-    function getQueryParam(param) {
-        const urlParams = new URLSearchParams(window.location.search);
-        return urlParams.get(param);
-    }
+    <a href="/" class="back-link">Back to Home</a>
+  </div>
 
-    function loadReceipt() {
-        const orderNumber = getQueryParam('ordernumber');
-        if (!orderNumber) {
-            document.getElementById('receipt-content').innerHTML = "<p>Invalid receipt link.</p>";
-            return;
-        }
+  <script>
+    window.onload = function() {
+      // Get the order number from the URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const orderNumber = urlParams.get('ordernumber');
 
-        const saleKey = `sale_${orderNumber}`;
-        const saleData = localStorage.getItem(saleKey);
-        if (!saleData) {
-            document.getElementById('receipt-content').innerHTML = "<p>Receipt has expired or does not exist.</p>";
-            return;
-        }
+      if (!orderNumber) {
+        alert("No order number found.");
+        return;
+      }
 
-        const data = JSON.parse(saleData);
+      const saleKey = `sale_${orderNumber}`;
+      const saleData = JSON.parse(localStorage.getItem(saleKey));
 
-        let html = `<p><strong>Order Number:</strong> ${orderNumber}</p>`;
-        html += `<p><strong>Date:</strong> ${new Date(data.timestamp).toLocaleString()}</p>`;
-        html += `<p><strong>Cashier:</strong> ${data.cashier}</p>`;
-        html += `<ul>`;
-        data.order.forEach(item => {
-            html += `<li>${item.name} - $${item.price.toFixed(2)}</li>`;
-        });
-        html += `</ul>`;
-        html += `<p><strong>Total:</strong> $${parseFloat(data.total).toFixed(2)}</p>`;
-        html += `<p><strong>Payment Type:</strong> ${data.paymentType || 'Credit/Debit Visa'}</p>`;
+      if (!saleData) {
+        alert("Invalid or expired order.");
+        return;
+      }
 
-        document.getElementById('receipt-content').innerHTML = html;
-    }
+      // Display the order number
+      document.getElementById("orderNumber").textContent = `Order Number: ${orderNumber}`;
 
-    loadReceipt();
-</script>
+      // Display the items and total
+      const receiptDetails = document.getElementById("receiptDetails");
+      let totalAmount = 0;
+      saleData.order.forEach(item => {
+        let li = document.createElement("li");
+        li.textContent = `${item.name} - $${item.price.toFixed(2)}`;
+        receiptDetails.appendChild(li);
+        totalAmount += item.price;
+      });
+
+      // Apply tax (let's assume 7% tax for this example)
+      const tax = totalAmount * 0.07;
+      totalAmount += tax;
+
+      document.getElementById("totalAmount").textContent = totalAmount.toFixed(2);
+    };
+  </script>
 
 </body>
 </html>
