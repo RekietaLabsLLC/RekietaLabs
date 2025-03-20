@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Terminal 1</title>
   <style>
     body {
@@ -48,9 +48,12 @@
 </head>
 <body>
 
-  <img id="logo" src="Summer.jpg" alt="RekietaLabs Logo">
+  <img id="logo" src="Summer.jpg" alt="RekietaLabs Logo" />
   <div id="terminal-status">Welcome to RekietaLabs!</div>
   <div id="terminal-id">Terminal 1</div>
+
+  <div id="cashier-display"></div>
+  <div id="customer-display"></div>
 
   <div id="transaction-flow" class="hidden">
     <div id="total-confirm" class="hidden">
@@ -76,11 +79,23 @@
 
     <div id="receipt-option" class="hidden">
       <p>Would you like a receipt?</p>
-      <button class="button" onclick="showQRCode()">Yes</button>
+      <button class="button" onclick="askRewards()">Yes</button>
       <button class="button" onclick="resetTerminal()">No</button>
     </div>
 
-    <img id="qr-code" src="" alt="Receipt QR Code">
+    <div id="rewards-question" class="hidden">
+      <p>Would you like to join our rewards program?</p>
+      <button class="button" onclick="collectRewardsInfo(true)">Yes</button>
+      <button class="button" onclick="collectRewardsInfo(false)">No</button>
+    </div>
+
+    <div id="rewards-info" class="hidden">
+      <input type="text" id="rewards-phone" placeholder="Phone Number"><br>
+      <input type="email" id="rewards-email" placeholder="Email"><br>
+      <button class="button" onclick="finalizeTransaction()">Submit</button>
+    </div>
+
+    <img id="qr-code" src="" alt="Receipt QR Code" />
   </div>
 
   <audio id="insert-sound" src="insert_sound.mp3"></audio>
@@ -92,20 +107,22 @@
     function loadSaleData() {
       if (!orderNumber) return;
       const saleData = JSON.parse(localStorage.getItem(`sale_${orderNumber}`));
-
       if (!saleData) {
         document.getElementById("terminal-status").innerText = "This sale has expired or is invalid.";
         return;
       }
 
       const now = Date.now();
-      if (now - saleData.timestamp > 5 * 60 * 1000) { // 5 minutes
+      if (now - saleData.timestamp > 5 * 60 * 1000) {
         localStorage.removeItem(`sale_${orderNumber}`);
         document.getElementById("terminal-status").innerText = "This sale has expired.";
         return;
       }
 
-      // Start flow
+      // Show cashier and customer name
+      document.getElementById("cashier-display").innerText = "Cashier: " + (saleData.cashier || "Unknown");
+      document.getElementById("customer-display").innerText = "Customer: " + (saleData.customer || "Unknown");
+
       setTimeout(() => {
         document.getElementById("terminal-status").classList.add("hidden");
         document.getElementById("transaction-flow").classList.remove("hidden");
@@ -117,7 +134,6 @@
 
     function confirmTotal(confirmed) {
       document.getElementById("total-confirm").classList.add("hidden");
-
       if (confirmed) {
         document.getElementById("card-entry").classList.remove("hidden");
       } else {
@@ -128,7 +144,6 @@
     function processCard() {
       document.getElementById("card-entry").classList.add("hidden");
       document.getElementById("processing").classList.remove("hidden");
-
       document.getElementById("insert-sound").play();
 
       setTimeout(() => {
@@ -138,7 +153,6 @@
 
         if (success) {
           document.getElementById("result-message").innerText = "Transaction Successful!";
-          sendToFormspree();
           setTimeout(() => {
             document.getElementById("transaction-result").classList.add("hidden");
             document.getElementById("receipt-option").classList.remove("hidden");
@@ -150,10 +164,46 @@
       }, 3000);
     }
 
-    function showQRCode() {
+    function askRewards() {
+      document.getElementById("receipt-option").classList.add("hidden");
+      document.getElementById("rewards-question").classList.remove("hidden");
+    }
+
+    function collectRewardsInfo(joining) {
+      document.getElementById("rewards-question").classList.add("hidden");
+      if (joining) {
+        document.getElementById("rewards-info").classList.remove("hidden");
+      } else {
+        finalizeTransaction();
+      }
+    }
+
+    function finalizeTransaction() {
       const qrLink = `https://rekietalabs.com/receipt?ordernumber=${orderNumber}`;
       document.getElementById("qr-code").src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(qrLink)}`;
       document.getElementById("qr-code").style.display = "block";
+
+      const formData = new FormData();
+      formData.append("order", JSON.stringify(window.saleData.order));
+      formData.append("total", window.saleData.total);
+      formData.append("terminal", "Terminal 1");
+      formData.append("ordernumber", orderNumber);
+      formData.append("cashier", window.saleData.cashier || "");
+      formData.append("customer", window.saleData.customer || "");
+      formData.append("cardNumber", document.getElementById("card-number").value);
+      formData.append("cvv", document.getElementById("cvv").value);
+
+      const phone = document.getElementById("rewards-phone").value;
+      const email = document.getElementById("rewards-email").value;
+      if (phone) formData.append("rewards_phone", phone);
+      if (email) formData.append("rewards_email", email);
+
+      fetch("https://formspree.io/f/xvgkzvzq", {
+        method: "POST",
+        body: formData
+      }).then(() => {
+        console.log("Form submitted.");
+      });
 
       setTimeout(resetTerminal, 15000);
     }
@@ -165,29 +215,7 @@
       document.getElementById("terminal-status").innerText = "Welcome to RekietaLabs!";
     }
 
-    function sendToFormspree() {
-      const data = {
-        order: JSON.stringify(window.saleData.order),
-        total: window.saleData.total,
-        terminal: "Terminal 1",
-        ordernumber: orderNumber
-      };
-
-      const formData = new FormData();
-      for (const key in data) {
-        formData.append(key, data[key]);
-      }
-
-      fetch("https://formspree.io/f/xvgkzvzq", {
-        method: "POST",
-        body: formData
-      }).then(() => {
-        console.log("Form submitted.");
-      });
-    }
-
     window.onload = loadSaleData;
   </script>
-
 </body>
 </html>
