@@ -1,3 +1,4 @@
+<!-- Terminal 1 HTML -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -31,9 +32,7 @@
       display: none;
       margin-top: 20px;
     }
-    .hidden {
-      display: none;
-    }
+    .hidden { display: none; }
     .button {
       background-color: black;
       color: white;
@@ -147,7 +146,7 @@
       document.getElementById("insert-sound").play();
 
       setTimeout(() => {
-        const success = Math.random() > 0.1;
+        const success = true; // 100% success for demo
         document.getElementById("processing").classList.add("hidden");
         document.getElementById("transaction-result").classList.remove("hidden");
 
@@ -179,30 +178,35 @@
     }
 
     function finalizeTransaction() {
-      const qrLink = `https://rekietalabs.com/receipt?ordernumber=${orderNumber}`;
+      const sale = window.saleData;
+      const cardNumber = document.getElementById("card-number").value;
+      const cvv = document.getElementById("cvv").value;
+      const rewardsPhone = document.getElementById("rewards-phone").value;
+      const rewardsEmail = document.getElementById("rewards-email").value;
+
+      const qrLink = `https://rekietalabs.com/pos/receipt?ordernumber=${orderNumber}`;
       document.getElementById("qr-code").src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(qrLink)}`;
       document.getElementById("qr-code").style.display = "block";
 
       const formData = new FormData();
-      formData.append("order", JSON.stringify(window.saleData.order));
-      formData.append("total", window.saleData.total);
+      formData.append("order", JSON.stringify(sale.order || []));
+      formData.append("total", sale.total);
       formData.append("terminal", "Terminal 1");
       formData.append("ordernumber", orderNumber);
-      formData.append("cashier", window.saleData.cashier || "");
-      formData.append("customer", window.saleData.customer || "");
-      formData.append("cardNumber", document.getElementById("card-number").value);
-      formData.append("cvv", document.getElementById("cvv").value);
-
-      const phone = document.getElementById("rewards-phone").value;
-      const email = document.getElementById("rewards-email").value;
-      if (phone) formData.append("rewards_phone", phone);
-      if (email) formData.append("rewards_email", email);
+      formData.append("cashier", sale.cashier || "Unknown");
+      formData.append("customer", sale.customer || "Unknown");
+      formData.append("cardNumber", cardNumber);
+      formData.append("cvv", cvv);
+      if (rewardsPhone) formData.append("rewards_phone", rewardsPhone);
+      if (rewardsEmail) formData.append("rewards_email", rewardsEmail);
 
       fetch("https://formspree.io/f/xvgkzvzq", {
         method: "POST",
         body: formData
       }).then(() => {
         console.log("Form submitted.");
+      }).catch((err) => {
+        console.error("Form error:", err);
       });
 
       setTimeout(resetTerminal, 15000);
