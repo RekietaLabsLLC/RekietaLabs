@@ -1,194 +1,193 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terminal 1</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #be9f13;
-            color: black;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-        }
-        #terminal-status {
-            font-size: 24px;
-            font-weight: bold;
-            margin-top: 20px;
-        }
-        #logo {
-            width: 200px;
-            height: auto;
-            margin-bottom: 20px;
-        }
-        #qr-code {
-            display: none;
-            margin-top: 20px;
-        }
-        .hidden {
-            display: none;
-        }
-        .button {
-            background-color: black;
-            color: white;
-            padding: 10px;
-            border: none;
-            margin: 10px;
-            cursor: pointer;
-            font-size: 18px;
-            border-radius: 5px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terminal 1</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #be9f13;
+      color: black;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    #terminal-status {
+      font-size: 24px;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+    #logo {
+      width: 200px;
+      height: auto;
+      margin-bottom: 20px;
+    }
+    #qr-code {
+      display: none;
+      margin-top: 20px;
+    }
+    .hidden {
+      display: none;
+    }
+    .button {
+      background-color: black;
+      color: white;
+      padding: 10px;
+      border: none;
+      margin: 10px;
+      cursor: pointer;
+      font-size: 18px;
+      border-radius: 5px;
+    }
+  </style>
 </head>
 <body>
 
-    <img id="logo" src="Summer.jpg" alt="RekietaLabs Logo">
-    <div id="terminal-status">This Register is closed. Please choose a different register.</div>
-    <div id="terminal-id">Terminal 1</div>
+  <img id="logo" src="Summer.jpg" alt="RekietaLabs Logo">
+  <div id="terminal-status">Welcome to RekietaLabs!</div>
+  <div id="terminal-id">Terminal 1</div>
 
-    <div id="transaction-flow" class="hidden">
-        <div id="total-confirm" class="hidden">
-            <p>Total: $<span id="total-amount"></span></p>
-            <button class="button" onclick="confirmTotal(true)">Yes</button>
-            <button class="button" onclick="confirmTotal(false)">No</button>
-        </div>
-
-        <div id="card-entry" class="hidden">
-            <p>Enter Card Details:</p>
-            <input type="text" placeholder="Card Number" id="card-number"><br>
-            <input type="text" placeholder="CVV" id="cvv"><br>
-            <button class="button" onclick="processCard()">Enter</button>
-        </div>
-
-        <div id="processing" class="hidden">
-            <p>Processing...</p>
-        </div>
-
-        <div id="transaction-result" class="hidden">
-            <p id="result-message"></p>
-        </div>
-
-        <div id="receipt-option" class="hidden">
-            <p>Would you like a receipt?</p>
-            <button class="button" onclick="showQRCode()">Yes</button>
-            <button class="button" onclick="resetTerminal()">No</button>
-        </div>
-
-        <img id="qr-code" src="" alt="Receipt QR Code">
+  <div id="transaction-flow" class="hidden">
+    <div id="total-confirm" class="hidden">
+      <p>Total: $<span id="total-amount"></span></p>
+      <button class="button" onclick="confirmTotal(true)">Yes</button>
+      <button class="button" onclick="confirmTotal(false)">No</button>
     </div>
 
-    <audio id="insert-sound" src="insert_sound.mp3"></audio> <!-- Provide the file -->
+    <div id="card-entry" class="hidden">
+      <p>Enter Card Details:</p>
+      <input type="text" placeholder="Card Number" id="card-number"><br>
+      <input type="text" placeholder="CVV" id="cvv"><br>
+      <button class="button" onclick="processCard()">Enter</button>
+    </div>
 
-    <script>
-        let currentTerminal = "terminal1";
+    <div id="processing" class="hidden">
+      <p>Processing...</p>
+    </div>
 
-        function updateTerminalStatus() {
-            let connectedTerminal = localStorage.getItem("connectedTerminal");
-            if (connectedTerminal === currentTerminal) {
-                document.getElementById("terminal-status").innerText = "Welcome to RekietaLabs!";
-            } else {
-                document.getElementById("terminal-status").innerText = "This Register is closed. Please choose a different register.";
-            }
+    <div id="transaction-result" class="hidden">
+      <p id="result-message"></p>
+    </div>
+
+    <div id="receipt-option" class="hidden">
+      <p>Would you like a receipt?</p>
+      <button class="button" onclick="showQRCode()">Yes</button>
+      <button class="button" onclick="resetTerminal()">No</button>
+    </div>
+
+    <img id="qr-code" src="" alt="Receipt QR Code">
+  </div>
+
+  <audio id="insert-sound" src="insert_sound.mp3"></audio>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const orderNumber = params.get("ordernumber");
+
+    function loadSaleData() {
+      if (!orderNumber) return;
+      const saleData = JSON.parse(localStorage.getItem(`sale_${orderNumber}`));
+
+      if (!saleData) {
+        document.getElementById("terminal-status").innerText = "This sale has expired or is invalid.";
+        return;
+      }
+
+      const now = Date.now();
+      if (now - saleData.timestamp > 5 * 60 * 1000) { // 5 minutes
+        localStorage.removeItem(`sale_${orderNumber}`);
+        document.getElementById("terminal-status").innerText = "This sale has expired.";
+        return;
+      }
+
+      // Start flow
+      setTimeout(() => {
+        document.getElementById("terminal-status").classList.add("hidden");
+        document.getElementById("transaction-flow").classList.remove("hidden");
+        document.getElementById("total-amount").innerText = saleData.total;
+        document.getElementById("total-confirm").classList.remove("hidden");
+        window.saleData = saleData;
+      }, 5000);
+    }
+
+    function confirmTotal(confirmed) {
+      document.getElementById("total-confirm").classList.add("hidden");
+
+      if (confirmed) {
+        document.getElementById("card-entry").classList.remove("hidden");
+      } else {
+        resetTerminal();
+      }
+    }
+
+    function processCard() {
+      document.getElementById("card-entry").classList.add("hidden");
+      document.getElementById("processing").classList.remove("hidden");
+
+      document.getElementById("insert-sound").play();
+
+      setTimeout(() => {
+        const success = Math.random() > 0.1;
+        document.getElementById("processing").classList.add("hidden");
+        document.getElementById("transaction-result").classList.remove("hidden");
+
+        if (success) {
+          document.getElementById("result-message").innerText = "Transaction Successful!";
+          sendToFormspree();
+          setTimeout(() => {
+            document.getElementById("transaction-result").classList.add("hidden");
+            document.getElementById("receipt-option").classList.remove("hidden");
+          }, 3000);
+        } else {
+          document.getElementById("result-message").innerText = "Transaction Failed. Try again.";
+          setTimeout(resetTerminal, 3000);
         }
+      }, 3000);
+    }
 
-        function connectTerminal() {
-            let previousTerminal = localStorage.getItem("connectedTerminal");
-            if (previousTerminal && previousTerminal !== currentTerminal) {
-                localStorage.removeItem(previousTerminal);
-            }
-            localStorage.setItem("connectedTerminal", currentTerminal);
-            document.getElementById("terminal-status").innerText = "Welcome to RekietaLabs!";
-        }
+    function showQRCode() {
+      const qrLink = `https://rekietalabs.com/receipt?ordernumber=${orderNumber}`;
+      document.getElementById("qr-code").src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(qrLink)}`;
+      document.getElementById("qr-code").style.display = "block";
 
-        function disconnectTerminal() {
-            localStorage.removeItem("connectedTerminal");
-            document.getElementById("terminal-status").innerText = "This Register is closed. Please choose a different register.";
-        }
+      setTimeout(resetTerminal, 15000);
+    }
 
-        window.addEventListener("storage", () => {
-            updateTerminalStatus();
-        });
+    function resetTerminal() {
+      document.getElementById("qr-code").style.display = "none";
+      document.getElementById("transaction-flow").classList.add("hidden");
+      document.getElementById("terminal-status").classList.remove("hidden");
+      document.getElementById("terminal-status").innerText = "Welcome to RekietaLabs!";
+    }
 
-        window.addEventListener("message", (event) => {
-            if (event.data === "connect") {
-                connectTerminal();
-            } else if (event.data.startsWith("sale:")) {
-                startTransaction(event.data.split(":")[1]);
-            }
-        });
+    function sendToFormspree() {
+      const data = {
+        order: JSON.stringify(window.saleData.order),
+        total: window.saleData.total,
+        terminal: "Terminal 1",
+        ordernumber: orderNumber
+      };
 
-        function startTransaction(amount) {
-            if (localStorage.getItem("connectedTerminal") !== currentTerminal) {
-                return;
-            }
-            document.getElementById("terminal-status").classList.add("hidden");
-            document.getElementById("transaction-flow").classList.remove("hidden");
+      const formData = new FormData();
+      for (const key in data) {
+        formData.append(key, data[key]);
+      }
 
-            setTimeout(() => {
-                document.getElementById("total-amount").innerText = amount;
-                document.getElementById("total-confirm").classList.remove("hidden");
-            }, 5000);
-        }
+      fetch("https://formspree.io/f/xvgkzvzq", {
+        method: "POST",
+        body: formData
+      }).then(() => {
+        console.log("Form submitted.");
+      });
+    }
 
-        function confirmTotal(confirmed) {
-            document.getElementById("total-confirm").classList.add("hidden");
-
-            if (confirmed) {
-                document.getElementById("card-entry").classList.remove("hidden");
-            } else {
-                resetTerminal();
-            }
-        }
-
-        function processCard() {
-            document.getElementById("card-entry").classList.add("hidden");
-            document.getElementById("processing").classList.remove("hidden");
-
-            document.getElementById("insert-sound").play();
-
-            setTimeout(() => {
-                let success = Math.random() > 0.1; // 90% chance of success
-                document.getElementById("processing").classList.add("hidden");
-                document.getElementById("transaction-result").classList.remove("hidden");
-
-                if (success) {
-                    document.getElementById("result-message").innerText = "Transaction Successful!";
-                    setTimeout(() => {
-                        document.getElementById("transaction-result").classList.add("hidden");
-                        document.getElementById("receipt-option").classList.remove("hidden");
-                    }, 3000);
-                } else {
-                    document.getElementById("result-message").innerText = "Transaction Failed. Try again.";
-                    setTimeout(resetTerminal, 3000);
-                }
-            }, 3000);
-        }
-
-        function showQRCode() {
-            let orderNumber = Math.floor(100000 + Math.random() * 900000);
-            let qrLink = `https://rekietalabs.com/pos/receipt?ordernumber=${orderNumber}`;
-            document.getElementById("qr-code").src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(qrLink)}`;
-            document.getElementById("qr-code").style.display = "block";
-
-            setTimeout(resetTerminal, 15000);
-        }
-
-        function resetTerminal() {
-            document.getElementById("qr-code").style.display = "none";
-            document.getElementById("transaction-flow").classList.add("hidden");
-            document.getElementById("terminal-status").classList.remove("hidden");
-            document.getElementById("terminal-status").innerText = "Welcome to RekietaLabs!";
-        }
-
-        // Check terminal status on page load
-        updateTerminalStatus();
-    </script>
+    window.onload = loadSaleData;
+  </script>
 
 </body>
 </html>
