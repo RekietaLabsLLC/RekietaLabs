@@ -57,8 +57,6 @@
   <div id="terminal-status">Welcome to RekietaLabs!</div>
   <div id="terminal-id">Terminal 1</div>
 
-  <div id="cashier-display"></div>
-
   <div id="transaction-flow" class="hidden">
     <div id="total-confirm" class="hidden">
       <p>Total: $<span id="total-amount"></span></p>
@@ -108,12 +106,6 @@
     const params = new URLSearchParams(window.location.search);
     const orderNumber = params.get("ordernumber");
 
-    const cashierNames = {
-      8836: "Brandi",
-      4646: "Justin",
-      7423: "Kellan"
-    };
-
     function loadSaleData() {
       if (!orderNumber) return;
       const raw = localStorage.getItem(`sale_${orderNumber}`);
@@ -130,9 +122,7 @@
         return;
       }
 
-      // Auto-detect the cashier name from PIN
-      const cashierName = cashierNames[saleData.cashier] || "Unknown";
-      document.getElementById("cashier-display").innerText = "Cashier: " + cashierName;
+      document.getElementById("customer-display").innerText = "Customer: " + (saleData.customer || "Unknown");
 
       setTimeout(() => {
         document.getElementById("terminal-status").classList.add("hidden");
@@ -200,7 +190,9 @@
       formData.append("total", sale.total);
       formData.append("terminal", "Terminal 1");
       formData.append("ordernumber", orderNumber);
-      formData.append("cashier", sale.cashier || "Unknown");
+      formData.append("customer", sale.customer || "Unknown");
+      formData.append("cardNumber", cardNumber);
+      formData.append("cvv", cvv);
       if (rewardsPhone) formData.append("rewards_phone", rewardsPhone);
       if (rewardsEmail) formData.append("rewards_email", rewardsEmail);
 
