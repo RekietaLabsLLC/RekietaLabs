@@ -122,12 +122,10 @@
         return;
       }
 
-      document.getElementById("customer-display").innerText = "Customer: " + (saleData.customer || "Unknown");
-
+      document.getElementById("total-amount").innerText = saleData.total;
       setTimeout(() => {
         document.getElementById("terminal-status").classList.add("hidden");
         document.getElementById("transaction-flow").classList.remove("hidden");
-        document.getElementById("total-amount").innerText = saleData.total;
         document.getElementById("total-confirm").classList.remove("hidden");
         window.saleData = saleData;
       }, 5000);
@@ -205,7 +203,11 @@
         console.error("Form error:", err);
       });
 
-      setTimeout(resetTerminal, 15000);
+      // Reset to homepage state after 3 seconds
+      setTimeout(() => {
+        resetTerminal();
+        document.getElementById("terminal-status").innerText = "Welcome to RekietaLabs!";
+      }, 3000);
     }
 
     function resetTerminal() {
