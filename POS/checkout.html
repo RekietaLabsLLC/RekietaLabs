@@ -59,16 +59,9 @@
   <div id="cashier-ui">
     <h1>RekietaLabs POS</h1>
 
-    <label for="terminalSelect">Select Terminal:</label>
-    <select id="terminalSelect">
-      <option value="">-- Select --</option>
-      <option value="terminal1">Terminal 1</option>
-      <option value="terminal2">Terminal 2</option>
-      <option value="terminal3">Terminal 3</option>
-      <option value="terminal4">Terminal 4</option>
-      <option value="terminal5">Terminal 5</option>
-    </select>
-    <button onclick="connectTerminal()">Connect to Terminal</button>
+    <p>Terminal 1 is the only available terminal for connection.</p>
+
+    <button onclick="connectTerminal()">Connect to Terminal 1</button>
 
     <div class="container">
       <div class="left-panel">
@@ -105,32 +98,13 @@
       }
     }
 
-    let selectedTerminal = "";
+    let selectedTerminal = "terminal1"; // Hardcoded to Terminal 1
     let order = [];
     let total = 0;
     let cashierName = "";
 
     function connectTerminal() {
-      const newTerminal = document.getElementById("terminalSelect").value;
-      if (!newTerminal) {
-        alert("Please select a terminal.");
-        return;
-      }
-
-      // Disconnect from old terminal
-      if (selectedTerminal && selectedTerminal !== newTerminal) {
-        const connected = JSON.parse(localStorage.getItem("connectedTerminals") || "{}");
-        delete connected[selectedTerminal];
-        localStorage.setItem("connectedTerminals", JSON.stringify(connected));
-      }
-
-      selectedTerminal = newTerminal;
-
-      // Allow multiple devices to connect to the same terminal
-      const connected = JSON.parse(localStorage.getItem("connectedTerminals") || "{}");
-      connected[selectedTerminal] = true;
-      localStorage.setItem("connectedTerminals", JSON.stringify(connected));
-
+      // Since only Terminal 1 is available, no need to select or disconnect from others
       alert(`Connected to ${selectedTerminal}`);
     }
 
@@ -152,11 +126,6 @@
     }
 
     function sendSale() {
-      if (!selectedTerminal) {
-        alert("Please connect to a terminal first.");
-        return;
-      }
-
       // Submit sale data
       submitSale();
     }
