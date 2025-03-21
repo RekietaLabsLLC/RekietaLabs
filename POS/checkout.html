@@ -88,9 +88,16 @@
 
   <script>
     // PIN login system
+    const cashiers = {
+      8836: 'Brandi',
+      4646: 'Justin',
+      7423: 'Kellan'
+    };
+
     function validatePIN() {
       const pin = document.getElementById("storePin").value;
-      if (pin === "7433") {
+      if (cashiers[pin]) {
+        cashierName = cashiers[pin];
         document.getElementById("pin-container").style.display = "none";
         document.getElementById("cashier-ui").style.display = "block";
       } else {
@@ -102,7 +109,6 @@
     let order = [];
     let total = 0;
     let cashierName = "";
-    let customerName = "";
 
     function connectTerminal() {
       const newTerminal = document.getElementById("terminalSelect").value;
@@ -151,13 +157,7 @@
         return;
       }
 
-      // Step 1: Prompt for customer name
-      customerName = prompt("Enter the customer's name:");
-
-      // Step 2: Prompt for cashier name
-      cashierName = prompt("Enter the cashier's name:");
-
-      // Step 3: Submit sale data
+      // Submit sale data
       submitSale();
     }
 
@@ -171,7 +171,7 @@
         expiresAt: Date.now() + 5 * 60 * 1000, // expires in 5 minutes
         orderNumber,
         terminal: selectedTerminal,
-        customerName,
+        customerName: "", // No longer prompting for customer name
         cashierName
       };
 
