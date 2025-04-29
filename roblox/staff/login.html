@@ -60,10 +60,8 @@
     const account = new Appwrite.Account(client);
 
     function loginWithDiscord() {
-      account.createOAuth2Session(
-        'discord',
-        'https://rekietalabs.com/success.html' // after login
-      );
+      // No redirect params → use Appwrite default callback
+      account.createOAuth2Session('discord');
     }
   </script>
 </body>
