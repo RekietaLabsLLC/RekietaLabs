@@ -16,31 +16,29 @@
       margin: 0;
       flex-direction: column;
     }
-    a {
-      color: #58a6ff;
-      text-decoration: underline;
-      margin-top: 1rem;
-    }
   </style>
 </head>
 <body>
-  <h1>Loading your staff session...</h1>
+  <h1>Logging you in...</h1>
 
   <script>
     const client = new Appwrite.Client()
       .setEndpoint('https://fra.cloud.appwrite.io/v1')
-      .setProject('rlrs');
+      .setProject('rlrs'); // your project ID here
 
     const account = new Appwrite.Account(client);
 
+    // Check if the user is logged in
     account.get()
       .then(user => {
         console.log("Logged in as:", user);
-        window.location.href = "/staff/dashboard.html";
+        // Now, redirect them to the dashboard
+        window.location.href = "/roblox/staff/dashboard.html"; // replace with your actual dashboard page
       })
       .catch(error => {
-        console.log("Not logged in", error);
-        document.body.innerHTML = '<h1>Session not found</h1><a href="/login.html">Go back to login</a>';
+        console.log("Error while checking login:", error);
+        // Redirect to login if no session found
+        window.location.href = "/roblox/staff/login.html"; // or another error page
       });
   </script>
 </body>
