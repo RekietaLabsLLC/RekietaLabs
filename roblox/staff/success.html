@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>RekietaLabs Staff Redirect</title>
+  <script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.0"></script>
+  <style>
+    body {
+      background-color: #1e1e2f;
+      color: white;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      flex-direction: column;
+    }
+    a {
+      color: #58a6ff;
+      text-decoration: underline;
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Loading your staff session...</h1>
+
+  <script>
+    const client = new Appwrite.Client()
+      .setEndpoint('https://fra.cloud.appwrite.io/v1')
+      .setProject('rlrs');
+
+    const account = new Appwrite.Account(client);
+
+    account.get()
+      .then(user => {
+        console.log("Logged in as:", user);
+        window.location.href = "/staff/dashboard.html";
+      })
+      .catch(error => {
+        console.log("Not logged in", error);
+        document.body.innerHTML = '<h1>Session not found</h1><a href="/login.html">Go back to login</a>';
+      });
+  </script>
+</body>
+</html>
