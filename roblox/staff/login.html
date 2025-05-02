@@ -1,55 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Staff Login - RekietaLabs</title>
+  <meta charset="UTF-8">
+  <title>RekietaLabs Staff Login</title>
   <script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.0"></script>
   <style>
     body {
       background-color: #1e1e2f;
-      color: white;
-      font-family: 'Segoe UI', sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
       margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      color: white;
     }
 
     .login-box {
       text-align: center;
-      background-color: #292b40;
-      padding: 3rem;
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
     }
 
-    h1 {
-      margin-bottom: 2rem;
-      font-size: 2rem;
-    }
-
-    .discord-btn {
-      background-color: #5865F2;
-      color: white;
-      padding: 0.75rem 1.5rem;
+    .login-btn {
+      background-color: #4a4a4a;
       border: none;
-      border-radius: 6px;
-      font-size: 1rem;
+      padding: 15px 30px;
+      font-size: 16px;
+      border-radius: 8px;
       cursor: pointer;
-      transition: background-color 0.2s ease;
+      color: white;
+      transition: background-color 0.3s;
     }
 
-    .discord-btn:hover {
-      background-color: #4752C4;
+    .login-btn:hover {
+      background-color: #5c5c5c;
     }
   </style>
 </head>
 <body>
   <div class="login-box">
-    <h1>Staff Portal Login</h1>
-    <button class="discord-btn" onclick="loginWithDiscord()">Click to login</button>
+    <h1>RekietaLabs Staff Portal</h1>
+    <button class="login-btn" onclick="loginWithDiscord()">Login</button>
   </div>
 
   <script>
@@ -60,8 +50,11 @@
     const account = new Appwrite.Account(client);
 
     function loginWithDiscord() {
-      // No redirect params → use Appwrite default callback
-      account.createOAuth2Session('discord');
+      account.createOAuth2Session(
+        'discord',
+        'https://rekietalabs.com/roblox/staff/success',
+        'https://rekietalabs.com/roblox/staff/login'
+      );
     }
   </script>
 </body>
