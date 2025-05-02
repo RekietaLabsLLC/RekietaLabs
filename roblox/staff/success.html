@@ -2,44 +2,32 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>RekietaLabs Staff Redirect</title>
+  <title>Login Success</title>
   <script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.0"></script>
-  <style>
-    body {
-      background-color: #1e1e2f;
-      color: white;
-      font-family: 'Segoe UI', sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      flex-direction: column;
-    }
-  </style>
 </head>
-<body>
+<body style="background:#1e1e2f;color:white;font-family:sans-serif;text-align:center;padding-top:100px;">
   <h1>Logging you in...</h1>
+  <p id="status">Checking session...</p>
 
   <script>
     const client = new Appwrite.Client()
       .setEndpoint('https://fra.cloud.appwrite.io/v1')
-      .setProject('rlrs'); // your project ID here
+      .setProject('rlrs');
 
     const account = new Appwrite.Account(client);
 
-    // Check if the user is logged in
-    account.get()
-      .then(user => {
-        console.log("Logged in as:", user);
-        // Now, redirect them to the dashboard
-        window.location.href = "/roblox/staff/dashboard.html"; // replace with your actual dashboard page
-      })
-      .catch(error => {
-        console.log("Error while checking login:", error);
-        // Redirect to login if no session found
-        window.location.href = "/roblox/staff/login.html"; // or another error page
-      });
+    account.get().then(
+      (user) => {
+        document.getElementById("status").innerText = "Welcome, " + user.name + "! Redirecting...";
+        // ✅ redirect to dashboard or wherever
+        setTimeout(() => {
+          window.location.href = "/roblox/staff/dashboard.html";
+        }, 1500);
+      },
+      (error) => {
+        document.getElementById("status").innerText = "Login failed or no session found.";
+      }
+    );
   </script>
 </body>
 </html>
