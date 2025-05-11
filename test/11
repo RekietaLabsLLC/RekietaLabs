@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RekietaLabs</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon"/>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background-color: #121212;
+      color: #66ccff; /* Light blue text */
+      scroll-behavior: smooth;
+      transition: background-color 0.3s ease;
+    }
+
+    .top-nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: #1e1e1e;
+      color: #66ccff; /* Light blue text */
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1em 2em;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+      z-index: 999;
+      transform: translateY(-100%);
+      transition: transform 0.4s ease;
+    }
+
+    .top-nav.visible {
+      transform: translateY(0);
+    }
+
+    .container {
+      padding: 120px 2em 3em;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .section {
+      background: #1f1f1f;
+      margin-bottom: 2em;
+      padding: 2em;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.4);
+      opacity: 0;
+      transform: translateY(30px);
+      animation: slideIn 0.7s forwards;
+    }
+
+    .section h2 {
+      margin-top: 0;
+      color: #66ccff; /* Light blue headings */
+    }
+
+    select, input, textarea {
+      width: 100%;
+      padding: 0.8em;
+      margin-top: 0.5em;
+      border: none;
+      border-radius: 5px;
+      background-color: #2c2c2c;
+      color: #66ccff; /* Light blue text */
+    }
+
+    button {
+      padding: 0.7em 1.5em;
+      border: none;
+      background-color: #5e5eff;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: transform 0.3s ease, background-color 0.3s ease;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      background-color: #4a5fd6;
+    }
+
+    .print-images {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1em;
+      margin-top: 1em;
+    }
+
+    .print-images img {
+      width: 200px;
+      border-radius: 8px;
+      transition: transform 0.3s, opacity 0.3s;
+    }
+
+    .print-images img:hover {
+      transform: scale(1.05);
+      opacity: 0.8;
+    }
+
+    iframe {
+      width: 100%;
+      border: none;
+      height: 480px;
+      border-radius: 10px;
+    }
+
+    .light-blue-quote {
+      color: #66ccff; /* Light blue quote */
+      text-align: center;
+      font-weight: bold;
+      margin-top: 100px;
+      font-size: 1.2em;
+    }
+
+    /* Hover effect for sections */
+    .section:hover {
+      transform: scale(1.02);
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
+    }
+
+    /* Animation for section entry */
+    @keyframes slideIn {
+      0% {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Banner with the "Printing Your Dreams" text -->
+  <div class="top-nav" id="topBanner">
+    <h1>RekietaLabs</h1>
+    <span>Printing Your Dreams</span>
+  </div>
+
+  <div class="container">
+
+    <div class="section" id="about">
+      <h2>About Us</h2>
+      <p><strong>Hello, My name is Kellan Rekieta.</strong> I am the owner of RekietaLabs™ 3D printing. I strive in helping customers with shopping our models, buying our models, and making sure your model gets in the right hands. Anything you need, we can provide. If you are having issues or would like to speak to support, please email us at RekietaLabs@groupmail.com. Or you can text us at 214-814-7423.</p>
+    </div>
+
+    <div class="section" id="prints">
+      <h2>3D Print Models</h2>
+      <select id="printSelect">
+        <option value="">Please select from below ↓</option>
+        <option value="Ammo themed container">Ammo themed container</option>
+        <option value="Corkscrew shaped tree">Corkscrew shaped tree</option>
+        <option value="Dragons">Dragons</option>
+        <option value="Dragon eggs">Dragon eggs</option>
+        <option value="Signs">Signs</option>
+        <option value="Rocket launcher">Rocket launcher</option>
+      </select>
+      <div id="printDetails" class="print-info"></div>
+    </div>
+
+    <div class="section" id="newsletter">
+      <h2>Newsletter</h2>
+      <p><a href="https://forms.gle/q5jKQ9Zhy8TsJLGf9" target="_blank">Subscribe or Unsubscribe to our Newsletter</a></p>
+    </div>
+
+    <div class="section" id="upload">
+      <h2>Upload Your Own 3D Print</h2>
+      <p><a href="https://forms.gle/xQu5B7ZSaJEDbiEK6" target="_blank">Upload Your Model</a></p>
+    </div>
+
+    <div class="section" id="calendar">
+      <h2>Calendar</h2>
+      <iframe src="https://docs.google.com/presentation/d/1A9jQ2tYuN5GggYX0GLNzxjqusX1enYSWNTix4vr_xno/embed?start=false&loop=false&delayms=3000" frameborder="0"></iframe>
+    </div>
+
+    <div class="section" id="contact">
+      <h2>Contact Us</h2>
+      <form action="https://formbold.com/s/oJr2w" method="POST">
+        <label for="name">Full Name:</label>
+        <input type="text" id="name" name="name" required />
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required />
+
+        <label for="message">Message:</label>
+        <textarea id="message" name="message" rows="4" required></textarea>
+
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+
+  </div>
+
+  <script>
+    window.addEventListener('scroll', function() {
+      var banner = document.getElementById('topBanner');
+      if (window.scrollY > 50) {
+        banner.classList.add('visible');
+      } else {
+        banner.classList.remove('visible');
+      }
+    });
+
+    // Print models data
+    const prints = {
+      "Ammo themed container": {
+        description: "This 3D print is a container themed around ammo. The price is $15.",
+        imageUrls: ["image0.jpeg", "image1.jpeg"]
+      },
+      "Corkscrew shaped tree": {
+        description: "This 3D print is a unique corkscrew-shaped tree. The price is $20.",
+        imageUrls: ["Tree1.jpeg", "Tree2.jpeg"]
+      },
+      "Dragons": {
+        description: "This 3D print is a beautifully detailed dragon. The price is $25.",
+        imageUrls: ["Dragon1.jpeg", "Dragon2.jpeg"]
+      },
+      "Dragon eggs": {
+        description: "This 3D print is a toy dragon egg that hatches to reveal a baby dragon inside. It's customizable and the price is $15.",
+        imageUrls: ["Egg1.jpg", "Egg2.jpg"]
+      },
+      "Signs": {
+        description: "This 3D print is a customizable sign. You can add text or images. The price varies between $10-12.",
+        imageUrls: ["Sign1.jpg", "Sign2.jpg", "Sign3.jpg"]
+      },
+      "Rocket launcher": {
+        description: "This 3D print is a fun little toy for all ages. Make sure to only use it outside, as it could break something inside. The price is $10.",
+        imageUrls: ["IMG_1639.jpeg", "IMG_1637.jpeg"]
+      }
+    };
+
+    const printSelect = document.getElementById('printSelect');
+    const printDetails = document.getElementById('printDetails');
+
+    printSelect.addEventListener('change', function() {
+      const selectedPrint = printSelect.value;
+      const printInfo = prints[selectedPrint];
+
+      if (printInfo) {
+        printDetails.innerHTML = `
+          <p>${printInfo.description}</p>
+          <div class="print-images">
+            ${printInfo.imageUrls.map(url => `<img src="${url}" alt="${selectedPrint}" />`).join('')}
+          </div>
+        `;
+      } else {
+        printDetails.innerHTML = '';
+      }
+    });
+  </script>
+</body>
+</html>
