@@ -3,95 +3,192 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>RekietaLabs – Coming Soon</title>
+  <title>RekietaLabs</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon"/>
   <style>
     body {
       margin: 0;
-      padding: 0;
-      background: linear-gradient(135deg, #1e3c72, #2a5298);
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      color: #fff;
+      font-family: "Segoe UI", sans-serif;
+      background-color: #121212;
+      color: #66ccff;
+      scroll-behavior: smooth;
+    }
+
+    .top-nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: #1e1e1e;
+      color: #66ccff;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      height: 100vh;
-      text-align: center;
+      padding: 1em;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+      z-index: 999;
+      transform: translateY(-100%);
+      transition: transform 0.4s ease;
     }
 
-    h1 {
-      font-size: 3em;
-      margin-bottom: 10px;
+    .top-nav.visible {
+      transform: translateY(0);
     }
 
-    p {
-      font-size: 1.3em;
-      margin-bottom: 30px;
+    .top-nav h1 {
+      margin: 0;
+      font-size: 1.8em;
     }
 
-    .countdown {
+    .top-nav span {
+      font-style: italic;
+      font-size: 1.1em;
+      margin: 5px 0 10px;
+    }
+
+    .top-nav ul {
+      list-style: none;
       display: flex;
-      gap: 20px;
-      font-size: 2em;
-      font-weight: bold;
-      justify-content: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      padding: 0;
+      margin: 10px 0 0;
     }
 
-    .countdown div {
-      background: rgba(255, 255, 255, 0.1);
-      padding: 15px 25px;
+    .top-nav a {
+      color: #66ccff;
+      text-decoration: none;
+      font-size: 1em;
+      padding: 8px 12px;
+      border-radius: 5px;
+      transition: background 0.3s;
+    }
+
+    .top-nav a:hover {
+      background: #333;
+    }
+
+    .container {
+      padding: 120px 2em 3em;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .section {
+      background: #1f1f1f;
+      margin-bottom: 2em;
+      padding: 2em;
       border-radius: 10px;
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+      box-shadow: 0 0 10px rgba(0,0,0,0.4);
     }
 
-    footer {
-      position: absolute;
-      bottom: 20px;
-      font-size: 0.9em;
-      color: rgba(255, 255, 255, 0.6);
+    .section h2 {
+      margin-top: 0;
+    }
+
+    iframe {
+      width: 100%;
+      height: 480px;
+      border: none;
+      border-radius: 10px;
+    }
+
+    select, input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      background: #2c2c2c;
+      color: #66ccff;
+      border: none;
+      border-radius: 5px;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      background: #5e5eff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
-  <h1>Hello!</h1>
-  <p>Looks like something's happening!!<br>
-  Please check back in a day to see if any progress has taken place!</p>
 
-  <div class="countdown" id="countdown">
-    <div><span id="days">00</span><br>Days</div>
-    <div><span id="hours">00</span><br>Hours</div>
-    <div><span id="minutes">00</span><br>Minutes</div>
-    <div><span id="seconds">00</span><br>Seconds</div>
+  <!-- Top Banner & Navigation -->
+  <div class="top-nav" id="topNav">
+    <h1>RekietaLabs</h1>
+    <span>"Printing Your Dreams"</span>
+    <ul>
+      <li><a href="#about">About</a></li>
+      <li><a href="#prints">3D Prints</a></li>
+      <li><a href="#newsletter">Newsletter</a></li>
+      <li><a href="#upload">Upload</a></li>
+      <li><a href="#calendar">Calendar</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
   </div>
 
-  <footer>Countdown to launch at 8:00 PM CST on May 11</footer>
+  <!-- Main Content -->
+  <div class="container">
+    <div class="section" id="about">
+      <h2>About Us</h2>
+      <p><strong>Hello, My name is Kellan Rekieta.</strong> I am the owner of RekietaLabs™ 3D printing. I strive in helping customers with shopping our models, buying our models, and making sure your model gets in the right hands. Anything you need, we can provide. If you are having issues or would like to speak to support, please email us at RekietaLabs@groupmail.com. Or you can text us at 214-814-7423.</p>
+    </div>
+
+    <div class="section" id="prints">
+      <h2>3D Print Models</h2>
+      <select>
+        <option value="">Select a model...</option>
+        <option>Ammo themed container</option>
+        <option>Corkscrew shaped tree</option>
+        <option>Dragons</option>
+        <option>Dragon eggs</option>
+        <option>Signs</option>
+        <option>Rocket launcher</option>
+      </select>
+    </div>
+
+    <div class="section" id="newsletter">
+      <h2>Newsletter</h2>
+      <p><a href="https://forms.gle/q5jKQ9Zhy8TsJLGf9" target="_blank">Subscribe or Unsubscribe</a></p>
+    </div>
+
+    <div class="section" id="upload">
+      <h2>Upload Your Own 3D Print</h2>
+      <p><a href="https://forms.gle/xQu5B7ZSaJEDbiEK6" target="_blank">Upload Your Model</a></p>
+    </div>
+
+    <div class="section" id="calendar">
+      <h2>Calendar</h2>
+      <iframe src="https://docs.google.com/presentation/d/1A9jQ2tYuN5GggYX0GLNzxjqusX1enYSWNTix4vr_xno/embed?start=false&loop=false&delayms=3000"></iframe>
+    </div>
+
+    <div class="section" id="contact">
+      <h2>Contact Us</h2>
+      <form action="https://formbold.com/s/oJr2w" method="POST">
+        <label>Full Name:</label>
+        <input type="text" name="name" required/>
+        <label>Email:</label>
+        <input type="email" name="email" required/>
+        <label>Message:</label>
+        <textarea name="message" rows="4" required></textarea>
+        <button type="submit">Send</button>
+      </form>
+    </div>
+  </div>
 
   <script>
-    // Target date: May 2 at 8:00 PM CST (UTC-5)
-    const targetDate = new Date("May 11, 2025 20:00:00 GMT-0500");
-
-    function updateCountdown() {
-      const now = new Date();
-      const diff = targetDate - now;
-
-      if (diff <= 0) {
-        document.getElementById("countdown").innerHTML = "<div>🎉 Site is now live! 🎉</div>";
-        return;
+    // Show menu when scrolling down
+    window.addEventListener('scroll', () => {
+      const nav = document.getElementById('topNav');
+      if (window.scrollY > 30) {
+        nav.classList.add('visible');
+      } else {
+        nav.classList.remove('visible');
       }
-
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-      const minutes = Math.floor((diff / (1000 * 60)) % 60);
-      const seconds = Math.floor((diff / 1000) % 60);
-
-      document.getElementById("days").textContent = String(days).padStart(2, '0');
-      document.getElementById("hours").textContent = String(hours).padStart(2, '0');
-      document.getElementById("minutes").textContent = String(minutes).padStart(2, '0');
-      document.getElementById("seconds").textContent = String(seconds).padStart(2, '0');
-    }
-
-    setInterval(updateCountdown, 1000);
-    updateCountdown(); // Initial call
+    });
   </script>
+
 </body>
 </html>
