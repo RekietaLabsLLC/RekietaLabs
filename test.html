@@ -136,18 +136,72 @@
       <p><strong>Hello, My name is Kellan Rekieta.</strong> I am the owner of RekietaLabs™ 3D printing. I strive in helping customers with shopping our models, buying our models, and making sure your model gets in the right hands. Anything you need, we can provide. If you are having issues or would like to speak to support, please email us at RekietaLabs@groupmail.com. Or you can text us at 214-814-7423.</p>
     </div>
 
-    <div class="section" id="prints">
-      <h2>3D Print Models</h2>
-      <select>
-        <option value="">Select a model...</option>
-        <option>Ammo themed container</option>
-        <option>Corkscrew shaped tree</option>
-        <option>Dragons</option>
-        <option>Dragon eggs</option>
-        <option>Signs</option>
-        <option>Rocket launcher</option>
-      </select>
-    </div>
+<div class="section" id="prints">
+  <h2>3D Print Models</h2>
+  <select id="modelDropdown" onchange="showModelImages(this)">
+    <option value="">Select a model...</option>
+    <option value="ammo">Ammo themed container</option>
+    <option value="tree">Corkscrew shaped tree</option>
+    <option value="dragon">Dragons</option>
+    <option value="egg">Dragon eggs</option>
+    <option value="sign">Signs</option>
+    <option value="rocket">Rocket launcher</option>
+  </select>
+  <div id="modelPreview" style="margin-top:20px; display:flex; gap:20px; flex-wrap:wrap;">
+    <img id="previewImage1" src="" alt="" style="max-width:48%; display:none; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.4);" />
+    <img id="previewImage2" src="" alt="" style="max-width:48%; display:none; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.4);" />
+  </div>
+</div>
+
+<script>
+  function showModelImages(select) {
+    const img1 = document.getElementById('previewImage1');
+    const img2 = document.getElementById('previewImage2');
+    let src1 = '';
+    let src2 = '';
+
+    switch (select.value) {
+      case 'ammo':
+        src1 = 'ammo1.jpg';
+        src2 = 'ammo2.jpg';
+        break;
+      case 'tree':
+        src1 = 'tree1.jpg';
+        src2 = 'tree2.jpg';
+        break;
+      case 'dragon':
+        src1 = 'dragon1.jpg';
+        src2 = 'dragon2.jpg';
+        break;
+      case 'egg':
+        src1 = 'egg1.jpg';
+        src2 = 'egg2.jpg';
+        break;
+      case 'sign':
+        src1 = 'sign1.jpg';
+        src2 = 'sign2.jpg';
+        break;
+      case 'rocket':
+        src1 = 'rocket1.jpg';
+        src2 = 'rocket2.jpg';
+        break;
+      default:
+        src1 = '';
+        src2 = '';
+    }
+
+    if (src1 && src2) {
+      img1.src = src1;
+      img2.src = src2;
+      img1.style.display = 'block';
+      img2.style.display = 'block';
+    } else {
+      img1.style.display = 'none';
+      img2.style.display = 'none';
+    }
+  }
+</script>
+
 
     <div class="section" id="newsletter">
       <h2>Newsletter</h2>
