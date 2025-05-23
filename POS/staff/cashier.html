@@ -1,1 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RekietaLabs POS</title>
+  <style>
+    body {
+      background-color: #222;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+    .container {
+      display: flex;
+    }
+    .left-panel {
+      width: 60%;
+      padding: 20px;
+    }
+    .right-panel {
+      width: 40%;
+      padding: 20px;
+      background-color: #333;
+    }
+    button {
+      background-color: #be9f13;
+      color: white;
+      border: none;
+      padding: 15px;
+      margin: 5px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    select {
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+    #pin-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    #cashier-ui {
+      display: none;
+    }
+  </style>
+</head>
+<body>
 
+  <div id="pin-container">
+    <h2>Enter Store PIN</h2>
+    <input type="password" id="storePin" placeholder="Store PIN" />
+    <br/>
+    <button onclick="validatePIN()">Login</button>
+  </div>
+
+  <div id="cashier-ui">
+    <h1>RekietaLabs POS</h1>
+
+    <p>Terminal 1 is the only available terminal for connection.</p>
+
+    <button onclick="connectTerminal()">Connect to Terminal 1</button>
+
+    <div class="container">
+      <div class="left-panel">
+        <h3>Items</h3>
+        <button onclick="addItem('Item A', 10.99)">Item A - $10.99</button>
+        <button onclick="addItem('Item B', 5.49)">Item B - $5.49</button>
+        <button onclick="addItem('Item C', 7.99)">Item C - $7.99</button>
+      </div>
+      <div class="right-panel">
+        <h3>Order Summary</h3>
+        <ul id="orderList"></ul>
+        <h3>Total: $<span id="totalAmount">0.00</span></h3>
+        <button onclick="sendSale()">Send Sale</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // PIN login system
+    const cashiers = {
+      8836: 'Brandi',
+      4646: 'Justin',
+      7423: 'Kellan'
+    };
+
+    function validatePIN() {
+      const pin = document.getElementById("storePin").value;
+      if (cashiers[pin]) {
+        cashierName = cashiers[pin];
+        document.getElementById("pin-container").style.display = "none";
+        document.getElementById("cashier-ui").style.display = "block";
+      } else {
+        alert("Invalid PIN");
+      }
+    }
+
+    let selectedTerminal = "terminal1"; // Hardcoded to Terminal 1
+    let order = [];
+    let total = 0;
+    let cashierName = "";
+
+    function connectTerminal() {
+      // Since only Terminal 1 is available, no need to select or disconnect from others
+      alert(`Connected to ${selectedTerminal}`);
+    }
+
+    function addItem(name, price) {
+      order.push({ name, price });
+      total += price;
+      updateOrderDisplay();
+    }
+
+    function updateOrderDisplay() {
+      let orderList = document.getElementById("orderList");
+      orderList.innerHTML = "";
+      order.forEach(item => {
+        let li = document.createElement("li");
+        li.textContent = `${item.name} - $${item.price.toFixed(2)}`;
+        orderList.appendChild(li);
+      });
+      document.getElementById("totalAmount").textContent = total.toFixed(2);
+    }
+
+    function sendSale() {
+      // Submit sale data
+      submitSale();
+    }
+
+    function submitSale() {
+      const orderNumber = Math.floor(100000 + Math.random() * 900000);
+      const saleKey = `sale_${orderNumber}`;
+      const saleData = {
+        order,
+        total: total.toFixed(2),
+        timestamp: Date.now(),
+        expiresAt: Date.now() + 5 * 60 * 1000, // expires in 5 minutes
+        orderNumber,
+        terminal: selectedTerminal,
+        customerName: "", // No longer prompting for customer name
+        cashierName
+      };
+
+      localStorage.setItem(saleKey, JSON.stringify(saleData));
+
+      // Open terminal in new tab with order number
+      const terminalUrl = `/pos/${selectedTerminal}.html?ordernumber=${orderNumber}`;
+      window.open(terminalUrl, "_blank");
+
+      // Reset order
+      order = [];
+      total = 0;
+      updateOrderDisplay();
+    }
+  </script>
+
+</body>
+</html>
