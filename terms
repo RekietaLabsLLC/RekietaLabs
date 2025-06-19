@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Terms of Service - RekietaLabs</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      padding: 20px;
+      background-color: #fdfdfd;
+      color: #222;
+      max-width: 800px;
+      margin: auto;
+    }
+    h1, h2 {
+      color: #1987a1;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Terms of Service</h1>
+  <p>Last updated: June 18, 2025</p>
+
+  <p>
+    These Terms of Service (“Terms”) apply to your use of any websites, tools, and platforms created by <strong>RekietaLabs</strong>. 
+    We are not a registered business—just a small community-led project—and these terms are designed to keep things safe and respectful for everyone.
+  </p>
+
+  <h2>1. By Using Our Services, You Agree to These Terms</h2>
+  <p>
+    If you use anything created by RekietaLabs, you are agreeing to these terms. If you disagree, please do not use our services.
+  </p>
+
+  <h2>2. User Accounts</h2>
+  <ul>
+    <li>Some tools may require an account (usually tied to a UUID)</li>
+    <li>You're responsible for keeping your login secure (if applicable)</li>
+    <li>We can remove or disable your access at any time for abuse, spam, or rule-breaking</li>
+  </ul>
+
+  <h2>3. Don't Be a Jerk</h2>
+  <p>You agree not to:</p>
+  <ul>
+    <li>Use our services for anything illegal, abusive, or harmful</li>
+    <li>Try to hack, spam, or overload our systems</li>
+    <li>Impersonate anyone or trick others</li>
+  </ul>
+
+  <h2>4. Content Ownership</h2>
+  <p>
+    Everything we create under RekietaLabs—like code, designs, and branding—belongs to us. 
+    Please don’t copy or reuse without permission.
+  </p>
+
+  <h2>5. No Promises</h2>
+  <p>
+    Our tools are provided “as-is.” We make no guarantees about uptime, accuracy, or future availability.
+    RekietaLabs is a volunteer-led project and may change, go offline, or be discontinued at any time.
+  </p>
+
+  <h2>6. Limitation of Responsibility</h2>
+  <p>
+    RekietaLabs is not a legal entity. We are not responsible for damages, losses, or problems that may happen as a result of using our tools. 
+    Use everything at your own discretion.
+  </p>
+
+  <h2>7. Changes to Terms</h2>
+  <p>
+    These terms may change over time. The latest version will always be posted here with the updated date.
+  </p>
+
+  <h2>8. Contact</h2>
+  <p>Got questions or issues?</p>
+  <p><strong>Email:</strong> support@rekietalabs.com</p>
+  <p><strong>Website:</strong> <a href="https://rekietalabs.com">https://rekietalabs.com</a></p>
+
+</body>
+</html>
