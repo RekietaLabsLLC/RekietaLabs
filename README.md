@@ -16,7 +16,9 @@ Links:
 
 Main website: https://rekietalabs.com
 
-My Labs By RekietaLabs: https://
+RekietaLabs Market: https://market.rekietalabs.com
+
+My Labs By RekietaLabs: https://accounts.rekietalabs.com
 
 Contact Us:
 
