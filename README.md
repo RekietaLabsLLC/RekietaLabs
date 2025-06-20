@@ -1,3 +1,25 @@
-This is a repsotory that host's our website you can copy any of the code but before you do please email kmrekieta@gmail.com to get permisson this repostory is updated daily 
-please be sure to look at our website at:
-https://rekietalabs.com
+DO NOT COPY ANY CODE UNLESS GIVEN PERMISSION. 
+
+Welcome to RekietaLabs!
+
+RekietaLabs is a 3D Printing company. we are not a registered business. As this is a small project created by me. 
+
+RekietaLabs Market:
+
+Welcome to the RekietaLabs Market! Come browse our pre-made 3D Printed or maybe even purchase one!
+
+MyLabs by RekietaLabs
+
+Welcome to MyLabs Accounts By RekietaLabs! MyLabs is a account system powered by RekietaLabs. Create your custom Shopper profile to browse custom made 3D models made and posted by our community! 
+
+Links:
+
+Main website: https://rekietalabs.com
+
+My Labs By RekietaLabs: https://
+
+Contact Us:
+
+Email Support: support@rekietalabs.com
+
+Website Support: https://support.rekietalabs.com
