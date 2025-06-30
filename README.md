@@ -6,7 +6,7 @@ RekietaLabs is a 3D Printing company. we are not a registered business. As this 
 
 RekietaLabs Market:
 
-Welcome to the RekietaLabs Market! Come browse our pre-made 3D Printed or maybe even purchase one!
+Welcome to the RekietaLabs Market! Come browse our pre-made 3D Printe or maybe even purchase one!
 
 MyLabs by RekietaLabs
 
