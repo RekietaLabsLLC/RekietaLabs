@@ -3,35 +3,246 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Chatbot Test</title>
+  <title>RekietaLabs – 3D Printing</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
   <style>
-    body {
+    :root {
+      --brand-color: #1753aa;
+      --bg-dark: #0e0e0e;
+      --bg-light-blue: #1f2d3d;
+      --text-light: #f1f1f1;
+      --section-border: #1753aa;
+    }
+
+    * {
       margin: 0;
       padding: 0;
-      background-color: #f0f0f0;
-      font-family: Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+      box-sizing: border-box;
     }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-light);
+      overflow-x: hidden;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 999;
+      background: #111;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      border-bottom: 2px solid var(--brand-color);
+    }
+
+    header h1 {
+      font-size: 1.5rem;
+      color: var(--brand-color);
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 1.2rem;
+      align-items: center;
+    }
+
+    nav a {
+      color: var(--text-light);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+
+    nav a:hover {
+      color: var(--brand-color);
+    }
+
+    .dropdown {
+      position: relative;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #222;
+      border: 1px solid var(--section-border);
+      border-radius: 0.5rem;
+      padding: 0.5rem;
+      top: 110%;
+      left: 0;
+      min-width: 150px;
+    }
+
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+
+    .dropdown-content a {
+      display: block;
+      padding: 0.4rem;
+      color: white;
+    }
+
+    .dropdown-content a:hover {
+      background-color: #333;
+    }
+
+    .mylabs-btn {
+      background: var(--brand-color);
+      color: white;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 0.4rem;
+      font-weight: bold;
+      cursor: pointer;
+      display: none;
+    }
+
+    section {
+      max-width: 900px;
+      margin: 3rem auto;
+      padding: 2rem;
+      background-color: var(--bg-light-blue);
+      border: 2px solid var(--section-border);
+      border-radius: 1rem;
+      text-align: center;
+      animation: fadeInUp 1s ease forwards;
+    }
+
+    section h2 {
+      font-size: 2rem;
+      color: var(--brand-color);
+      margin-bottom: 1rem;
+    }
+
+    section p {
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    @keyframes fadeInUp {
+      0% {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Chatbot styles */
     #bsai-stream {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
       height: 560px;
       width: 100%;
       max-width: 400px;
+      z-index: 999;
+      border-radius: 1rem;
+      overflow: hidden;
     }
+
     @media (max-width: 768px) {
       #bsai-stream {
         height: auto;
         width: 90%;
+        right: 5%;
+        bottom: 10px;
       }
+    }
+
+    .hidden {
+      display: none;
     }
   </style>
 </head>
 <body>
 
+  <header>
+    <h1>RekietaLabs</h1>
+    <nav>
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">About</a></li>
+        <li class="dropdown">
+          <a href="#">3D Prints</a>
+          <div class="dropdown-content">
+            <a href="#">Flower Fidget</a>
+            <a href="#">Fidget Tree</a>
+            <a href="#">Wizard Dino</a>
+          </div>
+        </li>
+        <li><a href="#">FAQ</a></li>
+        <li><button class="mylabs-btn" id="mylabsBtn">Go to MyLabs!</button></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section id="hero">
+    <h2>Welcome to RekietaLabs</h2>
+    <p>Innovating 3D printed creations with precision and passion.</p>
+  </section>
+
+  <section id="about">
+    <h2>About Us</h2>
+    <p>We are a 3D printing company dedicated to delivering unique, high-quality prints that inspire creativity and innovation. Every item is printed with care and precision using cutting-edge technology.</p>
+  </section>
+
+  <section id="products">
+    <h2>Our Products</h2>
+    <p>Explore our featured prints like the Flower Fidget, the vibrant Fidget Tree, and the magical Wizard Dino. More designs coming soon!</p>
+  </section>
+
+  <section id="faq">
+    <h2>FAQ</h2>
+    <p>Got questions about our prints, shipping, or customization? You're in the right place. Our chatbot can help too!</p>
+  </section>
+
+  <section id="mylabs-countdown">
+    <h2 id="mylabsTitle">MyLabs Accounts Coming Soon!</h2>
+    <p id="countdownText">Launching in <span id="countdown">...</span></p>
+  </section>
+
   <div id="bsai-stream"></div>
   <script async src="https://bigsur.ai/plugin/js/static.js"></script>
 
+  <script>
+    const countdownTarget = new Date("2025-08-25T00:00:00-05:00").getTime();
+    const countdownSpan = document.getElementById("countdown");
+    const title = document.getElementById("mylabsTitle");
+    const text = document.getElementById("countdownText");
+    const mylabsBtn = document.getElementById("mylabsBtn");
+
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const distance = countdownTarget - now;
+
+      if (distance <= 0) {
+        title.innerText = "MyLabs is Released!";
+        text.innerHTML = `<a href="https://accounts.rekietalabs.com" class="mylabs-btn" style="display:inline-block;margin-top:1rem;">Go to MyLabs!</a>`;
+        mylabsBtn.style.display = "inline-block";
+        return;
+      }
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      countdownSpan.innerText = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+      requestAnimationFrame(updateCountdown);
+    }
+
+    updateCountdown();
+  </script>
+
 </body>
-</html>
+</html
