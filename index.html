@@ -4,18 +4,14 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>RekietaLabs — Coming Soon</title>
- <link rel="icon" href="IMG_0926.jpeg" type="image/jpeg"/>
+<link rel="icon" href="IMG_0926.jpeg" type="image/jpeg"/>
 <style>
     :root {
         --brand-color: #1753aa;
         --text-light: #ffffff;
         --bg-dark: #0b0b0b;
     }
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
         background: var(--bg-dark);
         color: var(--text-light);
@@ -47,16 +43,8 @@
         color: var(--brand-color);
         animation: slideDown 1.2s ease;
     }
-    p.tagline {
-        font-size: 1.2rem;
-        margin-bottom: 30px;
-        opacity: 0.9;
-    }
-    .countdown {
-        display: flex;
-        gap: 15px;
-        margin-bottom: 30px;
-    }
+    p.tagline { font-size: 1.2rem; margin-bottom: 30px; opacity: 0.9; }
+    .countdown { display: flex; gap: 15px; margin-bottom: 30px; }
     .count-box {
         background: rgba(23,83,170,0.2);
         padding: 15px 20px;
@@ -64,18 +52,9 @@
         min-width: 70px;
         backdrop-filter: blur(4px);
     }
-    .count-box span {
-        display: block;
-    }
-    .count-num {
-        font-size: 1.8rem;
-        font-weight: bold;
-    }
-    .count-label {
-        font-size: 0.8rem;
-        text-transform: uppercase;
-        opacity: 0.8;
-    }
+    .count-box span { display: block; }
+    .count-num { font-size: 1.8rem; font-weight: bold; }
+    .count-label { font-size: 0.8rem; text-transform: uppercase; opacity: 0.8; }
     .btn {
         background: var(--brand-color);
         border: none;
@@ -86,10 +65,9 @@
         cursor: pointer;
         text-decoration: none;
         transition: 0.3s;
+        margin-top: 10px;
     }
-    .btn:hover {
-        background: #1f6bdd;
-    }
+    .btn:hover { background: #1f6bdd; }
     footer {
         position: absolute;
         bottom: 15px;
@@ -99,29 +77,41 @@
         opacity: 0.7;
     }
     /* Background animation */
-    canvas {
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: 0;
-    }
-    @keyframes fadeIn {
-        from {opacity: 0;}
-        to {opacity: 1;}
-    }
-    @keyframes slideDown {
-        from {opacity: 0; transform: translateY(-20px);}
-        to {opacity: 1; transform: translateY(0);}
-    }
-    @keyframes float {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-10px); }
+    canvas { position: absolute; top: 0; left: 0; z-index: 0; }
+
+    @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
+    @keyframes slideDown { from {opacity: 0; transform: translateY(-20px);} to {opacity: 1; transform: translateY(0);} }
+    @keyframes float { 0%,100%{ transform: translateY(0);} 50%{ transform: translateY(-10px);} }
+
+    /* Beta iframe */
+    #betaFrame {
+        position: fixed;
+        top:0;
+        left:0;
+        width:100%;
+        height:100%;
+        border:none;
+        display:none;
+        z-index: 100;
     }
 </style>
 </head>
 <body>
+
+<!-- Hotjar Tracking Code -->
+<script>
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:6495263,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+</script>
+
 <canvas id="bgCanvas"></canvas>
-<div class="container">
+<div class="container" id="comingSoonContent">
     <div class="logo"></div>
     <h1>RekietaLabs — Coming Soon!</h1>
     <p class="tagline">Something exciting is on the way...</p>
@@ -144,10 +134,15 @@
         </div>
     </div>
     <a href="mailto:support@rekietalabs.com" class="btn">Get In Touch</a>
+    <button class="btn" id="betaBtn">Enter Beta Testing</button>
 </div>
+
+<iframe id="betaFrame" src=""></iframe>
+
 <footer>
     &copy; 2025 RekietaLabs — All rights reserved.
 </footer>
+
 <script>
     // Countdown
     const countdown = () => {
@@ -159,20 +154,20 @@
             clearInterval(timer);
             return;
         }
-        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+        const days = Math.floor(diff / (1000*60*60*24));
+        const hours = Math.floor((diff % (1000*60*60*24))/(1000*60*60));
+        const minutes = Math.floor((diff % (1000*60*60))/(1000*60));
+        const seconds = Math.floor((diff % (1000*60))/1000);
 
         document.getElementById('days').innerText = days;
         document.getElementById('hours').innerText = hours;
         document.getElementById('minutes').innerText = minutes;
         document.getElementById('seconds').innerText = seconds;
     };
-    const timer = setInterval(countdown, 1000);
+    const timer = setInterval(countdown,1000);
     countdown();
 
-    // Fun floating particles
+    // Floating particles
     const canvas = document.getElementById('bgCanvas');
     const ctx = canvas.getContext('2d');
     let particlesArray;
@@ -181,52 +176,63 @@
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    window.addEventListener('resize', () => {
+    window.addEventListener('resize', ()=>{
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
         init();
     });
 
     class Particle {
-        constructor() {
+        constructor(){
             this.x = Math.random() * canvas.width;
             this.y = Math.random() * canvas.height;
-            this.size = Math.random() * 3 + 1;
-            this.speedX = (Math.random() - 0.5) * 0.5;
-            this.speedY = (Math.random() - 0.5) * 0.5;
+            this.size = Math.random()*3+1;
+            this.speedX = (Math.random()-0.5)*0.5;
+            this.speedY = (Math.random()-0.5)*0.5;
         }
-        update() {
-            this.x += this.speedX;
-            this.y += this.speedY;
-            if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
-            if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+        update(){
+            this.x+=this.speedX;
+            this.y+=this.speedY;
+            if(this.x<0||this.x>canvas.width)this.speedX*=-1;
+            if(this.y<0||this.y>canvas.height)this.speedY*=-1;
         }
-        draw() {
-            ctx.fillStyle = 'rgba(23,83,170,0.6)';
+        draw(){
+            ctx.fillStyle='rgba(23,83,170,0.6)';
             ctx.beginPath();
-            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.arc(this.x,this.y,this.size,0,Math.PI*2);
             ctx.fill();
         }
     }
 
-    function init() {
-        particlesArray = [];
-        for (let i = 0; i < numParticles; i++) {
+    function init(){
+        particlesArray=[];
+        for(let i=0;i<numParticles;i++){
             particlesArray.push(new Particle());
         }
     }
 
-    function animate() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        for (let i = 0; i < particlesArray.length; i++) {
-            particlesArray[i].update();
-            particlesArray[i].draw();
-        }
+    function animate(){
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        particlesArray.forEach(p=>{p.update();p.draw();});
         requestAnimationFrame(animate);
     }
 
     init();
     animate();
+
+    // Beta testing password
+    const betaBtn = document.getElementById('betaBtn');
+    betaBtn.addEventListener('click',()=>{
+        const password = prompt("Enter Beta Password:");
+        if(password==="Ey5A" || password==="TEST6576"){
+            document.getElementById('comingSoonContent').style.display='none';
+            const betaFrame = document.getElementById('betaFrame');
+            betaFrame.src = "https://rekietalabs.com/test000";
+            betaFrame.style.display="block";
+        } else {
+            alert("Incorrect password.");
+        }
+    });
 </script>
 </body>
 </html>
