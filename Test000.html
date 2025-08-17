@@ -1,232 +1,46 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>RekietaLabs – 3D Printing</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --brand-color: #1753aa;
-      --bg-dark: #0e0e0e;
-      --bg-section: #1f2d3d;
-      --text-light: #f1f1f1;
-      --section-border: #1753aa;
+<section id="prints">
+  <h2>3D Prints</h2>
+  <select id="modelDropdown" onchange="showPrintImages(this)">
+    <option value="">Select a model...</option>
+    <option value="ammo">Ammo themed container</option>
+    <option value="corkscrew">Corkscrew Tree</option>
+    <option value="flower">Flower Fidget</option>
+    <option value="dragon">Dragons</option>
+    <option value="egg">Dragon eggs</option>
+    <option value="sign">Signs</option>
+    <option value="rocket">Rocket launcher</option>
+    <option value="wizard">Wizard Dino</option>
+  </select>
+  <div class="print-images" id="printImages">
+    <img id="img1" src="" alt="">
+    <img id="img2" src="" alt="">
+  </div>
+</section>
+
+<script>
+  const printImages = document.getElementById("printImages");
+  const img1 = document.getElementById("img1");
+  const img2 = document.getElementById("img2");
+
+  function showPrintImages(select) {
+    let src1='', src2='';
+    switch(select.value){
+      case 'ammo': src1='image0.jpeg'; src2='image1.jpeg'; break;
+      case 'corkscrew': src1='Tree1.jpeg'; src2='Tree2.jpeg'; break;
+      case 'flower': src1='IMG_1006.jpeg'; src2='IMG_1005.jpeg'; break;
+      case 'dragon': src1='Dragon1.jpeg'; src2='Dragon2.jpeg'; break;
+      case 'egg': src1='Egg1.jpg'; src2='Egg2.jpg'; break;
+      case 'sign': src1='Sign2.jpg'; src2='Sign3.jpg'; break;
+      case 'rocket': src1='IMG_1637.jpeg'; src2='IMG_1639.jpeg'; break;
+      case 'wizard': src1='IMG_0057.jpeg'; src2='IMG_0057.jpeg'; break;
+      default: src1=''; src2='';
     }
-
-    * { margin:0; padding:0; box-sizing:border-box; }
-
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: var(--bg-dark);
-      color: var(--text-light);
-      overflow-x: hidden;
+    if(src1 && src2){
+      img1.src = src1;
+      img2.src = src2;
+      printImages.style.display='flex';
+    } else {
+      printImages.style.display='none';
     }
-
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 999;
-      background: #111;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1rem 2rem;
-      border-bottom: 2px solid var(--brand-color);
-    }
-
-    header h1 { font-size:1.5rem; color: var(--brand-color); }
-
-    nav ul {
-      list-style: none;
-      display: flex;
-      gap: 1.5rem;
-      align-items: center;
-    }
-
-    nav a {
-      color: var(--text-light);
-      text-decoration: none;
-      font-weight: 500;
-      transition: color 0.2s ease;
-    }
-
-    nav a:hover { color: var(--brand-color); }
-
-    section {
-      max-width: 900px;
-      margin: 3rem auto;
-      padding: 2rem;
-      background-color: var(--bg-section);
-      border: 2px solid var(--section-border);
-      border-radius: 1rem;
-      text-align: center;
-      animation: fadeInUp 1s ease forwards;
-    }
-
-    section h2 { font-size:2rem; color: var(--brand-color); margin-bottom:1rem; }
-
-    section p { font-size:1rem; line-height:1.6; }
-
-    @keyframes fadeInUp {
-      0% { opacity:0; transform:translateY(40px); }
-      100% { opacity:1; transform:translateY(0); }
-    }
-
-    /* 3D Prints dropdown */
-    select {
-      padding: 0.5rem;
-      font-size:1rem;
-      border-radius:0.5rem;
-      background:#222;
-      color:white;
-      border:1px solid var(--section-border);
-      cursor:pointer;
-      margin-bottom:1rem;
-    }
-
-    .print-images {
-      display:none;
-      flex-wrap:wrap;
-      gap:1rem;
-      justify-content:center;
-      margin-top:1rem;
-    }
-
-    .print-images img {
-      max-width:45%;
-      border-radius:0.8rem;
-      box-shadow:0 0 10px rgba(0,0,0,0.4);
-      transition: transform 0.3s ease;
-    }
-
-    .print-images img:hover { transform:translateY(5px); }
-
-    .mylabs-btn, .gift-btn, .market-btn {
-      background: var(--brand-color);
-      color:white;
-      padding:0.5rem 1rem;
-      border:none;
-      border-radius:0.5rem;
-      font-weight:bold;
-      cursor:pointer;
-      text-decoration:none;
-      display:inline-block;
-      margin-top:1rem;
-    }
-
-    /* Chatbot */
-    #bsai-stream {
-      position: fixed;
-      bottom:20px;
-      right:20px;
-      height:560px;
-      width:100%;
-      max-width:400px;
-      z-index:999;
-      border-radius:1rem;
-      overflow:hidden;
-    }
-
-    @media (max-width:768px) {
-      #bsai-stream { height:auto; width:90%; right:5%; bottom:10px; }
-    }
-  </style>
-</head>
-<body>
-
-  <header>
-    <h1>RekietaLabs</h1>
-    <nav>
-      <ul>
-        <li><a href="#mylabs">MyLabs</a></li>
-        <li><a href="#market">Market</a></li>
-        <li><a href="https://giftcard.hub.rekietalabs.com" target="_blank">Gift Cards</a></li>
-      </ul>
-    </nav>
-  </header>
-
-  <section id="about">
-    <h2>About Us</h2>
-    <p>RekietaLabs is a 3D printing company delivering unique, high-quality prints. Every item is crafted with precision and care using state-of-the-art technology.</p>
-    <p>Contact us: <strong>214-814-7423</strong> | <strong>support@rekietalabs.com</strong></p>
-  </section>
-
-  <section id="prints">
-    <h2>3D Prints</h2>
-    <select id="modelDropdown" onchange="showPrintImages(this)">
-      <option value="">Select a model...</option>
-      <option value="ammo">Ammo themed container</option>
-      <option value="tree">Corkscrew shaped tree</option>
-      <option value="flower">Flower Fidget</option>
-      <option value="dragon">Dragons</option>
-      <option value="egg">Dragon eggs</option>
-      <option value="sign">Signs</option>
-      <option value="rocket">Rocket launcher</option>
-      <option value="wizard">Wizard Dino</option>
-      <option value="fidgettree">Fidget Tree</option>
-    </select>
-    <div class="print-images" id="printImages">
-      <img id="img1" src="" alt="">
-      <img id="img2" src="" alt="">
-    </div>
-  </section>
-
-  <section id="market">
-    <h2>RekietaLabs Market</h2>
-    <p>Browse and purchase pre-made 3D print items directly from our online store.</p>
-    <a href="https://market.rekietalabs.com" target="_blank" class="market-btn">Go to Market</a>
-  </section>
-
-  <section id="mylabs">
-    <h2>MyLabs Accounts</h2>
-    <p>Manage your RekietaLabs experience! Sign in to access your account features and track your orders.</p>
-    <a href="https://accounts.rekietalabs.com" class="mylabs-btn">Go to MyLabs</a>
-  </section>
-
-  <section id="giftcards">
-    <h2>Gift Cards</h2>
-    <p>RekietaLabs is better with friends! Buy a gift card for any occasion — or even for yourself!</p>
-    <a href="https://giftcard.hub.rekietalabs.com" class="gift-btn">Get Gift Card</a>
-  </section>
-
-  <section id="community">
-    <h2>Community Marketplace</h2>
-    <p>Upload your own 3D models or download creations shared by other community members!</p>
-    <a href="https://customer.portal.hub.rekietalabs.com" class="market-btn">Go to Community Portal</a>
-  </section>
-
-  <div id="bsai-stream"></div>
-  <script async src="https://bigsur.ai/plugin/js/static.js"></script>
-
-  <script>
-    const printImages = document.getElementById("printImages");
-    const img1 = document.getElementById("img1");
-    const img2 = document.getElementById("img2");
-
-    function showPrintImages(select) {
-      let src1='', src2='';
-      switch(select.value){
-        case 'ammo': src1='image0.jpeg'; src2='image1.jpeg'; break;
-        case 'tree': src1='Tree1.jpeg'; src2='Tree2.jpeg'; break;
-        case 'flower': src1='IMG_1006.jpeg'; src2='IMG_1005.jpeg'; break;
-        case 'dragon': src1='Dragon1.jpeg'; src2='Dragon2.jpeg'; break;
-        case 'egg': src1='Egg1.jpg'; src2='Egg2.jpg'; break;
-        case 'sign': src1='Sign2.jpg'; src2='Sign3.jpg'; break;
-        case 'rocket': src1='IMG_1637.jpeg'; src2='IMG_1639.jpeg'; break;
-        case 'wizard': src1='Wizard1.jpeg'; src2='Wizard2.jpeg'; break;
-        case 'fidgettree': src1='FidgetTree1.jpeg'; src2='FidgetTree2.jpeg'; break;
-        default: src1=''; src2='';
-      }
-      if(src1 && src2){
-        img1.src = src1;
-        img2.src = src2;
-        printImages.style.display='flex';
-      } else {
-        printImages.style.display='none';
-      }
-    }
-  </script>
-
-</body>
-</html>
+  }
+</script>
