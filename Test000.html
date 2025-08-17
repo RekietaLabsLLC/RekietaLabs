@@ -1,46 +1,237 @@
-<section id="prints">
-  <h2>3D Prints</h2>
-  <select id="modelDropdown" onchange="showPrintImages(this)">
-    <option value="">Select a model...</option>
-    <option value="ammo">Ammo themed container</option>
-    <option value="corkscrew">Corkscrew Tree</option>
-    <option value="flower">Flower Fidget</option>
-    <option value="dragon">Dragons</option>
-    <option value="egg">Dragon eggs</option>
-    <option value="sign">Signs</option>
-    <option value="rocket">Rocket launcher</option>
-    <option value="wizard">Wizard Dino</option>
-  </select>
-  <div class="print-images" id="printImages">
-    <img id="img1" src="" alt="">
-    <img id="img2" src="" alt="">
-  </div>
-</section>
-
-<script>
-  const printImages = document.getElementById("printImages");
-  const img1 = document.getElementById("img1");
-  const img2 = document.getElementById("img2");
-
-  function showPrintImages(select) {
-    let src1='', src2='';
-    switch(select.value){
-      case 'ammo': src1='image0.jpeg'; src2='image1.jpeg'; break;
-      case 'corkscrew': src1='Tree1.jpeg'; src2='Tree2.jpeg'; break;
-      case 'flower': src1='IMG_1006.jpeg'; src2='IMG_1005.jpeg'; break;
-      case 'dragon': src1='Dragon1.jpeg'; src2='Dragon2.jpeg'; break;
-      case 'egg': src1='Egg1.jpg'; src2='Egg2.jpg'; break;
-      case 'sign': src1='Sign2.jpg'; src2='Sign3.jpg'; break;
-      case 'rocket': src1='IMG_1637.jpeg'; src2='IMG_1639.jpeg'; break;
-      case 'wizard': src1='IMG_0057.jpeg'; src2='IMG_0057.jpeg'; break;
-      default: src1=''; src2='';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RekietaLabs – 3D Printing</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --brand-color: #1753aa;
+      --bg-dark: #0e0e0e;
+      --bg-section: #1f2d3d;
+      --text-light: #f1f1f1;
+      --section-border: #1753aa;
     }
-    if(src1 && src2){
-      img1.src = src1;
-      img2.src = src2;
-      printImages.style.display='flex';
-    } else {
-      printImages.style.display='none';
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-light);
+      overflow-x:hidden;
     }
-  }
-</script>
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 999;
+      background: #111;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      border-bottom: 2px solid var(--brand-color);
+    }
+
+    header h1 {
+      font-size: 1.5rem;
+      color: var(--brand-color);
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
+
+    nav a {
+      color: var(--text-light);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+
+    nav a:hover { color: var(--brand-color); }
+
+    section {
+      max-width: 900px;
+      margin: 3rem auto;
+      padding: 2rem;
+      background-color: var(--bg-section);
+      border: 2px solid var(--section-border);
+      border-radius: 1rem;
+      text-align: center;
+      animation: fadeInUp 1s ease forwards;
+    }
+
+    section h2 { font-size:2rem; color: var(--brand-color); margin-bottom:1rem; }
+    section p { font-size:1rem; line-height:1.6; }
+
+    @keyframes fadeInUp {
+      0% { opacity:0; transform: translateY(40px);}
+      100% { opacity:1; transform: translateY(0);}
+    }
+
+    /* 3D Prints Dropdown */
+    #prints select {
+      width: 60%;
+      max-width: 400px;
+      padding:0.5rem;
+      margin:1rem 0;
+      border-radius:0.5rem;
+      border: 1px solid var(--brand-color);
+      background: #222;
+      color: var(--text-light);
+      font-size:1rem;
+      cursor:pointer;
+    }
+
+    #printImages {
+      margin-top: 1rem;
+      display: none;
+      gap:1rem;
+      flex-wrap:wrap;
+      justify-content: center;
+    }
+
+    #printImages img {
+      max-width: 45%;
+      border-radius: 0.8rem;
+      transition: transform 0.3s;
+      cursor: pointer;
+    }
+
+    #printImages img:hover {
+      transform: translateY(5px);
+    }
+
+    .section-link-btn {
+      display:inline-block;
+      margin-top:1rem;
+      padding:0.6rem 1.2rem;
+      background: var(--brand-color);
+      color:white;
+      border:none;
+      border-radius:0.5rem;
+      font-weight:bold;
+      cursor:pointer;
+      text-decoration:none;
+    }
+
+    /* Chatbot */
+    #bsai-stream {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      height: 560px;
+      width: 100%;
+      max-width: 400px;
+      z-index: 999;
+      border-radius: 1rem;
+      overflow: hidden;
+    }
+
+    @media (max-width: 768px){
+      #bsai-stream {height:auto;width:90%;right:5%;bottom:10px;}
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>RekietaLabs</h1>
+    <nav>
+      <ul>
+        <li><a href="#mylabs">MyLabs</a></li>
+        <li><a href="#market">Market</a></li>
+        <li><a href="https://giftcard.hub.rekietalabs.com" target="_blank">Gift Cards</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section id="hero">
+    <h2>Welcome to RekietaLabs</h2>
+    <p>Innovating 3D printed creations with precision and passion.</p>
+  </section>
+
+  <section id="about">
+    <h2>About Us</h2>
+    <p>We are a 3D printing company dedicated to delivering unique, high-quality prints that inspire creativity and innovation. Each item is printed with precision using cutting-edge technology.<br><br>
+    Contact us at <strong>support@rekietalabs.com</strong> or call <strong>214-814-7423</strong>.</p>
+  </section>
+
+  <section id="prints">
+    <h2>3D Prints</h2>
+    <select id="modelDropdown" onchange="showPrintImages(this)">
+      <option value="">Select a model...</option>
+      <option value="ammo">Ammo themed container</option>
+      <option value="corkscrew">Corkscrew Tree</option>
+      <option value="flower">Flower Fidget</option>
+      <option value="dragon">Dragons</option>
+      <option value="egg">Dragon eggs</option>
+      <option value="sign">Signs</option>
+      <option value="rocket">Rocket launcher</option>
+      <option value="wizard">Wizard Dino</option>
+    </select>
+    <div id="printImages" class="print-images">
+      <img id="img1" src="" alt="">
+      <img id="img2" src="" alt="">
+    </div>
+  </section>
+
+  <section id="market">
+    <h2>RekietaLabs Market</h2>
+    <p>Purchase pre-made 3D prints directly from our store. You can also browse the community marketplace to download models shared by others.</p>
+    <a href="https://market.rekietalabs.com" target="_blank" class="section-link-btn">Visit Market</a>
+    <a href="https://customer.portal.hub.rekietalabs.com" target="_blank" class="section-link-btn">Customer Portal</a>
+  </section>
+
+  <section id="mylabs">
+    <h2>MyLabs Accounts</h2>
+    <p>Manage your RekietaLabs experience through MyLabs. Your account keeps track of your orders, submissions, and preferences.</p>
+    <a href="https://accounts.rekietalabs.com" target="_blank" class="section-link-btn">Go to MyLabs!</a>
+  </section>
+
+  <section id="giftcards">
+    <h2>Gift Cards</h2>
+    <p>RekietaLabs is better with friends! Buy a gift card for any occasion, or just for yourself.</p>
+    <a href="https://giftcard.hub.rekietalabs.com" target="_blank" class="section-link-btn">Buy Gift Card</a>
+  </section>
+
+  <div id="bsai-stream"></div>
+  <script async src="https://bigsur.ai/plugin/js/static.js"></script>
+
+  <script>
+    const printImages = document.getElementById("printImages");
+    const img1 = document.getElementById("img1");
+    const img2 = document.getElementById("img2");
+
+    function showPrintImages(select) {
+      let src1='', src2='';
+      switch(select.value){
+        case 'ammo': src1='image0.jpeg'; src2='image1.jpeg'; break;
+        case 'corkscrew': src1='Tree1.jpeg'; src2='Tree2.jpeg'; break;
+        case 'flower': src1='IMG_1006.jpeg'; src2='IMG_1005.jpeg'; break;
+        case 'dragon': src1='Dragon1.jpeg'; src2='Dragon2.jpeg'; break;
+        case 'egg': src1='Egg1.jpg'; src2='Egg2.jpg'; break;
+        case 'sign': src1='Sign2.jpg'; src2='Sign3.jpg'; break;
+        case 'rocket': src1='IMG_1637.jpeg'; src2='IMG_1639.jpeg'; break;
+        case 'wizard': src1='IMG_0057.jpeg'; src2='IMG_0057.jpeg'; break;
+        default: src1=''; src2='';
+      }
+      if(src1 && src2){
+        img1.src = src1;
+        img2.src = src2;
+        printImages.style.display='flex';
+      } else {
+        printImages.style.display='none';
+      }
+    }
+  </script>
+
+</body>
+</html>
