@@ -23,5 +23,3 @@ My Labs By RekietaLabs: https://accounts.rekietalabs.com
 Contact Us:
 
 Email Support: support@rekietalabs.com
-
-Website Support: https://support.rekietalabs.com
