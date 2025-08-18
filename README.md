@@ -1,8 +1,10 @@
 DO NOT COPY ANY CODE UNLESS GIVEN PERMISSION. 
 
+Updates: Our new website just launched! 
+
 Welcome to RekietaLabs!
 
-RekietaLabs is a 3D Printing company. we are not a registered business. As this is a small project created by me. 
+RekietaLabs is a 3D Printing company. we are not a registered business. As this is a small project!
 
 RekietaLabs Market:
 
