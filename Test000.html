@@ -1,167 +1,173 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>RekietaLabs – 3D Printing</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --brand-color: #1753aa;
-      --bg-dark: #0e0e0e;
-      --bg-light-blue: #1f2d3d;
-      --text-light: #f1f1f1;
-      --section-border: #1753aa;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>RekietaLabs — 3D Printing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="icon" href="IMG_0926.jpeg" type="image/jpeg"/>
+<style>
+:root {
+  --brand-color: #1753aa;
+  --bg-dark: #0e0e0e;
+  --bg-light-blue: #1f2d3d;
+  --text-light: #f1f1f1;
+  --section-border: #1753aa;
+}
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: var(--bg-dark);
-      color: var(--text-light);
-      overflow-x: hidden;
-    }
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--bg-dark);
+  color: var(--text-light);
+  overflow-x: hidden;
+}
 
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 999;
-      background: #111;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1rem 2rem;
-      border-bottom: 2px solid var(--brand-color);
-    }
+header {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  background: #111;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  border-bottom: 2px solid var(--brand-color);
+}
 
-    header h1 {
-      font-size: 1.5rem;
-      color: var(--brand-color);
-    }
+header h1 {
+  font-size: 1.5rem;
+  color: var(--brand-color);
+}
 
-    nav ul {
-      list-style: none;
-      display: flex;
-      gap: 1.2rem;
-      align-items: center;
-    }
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
 
-    nav a {
-      color: var(--text-light);
-      text-decoration: none;
-      font-weight: 500;
-      transition: color 0.2s ease;
-    }
+nav a {
+  color: var(--text-light);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
 
-    nav a:hover {
-      color: var(--brand-color);
-    }
+nav a:hover {
+  color: var(--brand-color);
+}
 
-    .mylabs-btn, .giftcard-btn {
-      background: var(--brand-color);
-      color: white;
-      padding: 0.5rem 1rem;
-      border: none;
-      border-radius: 0.4rem;
-      font-weight: bold;
-      cursor: pointer;
-    }
+/* Button Styles */
+.mylabs-btn, .btn {
+  display: inline-block;
+  background: var(--brand-color);
+  color: #fff;
+  padding: 12px 25px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 50px;
+  text-decoration: none; /* removes underline */
+  text-align: center;
+  margin-top: 15px;
+  cursor: pointer;
+  transition: 0.3s;
+}
 
-    section {
-      max-width: 900px;
-      margin: 3rem auto;
-      padding: 2rem;
-      background-color: var(--bg-light-blue);
-      border: 2px solid var(--section-border);
-      border-radius: 1rem;
-      text-align: center;
-      animation: fadeInUp 1s ease forwards;
-    }
+.mylabs-btn:hover, .btn:hover {
+  background: #1f6bdd;
+}
 
-    section h2 {
-      font-size: 2rem;
-      color: var(--brand-color);
-      margin-bottom: 1rem;
-    }
+section {
+  max-width: 900px;
+  margin: 3rem auto;
+  padding: 2rem;
+  background-color: var(--bg-light-blue);
+  border: 2px solid var(--section-border);
+  border-radius: 1rem;
+  text-align: center;
+  animation: fadeInUp 1s ease forwards;
+}
 
-    section p {
-      font-size: 1rem;
-      line-height: 1.6;
-    }
+section h2 {
+  font-size: 2rem;
+  color: var(--brand-color);
+  margin-bottom: 1rem;
+}
 
-    @keyframes fadeInUp {
-      0% {
-        opacity: 0;
-        transform: translateY(40px);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
+section p {
+  font-size: 1rem;
+  line-height: 1.6;
+}
 
-    /* 3D Prints Dropdown */
-    #modelDropdown {
-      width: 100%;
-      padding: 10px;
-      margin-top: 1rem;
-      background: #222;
-      color: var(--text-light);
-      border: 1px solid var(--brand-color);
-      border-radius: 0.5rem;
-      font-size: 1rem;
-      cursor: pointer;
-    }
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
-    #modelPreview {
-      margin-top: 20px;
-      display: flex;
-      gap: 20px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
+#bsai-stream {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  height: 560px;
+  width: 100%;
+  max-width: 400px;
+  z-index: 999;
+  border-radius: 1rem;
+  overflow: hidden;
+}
 
-    #modelPreview img {
-      max-width: 48%;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.4);
-      transition: transform 0.3s ease;
-      display: none;
-    }
+@media (max-width: 768px) {
+  #bsai-stream {
+    height: auto;
+    width: 90%;
+    right: 5%;
+    bottom: 10px;
+  }
+}
 
-    #modelPreview img:hover {
-      transform: translateY(5px);
-    }
+/* 3D Prints dropdown */
+#modelDropdown {
+  background-color: #222;
+  color: white;
+  border: 1px solid var(--brand-color);
+  border-radius: 10px;
+  padding: 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+}
 
-    /* Chatbot styles */
-    #bsai-stream {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      height: 560px;
-      width: 100%;
-      max-width: 400px;
-      z-index: 999;
-      border-radius: 1rem;
-      overflow: hidden;
-    }
+#modelPreview {
+  margin-top: 20px;
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
 
-    @media (max-width: 768px) {
-      #bsai-stream {
-        height: auto;
-        width: 90%;
-        right: 5%;
-        bottom: 10px;
-      }
-    }
+#modelPreview img {
+  max-width: 45%;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.4);
+  transition: transform 0.3s ease;
+}
 
-  </style>
+#modelPreview img:hover {
+  transform: translateY(5px);
+}
+</style>
 </head>
 <body>
 
@@ -170,8 +176,7 @@
   <nav>
     <ul>
       <li><a href="#mylabs">MyLabs</a></li>
-      <li><a href="#market">Market</a></li>
-      <li><a href="https://giftcard.hub.rekietalabs.com" target="_blank">Gift Cards</a></li>
+      <li><a href="https://market.rekietalabs.com" target="_blank">Market</a></li>
     </ul>
   </nav>
 </header>
@@ -183,7 +188,7 @@
 
 <section id="about">
   <h2>About Us</h2>
-  <p>RekietaLabs is a 3D printing company delivering unique, high-quality prints for creative and practical uses. Contact us at support@rekietalabs.com or call 214-814-7423 for any questions or support.</p>
+  <p>We are a 3D printing company delivering unique, high-quality prints that inspire creativity and innovation.</p>
 </section>
 
 <section id="prints">
@@ -191,70 +196,47 @@
   <select id="modelDropdown" onchange="showModelImages(this)">
     <option value="">Select a model...</option>
     <option value="ammo">Ammo themed container</option>
-    <option value="corkscrewTree">Corkscrew shaped tree</option>
+    <option value="tree">Corkscrew Tree</option>
     <option value="flower">Flower Fidget</option>
     <option value="dragon">Dragons</option>
     <option value="egg">Dragon eggs</option>
     <option value="sign">Signs</option>
     <option value="rocket">Rocket launcher</option>
-    <option value="wizardDino">Wizard Dino</option>
+    <option value="dino">Wizard Dino</option>
   </select>
-  <div id="modelPreview"></div>
+  <div id="modelPreview">
+    <img id="previewImage1" src="" alt="" style="display:none;" />
+    <img id="previewImage2" src="" alt="" style="display:none;" />
+  </div>
+</section>
+
+<section id="mylabs">
+  <h2>MyLabs</h2>
+  <p>Our new MyLabs accounts system is coming soon! Get ready for a fully integrated experience.</p>
+  <p><a href="https://accounts.rekietalabs.com" target="_blank" class="mylabs-btn">Go to MyLabs!</a></p>
 </section>
 
 <section id="market">
   <h2>RekietaLabs Market</h2>
-  <p>Purchase pre-made 3D print items or browse the community marketplace where users upload models for download.</p>
-  <p><a href="https://market.rekietalabs.com" target="_blank" class="mylabs-btn">Visit the Market</a></p>
-</section>
-
-<section id="mylabs">
-  <h2>MyLabs Accounts</h2>
-  <p>Manage your RekietaLabs account and access exclusive features. Click below to go to MyLabs!</p>
-  <a href="https://accounts.rekietalabs.com" class="mylabs-btn">Go to MyLabs!</a>
+  <p>Explore our curated marketplace featuring top 3D prints and designs.</p>
+  <p><a href="https://market.rekietalabs.com" target="_blank" class="mylabs-btn">Go to Market</a></p>
 </section>
 
 <section id="giftcards">
-  <h2>RekietaLabs Gift Cards</h2>
-  <p>RekietaLabs is better with friends! Buy a gift card for any occasion — or treat yourself!</p>
-  <a href="https://giftcard.hub.rekietalabs.com" class="giftcard-btn">Get a Gift Card</a>
+  <h2>RekietaLabs is Better with Friends</h2>
+  <p>Buy a gift card for any occasion — or even for yourself!</p>
+  <p><a href="#" class="mylabs-btn">Gift Card Hub Coming Soon</a></p>
 </section>
 
-<section id="help">
+<section id="support">
   <h2>Need Help?</h2>
-  <p>Visit our new customer portal for support and assistance: <a href="https://customer.portal.hub.rekietalabs.com" target="_blank" class="mylabs-btn">Customer Portal</a></p>
+  <p>Check out our new customer portal (coming soon).</p>
+  <p><a href="#" class="mylabs-btn">Customer Portal Coming Soon</a></p>
 </section>
 
 <div id="bsai-stream"></div>
+
 <script async src="https://bigsur.ai/plugin/js/static.js"></script>
-
-<script>
-  const modelPreview = document.getElementById('modelPreview');
-
-  function showModelImages(select) {
-    const prints = {
-      ammo: ['image0.jpeg','image1.jpeg'],
-      corkscrewTree: ['Tree1.jpeg','Tree2.jpeg'],
-      flower: ['IMG_1006.jpeg','IMG_1005.jpeg'],
-      dragon: ['Dragon1.jpeg','Dragon2.jpeg'],
-      egg: ['Egg1.jpg','Egg2.jpg'],
-      sign: ['Sign2.jpg','Sign3.jpg'],
-      rocket: ['IMG_1637.jpeg','IMG_1639.jpeg'],
-      wizardDino: ['IMG_0057.jpeg','IMG_0057.jpeg']
-    };
-
-    modelPreview.innerHTML = '';
-    if (select.value && prints[select.value]) {
-      prints[select.value].forEach(src => {
-        const img = document.createElement('img');
-        img.src = src;
-        img.alt = select.value;
-        img.style.display = 'block';
-        modelPreview.appendChild(img);
-      });
-    }
-  }
-</script>
 
 <!-- Hotjar Tracking Code -->
 <script>
@@ -266,6 +248,34 @@
     r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
     a.appendChild(r);
 })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+</script>
+
+<script>
+function showModelImages(select) {
+  const img1 = document.getElementById('previewImage1');
+  const img2 = document.getElementById('previewImage2');
+  let src1 = '';
+  let src2 = '';
+
+  switch(select.value) {
+    case 'ammo': src1='image0.jpeg'; src2='image1.jpeg'; break;
+    case 'tree': src1='Tree1.jpeg'; src2='Tree2.jpeg'; break;
+    case 'flower': src1='IMG_1006.jpeg'; src2='IMG_1005.jpeg'; break;
+    case 'dragon': src1='Dragon1.jpeg'; src2='Dragon2.jpeg'; break;
+    case 'egg': src1='Egg1.jpg'; src2='Egg2.jpg'; break;
+    case 'sign': src1='Sign2.jpg'; src2='Sign3.jpg'; break;
+    case 'rocket': src1='IMG_1637.jpeg'; src2='IMG_1639.jpeg'; break;
+    case 'dino': src1='IMG_0057.jpeg'; src2='IMG_0057.jpeg'; break;
+    default: src1=''; src2=''; break;
+  }
+
+  if(src1 && src2) {
+    img1.src = src1; img2.src = src2;
+    img1.style.display='block'; img2.style.display='block';
+  } else {
+    img1.style.display='none'; img2.style.display='none';
+  }
+}
 </script>
 
 </body>
