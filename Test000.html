@@ -170,6 +170,51 @@ section p {
 </style>
 </head>
 <body>
+<!-- RekietaLabs V3 Announcement Banner -->
+<div id="v3Banner" style="
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    background-color:#1753aa;
+    color:white;
+    padding:10px 20px;
+    font-family: 'Inter', sans-serif;
+    font-weight:600;
+    position:relative;
+    z-index:1000;
+">
+  <div style="display:flex; align-items:center; gap:10px;">
+    <span style="font-size:1.5rem;">📢</span>
+    <span>Introducing RekietaLabs V3!</span>
+  </div>
+  <a href="https://rekietalabs.com/V3" target="_blank" style="
+    background:white;
+    color:#1753aa;
+    padding:8px 16px;
+    border-radius:50px;
+    font-weight:600;
+    text-decoration:none;
+    transition:0.3s;
+  " onmouseover="this.style.background='#eee';" onmouseout="this.style.background='white';">
+    Get More Details
+  </a>
+</div>
+
+<script>
+  // Hide banner after September 1, 2025
+  const banner = document.getElementById('v3Banner');
+  const expireDate = new Date('2025-09-01T00:00:00-05:00').getTime();
+
+  function checkBanner() {
+    const now = new Date().getTime();
+    if(now >= expireDate) {
+      banner.style.display = 'none';
+    }
+  }
+
+  checkBanner();
+  setInterval(checkBanner, 60*1000); // check every minute
+</script>
 
 <header>
   <h1>RekietaLabs</h1>
