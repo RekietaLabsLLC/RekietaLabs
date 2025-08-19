@@ -3,236 +3,318 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>RekietaLabs — Coming Soon</title>
+<title>RekietaLabs — 3D Printing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 <link rel="icon" href="IMG_0926.jpeg" type="image/jpeg"/>
 <style>
-    :root {
-        --brand-color: #1753aa;
-        --text-light: #ffffff;
-        --bg-dark: #0b0b0b;
-    }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-        background: var(--bg-dark);
-        color: var(--text-light);
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        overflow: hidden;
-        height: 100vh;
-    }
-    .container {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        height: 100%;
-        text-align: center;
-        position: relative;
-        z-index: 2;
-        animation: fadeIn 1s ease forwards;
-    }
-    .logo {
-        width: 150px;
-        height: 150px;
-        background: url('https://tr.rbxcdn.com/78801985499783/420/420/Image/Png') no-repeat center/contain;
-        margin-bottom: 20px;
-        animation: float 3s ease-in-out infinite;
-    }
-    h1 {
-        font-size: 3rem;
-        margin-bottom: 10px;
-        color: var(--brand-color);
-        animation: slideDown 1.2s ease;
-    }
-    p.tagline { font-size: 1.2rem; margin-bottom: 30px; opacity: 0.9; }
-    .countdown { display: flex; gap: 15px; margin-bottom: 30px; }
-    .count-box {
-        background: rgba(23,83,170,0.2);
-        padding: 15px 20px;
-        border-radius: 10px;
-        min-width: 70px;
-        backdrop-filter: blur(4px);
-    }
-    .count-box span { display: block; }
-    .count-num { font-size: 1.8rem; font-weight: bold; }
-    .count-label { font-size: 0.8rem; text-transform: uppercase; opacity: 0.8; }
-    .btn {
-        background: var(--brand-color);
-        border: none;
-        padding: 12px 25px;
-        font-size: 1rem;
-        color: #fff;
-        border-radius: 50px;
-        cursor: pointer;
-        text-decoration: none;
-        transition: 0.3s;
-        margin-top: 10px;
-    }
-    .btn:hover { background: #1f6bdd; }
-    footer {
-        position: absolute;
-        bottom: 15px;
-        width: 100%;
-        text-align: center;
-        font-size: 0.8rem;
-        opacity: 0.7;
-    }
-    /* Background animation */
-    canvas { position: absolute; top: 0; left: 0; z-index: 0; }
+:root {
+  --brand-color: #1753aa;
+  --bg-dark: #0e0e0e;
+  --bg-light-blue: #1f2d3d;
+  --text-light: #f1f1f1;
+  --section-border: #1753aa;
+}
 
-    @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
-    @keyframes slideDown { from {opacity: 0; transform: translateY(-20px);} to {opacity: 1; transform: translateY(0);} }
-    @keyframes float { 0%,100%{ transform: translateY(0);} 50%{ transform: translateY(-10px);} }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-    /* Beta iframe */
-    #betaFrame {
-        position: fixed;
-        top:0;
-        left:0;
-        width:100%;
-        height:100%;
-        border:none;
-        display:none;
-        z-index: 100;
-    }
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--bg-dark);
+  color: var(--text-light);
+  overflow-x: hidden;
+}
+
+header {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  background: #111;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  border-bottom: 2px solid var(--brand-color);
+}
+
+header h1 {
+  font-size: 1.5rem;
+  color: var(--brand-color);
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+nav a {
+  color: var(--text-light);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+nav a:hover {
+  color: var(--brand-color);
+}
+
+/* Button Styles */
+.mylabs-btn, .btn {
+  display: inline-block;
+  background: var(--brand-color);
+  color: #fff;
+  padding: 12px 25px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 50px;
+  text-decoration: none; /* removes underline */
+  text-align: center;
+  margin-top: 15px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.mylabs-btn:hover, .btn:hover {
+  background: #1f6bdd;
+}
+
+section {
+  max-width: 900px;
+  margin: 3rem auto;
+  padding: 2rem;
+  background-color: var(--bg-light-blue);
+  border: 2px solid var(--section-border);
+  border-radius: 1rem;
+  text-align: center;
+  animation: fadeInUp 1s ease forwards;
+}
+
+section h2 {
+  font-size: 2rem;
+  color: var(--brand-color);
+  margin-bottom: 1rem;
+}
+
+section p {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+#bsai-stream {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  height: 560px;
+  width: 100%;
+  max-width: 400px;
+  z-index: 999;
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+@media (max-width: 768px) {
+  #bsai-stream {
+    height: auto;
+    width: 90%;
+    right: 5%;
+    bottom: 10px;
+  }
+}
+
+/* 3D Prints dropdown */
+#modelDropdown {
+  background-color: #222;
+  color: white;
+  border: 1px solid var(--brand-color);
+  border-radius: 10px;
+  padding: 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+#modelPreview {
+  margin-top: 20px;
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+#modelPreview img {
+  max-width: 45%;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.4);
+  transition: transform 0.3s ease;
+}
+
+#modelPreview img:hover {
+  transform: translateY(5px);
+}
 </style>
 </head>
 <body>
+<!-- RekietaLabs V3 Announcement Banner -->
+<div id="v3Banner" style="
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    background-color:#1753aa;
+    color:white;
+    padding:10px 20px;
+    font-family: 'Inter', sans-serif;
+    font-weight:600;
+    position:relative;
+    z-index:1000;
+">
+  <div style="display:flex; align-items:center; gap:10px;">
+    <span style="font-size:1.5rem;">📢</span>
+    <span>Introducing RekietaLabs V3!</span>
+  </div>
+</div>
+<script>
+  // Hide banner after September 1, 2025
+  const banner = document.getElementById('v3Banner');
+  const expireDate = new Date('2025-09-01T00:00:00-05:00').getTime();
+
+  function checkBanner() {
+    const now = new Date().getTime();
+    if(now >= expireDate) {
+      banner.style.display = 'none';
+    }
+  }
+
+  checkBanner();
+  setInterval(checkBanner, 60*1000); // check every minute
+</script>
+
+<header>
+  <h1>RekietaLabs</h1>
+  <nav>
+    <ul>
+      <li><a href="https://accounts.rekietalabs.com" target="_blank">MyLabs</a></li>
+      <li><a href="https://market.rekietalabs.com" target="_blank">Market</a></li>
+    </ul>
+  </nav>
+</header>
+
+<section id="hero">
+  <h2>Welcome to RekietaLabs</h2>
+  <p>Innovating 3D printed creations with precision and passion.</p>
+</section>
+
+<section id="about">
+  <h2>About Us</h2>
+  <p>At RekietaLabs, we specialize in bringing your visions to life with our cutting-edge 3D printing technology. Our team is dedicated to pushing the boundaries of innovation, quality, and customer satisfaction.</p>
+</section>
+
+  <section id="mylabs">
+  <h2>Newsletter</h2>
+  <p>Our new newsletter hub is the perfect place to manage your RekietaLabs emailing preferences.</p>
+  <p><a href="https://emails.hub.rekietalabs.com" target="_blank" class="mylabs-btn">Go to emailing hub!</a></p>
+</section>
+
+<section id="prints">
+  <h2>3D Print Models</h2>
+  <select id="modelDropdown" onchange="showModelImages(this)">
+    <option value="">Select a model...</option>
+    <option value="ammo">Ammo themed container</option>
+    <option value="tree">Corkscrew Tree</option>
+    <option value="flower">Flower Fidget</option>
+    <option value="dragon">Dragons</option>
+    <option value="egg">Dragon eggs</option>
+    <option value="sign">Signs</option>
+    <option value="rocket">Rocket launcher</option>
+    <option value="dino">Wizard Dino</option>
+  </select>
+  <div id="modelPreview">
+    <img id="previewImage1" src="" alt="" style="display:none;" />
+    <img id="previewImage2" src="" alt="" style="display:none;" />
+  </div>
+</section>
+
+<section id="mylabs">
+  <h2>MyLabs</h2>
+  <p>Our MyLabs accounts system is coming soon! Get ready for a fully integrated experience.</p>
+  <p><a href="https://accounts.rekietalabs.com" target="_blank" class="mylabs-btn">Go to MyLabs!</a></p>
+</section>
+
+<section id="market">
+  <h2>RekietaLabs Market</h2>
+  <p>Explore our curated marketplace featuring top 3D prints and designs.</p>
+  <p><a href="https://market.rekietalabs.com" target="_blank" class="mylabs-btn">Go to Market</a></p>
+</section>
+
+<section id="giftcards">
+  <h2>RekietaLabs is Better with Friends</h2>
+  <p>Buy a gift card for any occasion — or even for yourself!</p>
+  <p><span class="mylabs-btn">Gift Card Hub Coming Soon</span></p>
+</section>
+
+<section id="support">
+  <h2>Need Help?</h2>
+  <p>Check out our customer portal (Coming Soon).</p>
+  <p><span class="mylabs-btn">Customer Portal Coming Soon</span></p>
+</section>
+
+<div id="bsai-stream"></div>
+<script async src="https://bigsur.ai/plugin/js/static.js"></script>
 
 <!-- Hotjar Tracking Code -->
 <script>
-    (function(h,o,t,j,a,r){
-        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-        h._hjSettings={hjid:6495263,hjsv:6};
-        a=o.getElementsByTagName('head')[0];
-        r=o.createElement('script');r.async=1;
-        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
-        a.appendChild(r);
-    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+(function(h,o,t,j,a,r){
+    h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+    h._hjSettings={hjid:6495263,hjsv:6};
+    a=o.getElementsByTagName('head')[0];
+    r=o.createElement('script');r.async=1;
+    r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+    a.appendChild(r);
+})(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
 </script>
-
-<canvas id="bgCanvas"></canvas>
-<div class="container" id="comingSoonContent">
-    <div class="logo"></div>
-    <h1>RekietaLabs — Coming Soon!</h1>
-    <p class="tagline">Something exciting is on the way...</p>
-    <div class="countdown" id="countdown">
-        <div class="count-box">
-            <span class="count-num" id="days">0</span>
-            <span class="count-label">Days</span>
-        </div>
-        <div class="count-box">
-            <span class="count-num" id="hours">0</span>
-            <span class="count-label">Hours</span>
-        </div>
-        <div class="count-box">
-            <span class="count-num" id="minutes">0</span>
-            <span class="count-label">Minutes</span>
-        </div>
-        <div class="count-box">
-            <span class="count-num" id="seconds">0</span>
-            <span class="count-label">Seconds</span>
-        </div>
-    </div>
-    <a href="mailto:support@rekietalabs.com" class="btn">Get In Touch</a>
-    <button class="btn" id="betaBtn">Enter Beta Testing</button>
-</div>
-
-<iframe id="betaFrame" src=""></iframe>
-
-<footer>
-    &copy; 2025 RekietaLabs — All rights reserved.
-</footer>
 
 <script>
-    // Countdown
-    const countdown = () => {
-        const targetDate = new Date('August 18, 2025 18:00:00 CST').getTime();
-        const now = new Date().getTime();
-        const diff = targetDate - now;
-        if (diff <= 0) {
-            document.getElementById('countdown').innerHTML = "<p style='font-size:1.5rem;'>🎉 We’re Live!</p>";
-            clearInterval(timer);
-            return;
-        }
-        const days = Math.floor(diff / (1000*60*60*24));
-        const hours = Math.floor((diff % (1000*60*60*24))/(1000*60*60));
-        const minutes = Math.floor((diff % (1000*60*60))/(1000*60));
-        const seconds = Math.floor((diff % (1000*60))/1000);
+function showModelImages(select) {
+  const img1 = document.getElementById('previewImage1');
+  const img2 = document.getElementById('previewImage2');
+  let src1 = '';
+  let src2 = '';
 
-        document.getElementById('days').innerText = days;
-        document.getElementById('hours').innerText = hours;
-        document.getElementById('minutes').innerText = minutes;
-        document.getElementById('seconds').innerText = seconds;
-    };
-    const timer = setInterval(countdown,1000);
-    countdown();
+  switch(select.value) {
+    case 'ammo': src1='image0.jpeg'; src2='image1.jpeg'; break;
+    case 'tree': src1='Tree1.jpeg'; src2='Tree2.jpeg'; break;
+    case 'flower': src1='IMG_1006.jpeg'; src2='IMG_1005.jpeg'; break;
+    case 'dragon': src1='Dragon1.jpeg'; src2='Dragon2.jpeg'; break;
+    case 'egg': src1='Egg1.jpg'; src2='Egg2.jpg'; break;
+    case 'sign': src1='Sign2.jpg'; src2='Sign3.jpg'; break;
+    case 'rocket': src1='IMG_1637.jpeg'; src2='IMG_1639.jpeg'; break;
+    case 'dino': src1='IMG_0057.jpeg'; src2='IMG_0057.jpeg'; break;
+    default: src1=''; src2=''; break;
+  }
 
-    // Floating particles
-    const canvas = document.getElementById('bgCanvas');
-    const ctx = canvas.getContext('2d');
-    let particlesArray;
-    const numParticles = 60;
-
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    window.addEventListener('resize', ()=>{
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        init();
-    });
-
-    class Particle {
-        constructor(){
-            this.x = Math.random() * canvas.width;
-            this.y = Math.random() * canvas.height;
-            this.size = Math.random()*3+1;
-            this.speedX = (Math.random()-0.5)*0.5;
-            this.speedY = (Math.random()-0.5)*0.5;
-        }
-        update(){
-            this.x+=this.speedX;
-            this.y+=this.speedY;
-            if(this.x<0||this.x>canvas.width)this.speedX*=-1;
-            if(this.y<0||this.y>canvas.height)this.speedY*=-1;
-        }
-        draw(){
-            ctx.fillStyle='rgba(23,83,170,0.6)';
-            ctx.beginPath();
-            ctx.arc(this.x,this.y,this.size,0,Math.PI*2);
-            ctx.fill();
-        }
-    }
-
-    function init(){
-        particlesArray=[];
-        for(let i=0;i<numParticles;i++){
-            particlesArray.push(new Particle());
-        }
-    }
-
-    function animate(){
-        ctx.clearRect(0,0,canvas.width,canvas.height);
-        particlesArray.forEach(p=>{p.update();p.draw();});
-        requestAnimationFrame(animate);
-    }
-
-    init();
-    animate();
-
-    // Beta testing password
-    const betaBtn = document.getElementById('betaBtn');
-    betaBtn.addEventListener('click',()=>{
-        const password = prompt("Enter Beta Password:");
-        if(password==="Ey5A" || password==="TEST6576"){
-            document.getElementById('comingSoonContent').style.display='none';
-            const betaFrame = document.getElementById('betaFrame');
-            betaFrame.src = "https://rekietalabs.com/test000";
-            betaFrame.style.display="block";
-        } else {
-            alert("Incorrect password.");
-        }
-    });
+  if(src1 && src2) {
+    img1.src = src1; img2.src = src2;
+    img1.style.display='block'; img2.style.display='block';
+  } else {
+    img1.style.display='none'; img2.style.display='none';
+  }
+}
 </script>
+
 </body>
 </html>
