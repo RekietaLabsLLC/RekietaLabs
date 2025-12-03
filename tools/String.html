@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>String Generator</title>
+<style>
+    body {
+        background: #0d0d0d;
+        color: #e4e4e4;
+        font-family: Arial, sans-serif;
+        padding: 30px;
+    }
+
+    h1 {
+        color: #fff;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .container {
+        max-width: 800px;
+        margin: auto;
+        background: #151515;
+        padding: 20px;
+        border-radius: 10px;
+        border: 2px solid #1753aa;
+    }
+
+    label {
+        display: block;
+        margin-top: 15px;
+        font-weight: bold;
+    }
+
+    input[type="number"],
+    input[type="text"] {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        background: #1f1f1f;
+        border: 2px solid #1753aa;
+        border-radius: 6px;
+        color: #fff;
+    }
+
+    input[type="checkbox"] {
+        transform: scale(1.3);
+        margin-right: 10px;
+    }
+
+    button {
+        background: #1753aa;
+        border: none;
+        padding: 12px 20px;
+        color: #fff;
+        font-weight: bold;
+        border-radius: 6px;
+        cursor: pointer;
+        margin-top: 20px;
+        width: 100%;
+    }
+
+    button:hover {
+        opacity: 0.8;
+    }
+
+    #results {
+        margin-top: 25px;
+        background: #0f0f0f;
+        padding: 15px;
+        border-radius: 8px;
+        border: 1px solid #1753aa;
+        max-height: 400px;
+        overflow-y: auto;
+        white-space: pre-wrap;
+        font-family: Consolas, monospace;
+    }
+
+    #error {
+        color: #ff5555;
+        margin-top: 10px;
+        font-weight: bold;
+    }
+</style>
+</head>
+<body>
+
+<h1>String Generator</h1>
+
+<div class="container">
+    <label>How many strings?</label>
+    <input id="count" type="number" min="1" value="5" />
+
+    <label>How many characters per string?</label>
+    <input id="length" type="number" min="1" value="10" />
+
+    <label>Character Sets:</label>
+    <div>
+        <label><input type="checkbox" id="upper" checked> Uppercase (A–Z)</label>
+        <label><input type="checkbox" id="lower" checked> Lowercase (a–z)</label>
+        <label><input type="checkbox" id="numbers" checked> Numbers (0–9)</label>
+        <label><input type="checkbox" id="symbols"> Symbols (!@#$%^&*)</label>
+    </div>
+
+    <label><input type="checkbox" id="allowRepeat" checked> Allow repeated characters inside a string</label>
+
+    <button onclick="generateStrings()">Generate Strings</button>
+
+    <div id="error"></div>
+
+    <div id="results"></div>
+
+    <button onclick="copyAll()">Copy All</button>
+
+    <label>Copy string by number:</label>
+    <input id="copyIndex" type="number" min="1" placeholder="Enter number..." />
+    <button onclick="copyOne()">Copy Selected String</button>
+
+</div>
+
+<script>
+function generateStrings() {
+    const count = parseInt(document.getElementById("count").value);
+    const length = parseInt(document.getElementById("length").value);
+
+    const upper = document.getElementById("upper").checked;
+    const lower = document.getElementById("lower").checked;
+    const numbers = document.getElementById("numbers").checked;
+    const symbols = document.getElementById("symbols").checked;
+    const allowRepeat = document.getElementById("allowRepeat").checked;
+
+    let errorEl = document.getElementById("error");
+    let resultsEl = document.getElementById("results");
+    errorEl.innerText = "";
+    resultsEl.innerText = "";
+
+    let charset = "";
+    if (upper) charset += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    if (lower) charset += "abcdefghijklmnopqrstuvwxyz";
+    if (numbers) charset += "0123456789";
+    if (symbols) charset += "!@#$%^&*()_-+=<>?{}[]|~";
+
+    if (charset.length === 0) {
+        errorEl.innerText = "You must select at least one character set.";
+        return;
+    }
+
+    const lines = [];
+
+    for (let i = 0; i < count; i++) {
+        let str = "";
+
+        if (!allowRepeat && length > charset.length) {
+            errorEl.innerText =
+                "You disabled repeats but requested more characters than the character pool contains.";
+            return;
+        }
+
+        for (let j = 0; j < length; j++) {
+            if (allowRepeat) {
+                str += charset[Math.floor(Math.random() * charset.length)];
+            } else {
+                const available = charset.split("").filter(c => !str.includes(c));
+                str += available[Math.floor(Math.random() * available.length)];
+            }
+        }
+
+        lines.push(`${i + 1}. ${str}`);
+    }
+
+    resultsEl.innerText = lines.join("\n");
+}
+
+function copyAll() {
+    const text = document.getElementById("results").innerText;
+    if (!text.trim()) return;
+
+    navigator.clipboard.writeText(text);
+}
+
+function copyOne() {
+    const index = parseInt(document.getElementById("copyIndex").value);
+    const results = document.getElementById("results").innerText.split("\n");
+
+    if (!index || index < 1 || index > results.length) {
+        document.getElementById("error").innerText = "Invalid string number.";
+        return;
+    }
+
+    const selected = results[index - 1].replace(/^[0-9]+\.\s/, "");
+
+    navigator.clipboard.writeText(selected);
+}
+</script>
+
+</body>
+</html>
